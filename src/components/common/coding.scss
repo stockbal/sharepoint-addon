@@ -4,6 +4,26 @@
   cursor: default;
 }
 
+.coding--editable {
+  border: 1px solid $primary-color;
+  padding: 5px;
+
+  //&:hover::before {
+  //  position: relative;
+  //  left: -10px;
+  //  top: -10px;
+  //  content: attr(data-language);
+  //  padding: 10px;
+  //  border-radius: 5px;
+  //  background: $primary-color;
+  //  color: white;
+  //}
+}
+
+.coding-line {
+  font-family: Consolas, monospace;
+}
+
 .content-box--no-coding-selection .coding {
   &,
   * {

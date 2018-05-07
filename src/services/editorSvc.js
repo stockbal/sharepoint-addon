@@ -1,5 +1,4 @@
 import store from '../store';
-import layoutSvc from './layoutSvc';
 import selectionSvc from './selectionSvc';
 import Prism from 'prismjs';
 import codeCreatorSvc from './codeCreatorSvc';
@@ -7,12 +6,9 @@ import Logger from 'js-logger';
 import config from '../config';
 import utils from './utils';
 import $ from 'jquery';
-import browser from './browser';
-import doubleClickListener from './editor/doubleClickListener';
 import contextMenuListener from './editor/contextMenuListener';
 import keyListener from './editor/keyListener';
 import { styleSvc } from './styleSvc';
-import { CODING_SELECTOR } from '../config/constants';
 import editorUtilsSvc from './editorUtilsSvc';
 import { ImagePreview } from './editor/imagePreview';
 import { BackgroundRemover } from './editor/backgroundRemover';
@@ -263,8 +259,6 @@ export default {
       await store.dispatch('toggleEditMode');
       const { editorDisabled, codeEditorDisabled } = store.state.settings;
 
-      this._fixCodingBlocks();
-
       if (codeEditorDisabled) {
         this._disableCodeEditor();
       } else {
@@ -275,10 +269,6 @@ export default {
         this._disableEditor();
       } else {
         this._enableEditor();
-      }
-
-      if (browser.isIE()) {
-        selectionSvc.preventSelectionForCoding();
       }
 
       // connect some listeners
@@ -304,34 +294,6 @@ export default {
       ImagePreview.createImgListeners();
     }
   },
-  /**
-   * fix coding blocks that were created with a previous version of the addons
-   * @private
-   */
-  _fixCodingBlocks() {
-    const $codingBlocks = $(`#${config.elements.editorContentElementId} ${CODING_SELECTOR}`);
-
-    $codingBlocks.each((index, element) => {
-      const $element = $(element);
-      const $code = $element.find('code');
-
-      element.setData('inline', $element.hasClass('inline'));
-      element.setData('language', /language-(\w+)/.exec($code.attr('class'))[1]);
-      element.setData('line-numbers', ($element.children('.line-numbers').length > 0).toString());
-    });
-  },
-  setUpCodingBlocks(codeEditorDisabled) {
-    const $codingBlocks = $(`#${config.elements.editorContentElementId} ${CODING_SELECTOR}`);
-
-    if (codeEditorDisabled) {
-      $codingBlocks.removeAttr('contenteditable');
-    } else {
-      $codingBlocks.attr('contenteditable', false);
-    }
-  },
-  /**
-   * Highlights all existing coding blocks inside the document
-   */
   highlightCode() {
     Prism.highlightAllUnder(document.getElementById(config.elements.editorContentElementId));
   },
@@ -360,14 +322,6 @@ export default {
    */
   _disableCodeEditor() {
     this.disableCodeTheming();
-
-    if (store.state.editMode) {
-      if (!browser.isIE()) {
-        layoutSvc.enableCodingSelection();
-      }
-      doubleClickListener.stop();
-      this.setUpCodingBlocks(true);
-    }
   },
   /**
    * Enables the code editor features
@@ -375,14 +329,6 @@ export default {
    */
   _enableCodeEditor() {
     this._updatePrismStyle();
-
-    if (store.state.editMode) {
-      if (!browser.isIE()) {
-        layoutSvc.disableCodingSelection();
-      }
-      doubleClickListener.start();
-      this.setUpCodingBlocks(false);
-    }
   },
   /**
    * Enables the editor

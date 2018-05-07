@@ -5,11 +5,24 @@ import store from '../../store';
 import editorUtilsSvc from '../editorUtilsSvc';
 import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
+import browser from '../browser';
 
 const logger = Logger.get('ContextMenuListener');
 
 const command = id => () => {
   document.execCommand(id);
+};
+
+const isKeyBoardEvent = evt => {
+  if (browser.isIE() || browser.isEdge()) {
+    return evt.pointerType === '';
+  } else if (browser.isFirefox()) {
+    return evt.button === 0;
+  } else if (browser.isChrome()) {
+    return evt.button === 0;
+  } else {
+    return false;
+  }
 };
 
 const createItem = (name, icon, cb) => ({
@@ -210,6 +223,36 @@ class MenuItemCreator {
 
 const menuItemCreator = new MenuItemCreator();
 
+const getContextMenuEventTargetData = evt => {
+  const eventData = {};
+  const keyBoardEvent = isKeyBoardEvent(evt);
+
+  if (browser.isChrome() || !keyBoardEvent) {
+    eventData.$target = $(evt.target);
+    eventData.coordinates = { top: evt.clientY, left: evt.clientX };
+  } else {
+    // get target by reading the current selection data
+    let $containerElement = $(store.state.selectionData.containerElement);
+    if ($containerElement.is(`.${config.elements.sharePointEditorArea}`)) {
+      $containerElement = $(store.state.selectionData.sel.anchorNode.parentNode);
+    }
+    eventData.$target = $containerElement;
+
+    // calculate the offset data
+    let top = evt.clientY > 0 ? evt.clientY : 0;
+    let left = evt.clientX > 0 ? evt.clientX : 0;
+
+    if (!top || !left) {
+      let offset = { top: 0, left: 0 };
+      offset = $containerElement.offset() || offset;
+      top = offset.top + 20;
+      left = offset.left + 40;
+    }
+    eventData.coordinates = { top, left };
+  }
+  return eventData;
+};
+
 /**
  * Context menu listener for <code>coding</code> elements
  */
@@ -219,7 +262,12 @@ export default {
       return;
     }
 
-    let $target = $(evt.target);
+    // event was not fired inside editorial area
+    if (!$(evt.target).closest(`.${config.elements.sharePointEditorArea}`).length) {
+      return;
+    }
+
+    const { $target, coordinates } = getContextMenuEventTargetData(evt);
 
     let $coding = $target;
     if (!$target.is(CODING_SELECTOR)) {
@@ -230,7 +278,7 @@ export default {
 
       try {
         (await store.dispatch('contextMenu/open', {
-          coordinates: { left: evt.clientX, top: evt.clientY },
+          coordinates,
           items: menuItemCreator.createItemsForCoding($coding)
         })).perform();
       } catch (e) {
@@ -238,34 +286,14 @@ export default {
       }
     } else {
       // check if right mouse click was fired inside editor
-      if ($target.closest(`.${config.elements.sharePointEditorArea}`).length) {
-        evt.preventDefault();
-        let top = evt.clientY > 0 ? evt.clientY : 0;
-        let left = evt.clientX > 0 ? evt.clientX : 0;
-
-        if (!top || !left) {
-          let offset = { top: 0, left: 0 };
-          const selectionData = store.state.selectionData;
-
-          if (selectionData && selectionData.containerElement) {
-            let $containerElement = $(selectionData.containerElement);
-            if ($containerElement.is(`.${config.elements.sharePointEditorArea}`)) {
-              $containerElement = $(selectionData.sel.anchorNode.parentNode);
-            }
-            const containerOffset = $containerElement.offset();
-            offset = containerOffset || offset;
-          }
-          top = offset.top + 20;
-          left = offset.left + 40;
-        }
-        try {
-          (await store.dispatch('contextMenu/open', {
-            coordinates: { left, top },
-            items: menuItemCreator.createItemsForNormalContent()
-          })).perform();
-        } catch (e) {
-          logger.error(e);
-        }
+      evt.preventDefault();
+      try {
+        (await store.dispatch('contextMenu/open', {
+          coordinates,
+          items: menuItemCreator.createItemsForNormalContent()
+        })).perform();
+      } catch (e) {
+        logger.error(e);
       }
     }
   },

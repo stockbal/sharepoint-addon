@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import store from '../store';
 import config from '../config';
-import { CODING_SELECTOR } from '../config/constants';
 
 /**
  * Retrieves the current selection data
@@ -75,46 +74,5 @@ class SelectionListener {
 
 export default {
   selectionListener: new SelectionListener(),
-  getSelection,
-  /**
-   * Moves the selection after the passed element
-   * @param element
-   */
-  moveSelectionAfter(element) {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.setStartAfter(element);
-    range.setEndAfter(element);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  },
-  /**
-   * Prevent selection of coding elements by moving
-   * the selection after the clicked coding elements
-   *
-   * This is only relevant for internet explorer to remove
-   * the resize boxes of the coding elements
-   */
-  preventSelectionForCoding() {
-    const getCoding = target => {
-      let $target = $(target);
-      if ($target.is(CODING_SELECTOR)) {
-        return $target[0];
-      } else {
-        $target = $target.closest(CODING_SELECTOR);
-        return $target.length ? $target[0] : null;
-      }
-    };
-
-    const moveSelectionIfCoding = evt => {
-      const coding = getCoding(evt.target);
-      if (coding) {
-        this.moveSelectionAfter(coding);
-      }
-    };
-
-    document.addEventListener('mousedown', moveSelectionIfCoding);
-    document.addEventListener('mouseup', moveSelectionIfCoding);
-    document.addEventListener('contextmenu', moveSelectionIfCoding);
-  }
+  getSelection
 };
