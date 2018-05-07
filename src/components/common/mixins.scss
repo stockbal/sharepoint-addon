@@ -1,0 +1,36 @@
+@mixin no-selection {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin disabled {
+  opacity: 0.33;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+@mixin transition($transition...) {
+  transition: $transition;
+  -moz-transition: $transition;
+  -webkit-transition: $transition;
+}
+
+@mixin transform($type) {
+  transform: $type;
+  -webkit-transform: $type;
+  -moz-transform: $type;
+  -ms-transform: $type;
+}
+
+@mixin box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}

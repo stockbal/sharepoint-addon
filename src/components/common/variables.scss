@@ -1,0 +1,29 @@
+/* definition of colors */
+$sidebar-width-folded: 31px;
+$sidebar-width-full: 280px;
+$toolbar-height: 35px;
+$toolbar-line-height: 28px;
+
+$primary-color: #841439;
+$light-gray: #eee;
+$secondary-color: #707070;
+$shadow-color: rgba(0, 0, 0, 0.3);
+$dark-grey: #333;
+$darker-primary-color: darken($primary-color, 10%);
+$button-hover-bg: rgba(0, 0, 0, 0.05);
+
+$font-family-main: Lato, 'Helvetica Neue', Helvetica, sans-serif;
+$font-family-monospace: 'Roboto Mono', 'Lucida Sans Typewriter', 'Lucida Console', monaco, Courrier, monospace;
+$body-color-light: rgba(0, 0, 0, 0.75);
+$line-height-base: 1.67;
+$line-height-title: 1.33;
+$font-size-monospace: 0.85em;
+$highlighting-color: #ff0;
+$selection-highlighting-color: #ff9632;
+$info-bg: transparentize($selection-highlighting-color, 0.85);
+$code-border-radius: 2px;
+$link-color: $primary-color;
+$error-color: #f31;
+$border-radius-base: 2px;
+$input-border-color: #d8d8d8;
+$hr-color: rgba(128, 128, 128, 0.2);
