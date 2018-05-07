@@ -1,3 +1,9 @@
+### v0.6.1
+
+#### Fixes
+- Fixes minor issues for removing special text formatting where in special cases the formattings of all elements of the
+page would get removed, even if only a specific element should be adjusted
+
 ### v0.6.0
 
 #### Features

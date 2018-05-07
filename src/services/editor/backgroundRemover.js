@@ -21,15 +21,19 @@ export class BackgroundRemover {
   /**
    * Retrieves the next node in the tree
    * @param node
+   * @param endNode
    * @returns {*}
    * @private
    */
-  _nextNode(node) {
+  _nextNode(node, endNode) {
     if (node.hasChildNodes()) {
       return node.firstChild;
     } else {
       while (node && !node.nextSibling) {
         node = node.parentNode;
+        if (node === endNode) {
+          return null;
+        }
       }
       if (!node) {
         return null;
@@ -56,8 +60,10 @@ export class BackgroundRemover {
     // Iterate nodes until we hit the end container
     const rangeNodes = [];
     while (node && node !== endNode) {
-      node = this._nextNode(node);
-      rangeNodes.push(node);
+      node = this._nextNode(node, endNode);
+      if (node) {
+        rangeNodes.push(node);
+      }
     }
 
     // Add partially selected nodes at the start of the range
@@ -71,7 +77,7 @@ export class BackgroundRemover {
   }
 
   _checkAndRemoveFormatting(node) {
-    if (!node || node.nodeType === Node.TEXT_NODE) {
+    if (!node || !(node instanceof HTMLElement)) {
       return;
     }
 
