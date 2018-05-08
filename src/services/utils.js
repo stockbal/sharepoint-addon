@@ -1,5 +1,6 @@
 import Logger from 'js-logger';
 import _ from 'lodash';
+import $ from 'jquery';
 
 // For utils.uid()
 const uidLength = 16;
@@ -121,5 +122,48 @@ export default {
       }
     });
     return target;
+  },
+  /**
+   * Enables scrolling of an element in the given container
+   * via mouse dragging
+   *
+   * @param container
+   * @param draggableEl
+   * @param scrollFactor
+   */
+  dragscroll(container, draggableEl, scrollFactor = 1) {
+    const $container = $(container);
+    const $draggableEl = $(draggableEl);
+
+    let clicked = false;
+    let clickY;
+    let clickX;
+    let left;
+    let top;
+
+    const updateScrollPos = (e, $el) => {
+      $draggableEl.css('cursor', 'move');
+
+      $el.scrollTop(top + (clickY - e.clientY) * scrollFactor);
+      $el.scrollLeft(left + (clickX - e.clientX) * scrollFactor);
+    };
+
+    $draggableEl.on({
+      mousemove: function(e) {
+        clicked && updateScrollPos(e, $container);
+      },
+      mousedown: function(e) {
+        e.preventDefault();
+        clicked = true;
+        clickY = e.clientY;
+        clickX = e.clientX;
+        left = $container.scrollLeft();
+        top = $container.scrollTop();
+      },
+      mouseup: function() {
+        clicked = false;
+        $(draggableEl).css('cursor', 'pointer');
+      }
+    });
   }
 };

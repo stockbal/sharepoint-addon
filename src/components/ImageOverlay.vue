@@ -18,43 +18,7 @@
 <script>
 import { mapState } from 'vuex';
 import keystrokes from '../services/keystrokes';
-import $ from 'jquery';
-
-const dragscroll = (container, draggableEl) => {
-  const $container = $(container);
-  const $draggableEl = $(draggableEl);
-
-  let clicked = false;
-  let clickY;
-  let clickX;
-  let left;
-  let top;
-
-  const updateScrollPos = (e, $el) => {
-    $draggableEl.css('cursor', 'move');
-
-    $el.scrollTop(top + (clickY - e.clientY) * 2);
-    $el.scrollLeft(left + (clickX - e.clientX) * 2);
-  };
-
-  $draggableEl.on({
-    mousemove: function(e) {
-      clicked && updateScrollPos(e, $container);
-    },
-    mousedown: function(e) {
-      e.preventDefault();
-      clicked = true;
-      clickY = e.clientY;
-      clickX = e.clientX;
-      left = $container.scrollLeft();
-      top = $container.scrollTop();
-    },
-    mouseup: function() {
-      clicked = false;
-      $(draggableEl).css('cursor', 'pointer');
-    }
-  });
-};
+import utils from '../services/utils';
 
 export default {
   name: 'ImageOverlay',
@@ -98,7 +62,7 @@ export default {
   mounted() {
     document.addEventListener('keydown', this.keyListener);
     window.addEventListener('resize', this.calcSize);
-    dragscroll(this.$el, this.$el.querySelector('img'));
+    utils.dragscroll(this.$el, this.$el.querySelector('img'), 1.5);
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.keyListener);
