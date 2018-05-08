@@ -6,7 +6,7 @@
 <script>
 import Prism from 'prismjs';
 import _ from 'lodash';
-import eventProxy from '../services/utils';
+import eventProxy from '../util/eventProxy';
 
 export default {
   props: ['value', 'lang', 'disabled'],

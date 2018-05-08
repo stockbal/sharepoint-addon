@@ -16,6 +16,7 @@ import { CODING_SELECTOR } from '../config/constants';
 import { ImagePreview } from './editor/imagePreview';
 import { BackgroundRemover } from './editor/backgroundRemover';
 import eventProxy from '../util/eventProxy';
+import './editorUtilsSvc';
 
 const logger = Logger.get('Editor Service');
 

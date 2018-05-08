@@ -41,13 +41,19 @@ const buildTocClosureTable = () => {
 
   const selectors = 'h1 h2 h3 h4'
     .split(' ')
-    .map(value => `[class*="${config.elements.sharePointEditorAreaRead}"] > ${value}`)
+    .map(value => `[class*="${config.elements.sharePointEditorAreaRead}"] ${value}`)
     .join(',');
 
   $(selectors).each((i, heading) => {
     const $heading = $(heading);
 
-    if ($heading.parents(`.${config.elements.webPartContainerClass}`).length) {
+    if ($heading.closest(`.${config.elements.webPartContainerClass}`).length) {
+      return;
+    }
+
+    // check if heading resides inside table
+    const $possibleTableParent = $heading.closest('table');
+    if ($possibleTableParent.length && $possibleTableParent.attr('id') !== 'layoutsTable') {
       return;
     }
 
