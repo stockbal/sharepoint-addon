@@ -1,3 +1,9 @@
+### v0.6.3
+
+#### Fixes
+
+- Fixes some issue in TOC during edit mode
+
 ### v0.6.2
 
 #### Changes
