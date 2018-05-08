@@ -53,7 +53,7 @@ const buildTocClosureTable = () => {
 
     // check if heading resides inside table
     const $possibleTableParent = $heading.closest('table');
-    if ($possibleTableParent.length && $possibleTableParent.attr('id') !== 'layoutsTable') {
+    if ($possibleTableParent.length && !$possibleTableParent.attr('id')) {
       return;
     }
 
