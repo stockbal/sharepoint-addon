@@ -1,4 +1,4 @@
-import utils from './utils';
+import eventProxy from '../util/eventProxy';
 import KeyStrokes from './keystrokes';
 import { ZERO_WIDTH } from '../config/constants';
 
@@ -70,9 +70,7 @@ const editorUtilsSvc = {
   }
 };
 
-utils.createEventHooks(editorUtilsSvc);
-
-editorUtilsSvc.on('handleCodeEditorKeyDown', (evt, useTabs = true) => {
+eventProxy.on('handleCodeEditorKeyDown', (evt, useTabs = true) => {
   if (evt.keyCode === KeyStrokes.Enter || evt.keyCode === KeyStrokes.Tab) {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
@@ -89,5 +87,3 @@ editorUtilsSvc.on('handleCodeEditorKeyDown', (evt, useTabs = true) => {
     }
   }
 });
-
-export default editorUtilsSvc;

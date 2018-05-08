@@ -2,8 +2,8 @@
 
 import localDbSvc from '../../services/localDbSvc';
 import layoutSvc from '../../services/layoutSvc';
-import editorUtilsSvc from '../../services/editorUtilsSvc';
 import keyListener from '../../services/editor/keyListener';
+import eventProxy from '../../util/eventProxy';
 
 export default {
   createPlugins() {
@@ -17,19 +17,19 @@ export default {
 
           // check if prism theme was updated
           if (id === 'codeEditorTheme') {
-            editorUtilsSvc.$trigger('updatePrismStyle');
+            eventProxy.$trigger('updatePrismStyle');
           } else if (id === 'codeEditorDisabled') {
             if (value) {
-              editorUtilsSvc.$trigger('disableCodeEditor');
+              eventProxy.$trigger('disableCodeEditor');
             } else {
-              editorUtilsSvc.$trigger('enableCodeEditor');
+              eventProxy.$trigger('enableCodeEditor');
             }
           } else if (id === 'editorDisabled') {
             if (editMode) {
               if (value) {
-                editorUtilsSvc.$trigger('disableEditor');
+                eventProxy.$trigger('disableEditor');
               } else {
-                editorUtilsSvc.$trigger('enableEditor');
+                eventProxy.$trigger('enableEditor');
               }
             }
           } else if (id === 'sideBarOpen') {
@@ -42,18 +42,18 @@ export default {
             if (value) {
               layoutSvc.activateAddonStyle();
               keyListener.registerChangeFontSizeListeners();
-              editorUtilsSvc.$trigger('activateCustomEditorStyle');
+              eventProxy.$trigger('activateCustomEditorStyle');
             } else {
               layoutSvc.deactivateAddonStyle();
               keyListener.unregisterChangeFontSizeListeners();
-              editorUtilsSvc.$trigger('deactivateCustomEditorStyle');
+              eventProxy.$trigger('deactivateCustomEditorStyle');
             }
           } else if (id === 'editorCustomStyleDark') {
             if (store.state.settings.editorCustomStyleActive) {
               layoutSvc.toggleAddonStyleDark(value);
             }
           } else if (id === 'baseFontSize') {
-            editorUtilsSvc.$trigger('setCustomStyle', false);
+            eventProxy.$trigger('setCustomStyle', false);
           }
         }
       });

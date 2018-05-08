@@ -1,3 +1,13 @@
+### v0.6.2
+
+#### Changes
+
+- Image overlay is always opened in zoom mode
+
+#### Fixes
+
+- Fixed some minor issues
+
 ### v0.6.1
 
 #### Fixes

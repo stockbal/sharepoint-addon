@@ -9,9 +9,10 @@ import $ from 'jquery';
 import contextMenuListener from './editor/contextMenuListener';
 import keyListener from './editor/keyListener';
 import { styleSvc } from './styleSvc';
-import editorUtilsSvc from './editorUtilsSvc';
 import { ImagePreview } from './editor/imagePreview';
 import { BackgroundRemover } from './editor/backgroundRemover';
+import eventProxy from '../util/eventProxy';
+import './editorUtilsSvc';
 
 const logger = Logger.get('Editor Service');
 
@@ -272,12 +273,12 @@ export default {
       }
 
       // connect some listeners
-      editorUtilsSvc.on('openEditorWith', $coding => {
+      eventProxy.on('openEditorWith', $coding => {
         this._openEditorForElement($coding);
       });
 
-      editorUtilsSvc.on('createCode', async () => this.addCoding());
-      editorUtilsSvc.on('createInlineCode', () => {
+      eventProxy.on('createCode', async () => this.addCoding());
+      eventProxy.on('createInlineCode', () => {
         this.createCode({
           inline: true,
           text: store.state.selectionData.text,
@@ -285,11 +286,11 @@ export default {
           fromSelection: true
         });
       });
-      editorUtilsSvc.on('convertToText', $coding => this._convertCodeToText($coding));
-      editorUtilsSvc.on('blockquote', () => this._createBlockQuote());
-      editorUtilsSvc.on('alert', type => this._createAlert(type));
-      editorUtilsSvc.on('paste', () => this._pasteClipboard());
-      editorUtilsSvc.on('removeFormatting', type => this._removeFormatting(type));
+      eventProxy.on('convertToText', $coding => this._convertCodeToText($coding));
+      eventProxy.on('blockquote', () => this._createBlockQuote());
+      eventProxy.on('alert', type => this._createAlert(type));
+      eventProxy.on('paste', () => this._pasteClipboard());
+      eventProxy.on('removeFormatting', type => this._removeFormatting(type));
     } else {
       ImagePreview.createImgListeners();
     }
@@ -381,16 +382,16 @@ export default {
   async init() {
     keyListener.start();
     await this._updateEditMode();
-    editorUtilsSvc.on('disableCodeEditor', () => this._disableCodeEditor());
-    editorUtilsSvc.on('enableCodeEditor', () => this._enableCodeEditor());
-    editorUtilsSvc.on('disableEditor', () => this._disableEditor());
-    editorUtilsSvc.on('enableEditor', () => this._enableEditor());
-    editorUtilsSvc.on('updatePrismStyle', () => this._updatePrismStyle());
-    editorUtilsSvc.on('setCustomStyle', (updateBaseFontSize = true) =>
+    eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
+    eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
+    eventProxy.on('disableEditor', () => this._disableEditor());
+    eventProxy.on('enableEditor', () => this._enableEditor());
+    eventProxy.on('updatePrismStyle', () => this._updatePrismStyle());
+    eventProxy.on('setCustomStyle', (updateBaseFontSize = true) =>
       this._setCustomEditorStyle(updateBaseFontSize)
     );
-    editorUtilsSvc.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
-    editorUtilsSvc.on('activateCustomEditorStyle', () => this._updatePrismStyle());
+    eventProxy.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
+    eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
     this._setCustomEditorStyle();
     this._updatePrismStyle();
     this._scrollToLoadedLocation();

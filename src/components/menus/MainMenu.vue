@@ -26,8 +26,8 @@
 <script>
 import MenuEntry from './common/MenuEntry';
 import Logger from 'js-logger';
-import editorUtilSvc from '../../services/editorUtilsSvc';
 import { mapActions } from 'vuex';
+import eventProxy from '../../util/eventProxy';
 
 const logger = Logger.get('MainMenu');
 
@@ -51,7 +51,7 @@ export default {
           id: 'editorCustomStyle',
           value: customStyle
         });
-        editorUtilSvc.$trigger('setCustomStyle');
+        eventProxy.$trigger('setCustomStyle');
       } catch (e) {
         if (e) {
           logger.error(e.message);

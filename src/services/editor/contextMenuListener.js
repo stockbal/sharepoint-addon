@@ -2,10 +2,10 @@
 import $ from 'jquery';
 import Logger from 'js-logger';
 import store from '../../store';
-import editorUtilsSvc from '../editorUtilsSvc';
 import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
 import browser from '../browser';
+import eventProxy from '../../util/eventProxy';
 
 const logger = Logger.get('ContextMenuListener');
 
@@ -86,7 +86,7 @@ class MenuItemCreator {
       if (store.getters.hasClipboardData) {
         actions.push(
           createItem('Paste', 'paste', () => {
-            editorUtilsSvc.$trigger('paste');
+            eventProxy.$trigger('paste');
           })
         );
       }
@@ -108,8 +108,8 @@ class MenuItemCreator {
   createItemsForCoding($coding) {
     return [
       ...this._createClipBoardActions($coding),
-      createItem('Edit', 'edit', async () => editorUtilsSvc.$trigger('openEditorWith', $coding)),
-      createItem('Convert to Text', '', () => editorUtilsSvc.$trigger('convertToText', $coding)),
+      createItem('Edit', 'edit', async () => eventProxy.$trigger('openEditorWith', $coding)),
+      createItem('Convert to Text', '', () => eventProxy.$trigger('convertToText', $coding)),
       createItem('Delete', 'trash', () => $coding.remove()),
       separator,
       {
@@ -169,17 +169,17 @@ class MenuItemCreator {
       name: 'Special Formatting',
       items: [
         createItem('Remove background color', '', () =>
-          editorUtilsSvc.$trigger('removeFormatting', 'background')
+          eventProxy.$trigger('removeFormatting', 'background')
         ),
         createItem('Remove foreground color', '', () =>
-          editorUtilsSvc.$trigger('removeFormatting', 'foreground')
+          eventProxy.$trigger('removeFormatting', 'foreground')
         ),
         createItem('Reset font size', '', () =>
-          editorUtilsSvc.$trigger('removeFormatting', 'fontsize')
+          eventProxy.$trigger('removeFormatting', 'fontsize')
         ),
         separator,
         createItem('Remove all text formatting', 'trash', () =>
-          editorUtilsSvc.$trigger('removeFormatting', 'all')
+          eventProxy.$trigger('removeFormatting', 'all')
         )
       ]
     });
@@ -187,31 +187,31 @@ class MenuItemCreator {
     items.push(separator);
 
     items.push(
-      createItem('Create Blockquote', 'quote-right', () => editorUtilsSvc.$trigger('blockquote'))
+      createItem('Create Blockquote', 'quote-right', () => eventProxy.$trigger('blockquote'))
     );
     items.push({
       type: 'item',
       name: 'Create alert',
       icon: 'info-circle',
-      perform: () => editorUtilsSvc.$trigger('alert', 'info'),
+      perform: () => eventProxy.$trigger('alert', 'info'),
       items: [
-        createItem('Success', 'check-circle', () => editorUtilsSvc.$trigger('alert', 'success')),
+        createItem('Success', 'check-circle', () => eventProxy.$trigger('alert', 'success')),
         createItem('Warning', 'exclamation-triangle', () =>
-          editorUtilsSvc.$trigger('alert', 'warning')
+          eventProxy.$trigger('alert', 'warning')
         ),
-        createItem('Danger', 'exclamation-circle', () => editorUtilsSvc.$trigger('alert', 'danger'))
+        createItem('Danger', 'exclamation-circle', () => eventProxy.$trigger('alert', 'danger'))
       ]
     });
 
     if (!store.state.settings.codeEditorDisabled) {
       items.push(separator);
       items.push(
-        createItem('Create Block Coding', 'code', () => editorUtilsSvc.$trigger('createCode'))
+        createItem('Create Block Coding', 'code', () => eventProxy.$trigger('createCode'))
       );
       if (store.getters.hasSelection(true)) {
         items.push(
           createItem('Create Inline Coding', 'terminal', () =>
-            editorUtilsSvc.$trigger('createInlineCode')
+            eventProxy.$trigger('createInlineCode')
           )
         );
       }
