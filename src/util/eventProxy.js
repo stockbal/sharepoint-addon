@@ -1,4 +1,4 @@
-import utils from './utils';
+import utils from '../services/utils';
 
 const eventProxy = {};
 

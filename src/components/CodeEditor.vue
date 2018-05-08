@@ -5,8 +5,8 @@
 
 <script>
 import Prism from 'prismjs';
-import editorUtilSvc from '../services/editorUtilsSvc';
 import _ from 'lodash';
+import eventProxy from '../services/utils';
 
 export default {
   props: ['value', 'lang', 'disabled'],
@@ -18,7 +18,7 @@ export default {
       this.$emit('changed', this.$el.innerText);
     },
     onKeyDown(evt) {
-      editorUtilSvc.$trigger('handleCodeEditorKeyDown', evt, false);
+      eventProxy.$trigger('handleCodeEditorKeyDown', evt, false);
     },
     onPaste(evt) {
       let htmlContent = _.findIndex(evt.clipboardData.items, { type: 'text/html' });

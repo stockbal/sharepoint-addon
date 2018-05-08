@@ -29,11 +29,11 @@ import ModalInner from './common/ModalInner';
 import ObjectUtil from '../../util/objectUtil';
 import SelectMenu from '../SelectMenu';
 import Slider from '../Slider';
-import editorUtilSvc from '../../services/editorUtilsSvc';
 import FormEntry from '../FormEntry';
 import config from '../../config';
 import { ZERO_WIDTH } from '../../config/constants';
 import { mapGetters } from 'vuex';
+import eventProxy from '../../services/utils';
 
 export default {
   components: {
@@ -74,7 +74,7 @@ export default {
       this.checkHasText();
     },
     onKeydown(evt) {
-      editorUtilSvc.$trigger('handleCodeEditorKeyDown', evt);
+      eventProxy.$trigger('handleCodeEditorKeyDown', evt);
     },
     togglePrintLineNumbers(value) {
       this.code.printLineNumbers = value;

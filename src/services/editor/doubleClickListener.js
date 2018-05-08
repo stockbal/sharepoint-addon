@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import editorUtilsSvc from '../editorUtilsSvc';
 import { CODING_SELECTOR } from '../../config/constants';
+import eventProxy from '../../util/eventProxy';
 
 export default {
   _listener(evt) {
@@ -13,7 +13,7 @@ export default {
     }
 
     if ($coding.length) {
-      editorUtilsSvc.$trigger('openEditorWith', $coding);
+      eventProxy.$trigger('openEditorWith', $coding);
       evt.preventDefault();
     }
   },
