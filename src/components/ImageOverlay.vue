@@ -59,7 +59,7 @@ const dragscroll = (container, draggableEl) => {
 export default {
   name: 'ImageOverlay',
   data: () => ({
-    zoomedIn: false,
+    zoomedIn: true,
     maxHeight: '',
     maxWidth: ''
   }),
