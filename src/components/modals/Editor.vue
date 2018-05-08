@@ -33,7 +33,7 @@ import FormEntry from '../FormEntry';
 import config from '../../config';
 import { ZERO_WIDTH } from '../../config/constants';
 import { mapGetters } from 'vuex';
-import eventProxy from '../../services/utils';
+import eventProxy from '../../util/eventProxy';
 
 export default {
   components: {

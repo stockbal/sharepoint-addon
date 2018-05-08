@@ -27,7 +27,7 @@
 import MenuEntry from './common/MenuEntry';
 import Logger from 'js-logger';
 import { mapActions } from 'vuex';
-import eventProxy from '../../services/utils';
+import eventProxy from '../../util/eventProxy';
 
 const logger = Logger.get('MainMenu');
 
