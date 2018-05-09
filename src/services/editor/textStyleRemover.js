@@ -1,4 +1,6 @@
-export class BackgroundRemover {
+import $ from 'jquery';
+
+export class TextStyleRemover {
   constructor(type) {
     switch (type) {
       case 'background':
@@ -7,14 +9,18 @@ export class BackgroundRemover {
       case 'foreground':
         this._remover = [this._checkAndRemoveForeground];
         break;
-      case 'fontsize':
-        this._remover = [this._checkAndRemoveFontSize];
+      case 'font':
+        this._remover = [this._checkAndRemoveFont];
+        break;
+      case 'style':
+        this._remover = [this._checkAndRemoveCustomStyle];
         break;
       case 'all':
         this._remover = [
           this._checkAndRemoveBackground,
-          this._checkAndRemoveFontSize,
-          this._checkAndRemoveForeground
+          this._checkAndRemoveFont,
+          this._checkAndRemoveForeground,
+          this._checkAndRemoveCustomStyle
         ];
     }
   }
@@ -109,10 +115,35 @@ export class BackgroundRemover {
     }
   }
 
-  _checkAndRemoveFontSize(node) {
+  _checkAndRemoveFont(node) {
     if (node.style.fontSize) {
       node.style.fontSize = '';
     }
+
+    if (node.style.fontFamily) {
+      node.style.fontFamily = '';
+    }
+
+    if (node.style.fontWeight) {
+      node.style.fontWeight = '';
+    }
+
+    if (node.style.fontStyle) {
+      node.style.fontStyle = '';
+    }
+
+    if (node instanceof HTMLFontElement) {
+      $(node).replaceWith(`<span>${node.innerHTML}</span>`);
+    }
+  }
+
+  _checkAndRemoveCustomStyle(node) {
+    const regex = /ms-rteStyle.*/;
+    if (node.hasClass(regex)) {
+      node.removeClass(regex);
+    }
+
+    node.removeAttribute('style');
   }
 
   /**

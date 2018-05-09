@@ -161,9 +161,10 @@ class MenuItemCreator {
         createItem('Remove foreground color', '', () =>
           eventProxy.$trigger('removeFormatting', 'foreground')
         ),
-        createItem('Reset font size', '', () =>
-          eventProxy.$trigger('removeFormatting', 'fontsize')
+        createItem('Remove custom style', '', () =>
+          eventProxy.$trigger('removeFormatting', 'style')
         ),
+        createItem('Reset font style', '', () => eventProxy.$trigger('removeFormatting', 'font')),
         separator,
         createItem('Remove all text formatting', 'trash', () =>
           eventProxy.$trigger('removeFormatting', 'all')
@@ -173,9 +174,7 @@ class MenuItemCreator {
 
     items.push(separator);
 
-    items.push(
-      createItem('Create Blockquote', 'quote-right', () => eventProxy.$trigger('blockquote'))
-    );
+    items.push();
     items.push({
       type: 'item',
       name: 'Create alert',

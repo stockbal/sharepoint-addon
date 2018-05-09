@@ -126,6 +126,22 @@
     .ms-rteForeColor-1-0 {
       color: #9124bb;
     }
+
+    .ms-rteStyle-Normal {
+      font-family:"Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
+      font-size:13px;
+      color:#444;
+      background-color:#fff;
+      background-color:rgba(255, 255, 255, 0.85);
+      font-weight:normal;
+    }
+
+    .ms-rteStyle-Byline,
+    .ms-rteStyle-Quote,
+    .ms-rteStyle-IntenseQuote {
+      font-style:italic;
+      color:#444;
+    }
   </style>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 
@@ -321,7 +337,7 @@
                 aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.Stet clita kasd
                 gubergren, no sea takimata sanctus est Lore<span style="background-color: lightgreen;">m ipsum dolor sit</span> amet. Lorem ipsum dolor sit amet, consetetur
                 sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                voluptua. At <font face="Consolas, monospace" size="4" color="blue">vero eos et accusam et justo duo dolores</font> et ea rebum. Stet clita kasd gubergren, no sea
                 takimata sanctus est Lorem ipsum dolor sit amet. </p>
               <p>Duis autem vel eum iriure dolor in hendrerit in<div class="alert alert--warning">A simple warning info</div> vulputate velit esse molestie consequat, vel illum dolore
                 eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum
@@ -348,8 +364,8 @@
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
                 et dolore magna aliquyam erat. </p>
               <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-                erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-                gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+                erat, sed <span class="ms-rteStyle-Normal">diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+                  gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span> Lorem ipsum dolor sit amet, consetetur
                 sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
                 voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
                 takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,

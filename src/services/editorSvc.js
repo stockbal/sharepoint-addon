@@ -14,7 +14,7 @@ import keyListener from './editor/keyListener';
 import { styleSvc } from './styleSvc';
 import { CODING_SELECTOR } from '../config/constants';
 import { ImagePreview } from './editor/imagePreview';
-import { BackgroundRemover } from './editor/backgroundRemover';
+import { TextStyleRemover } from './editor/textStyleRemover';
 import eventProxy from '../util/eventProxy';
 import './editorUtilsSvc';
 
@@ -170,7 +170,7 @@ export default {
    * @private
    */
   _removeFormatting(type) {
-    new BackgroundRemover(type).removeFormattingFromSelection();
+    new TextStyleRemover(type).removeFormattingFromSelection();
   },
   /**
    * Creates a block quote at the current caret position / text selection
