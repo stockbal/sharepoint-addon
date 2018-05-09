@@ -1,5 +1,5 @@
 # SharePoint Wiki Add-On
-###### *Version 0.6.3*
+###### *Version 0.6.4*
 > Add-On's for MS SharePoint wiki sites
 
 ## Description of the Add-On's
@@ -22,7 +22,7 @@ current selected elements
 - Ordered list
 - Unordered list
 - Remove all formatting
-- Remove highlighting color from text content
+- Remove font color/ font background / style from selected content
 
 #### Creating Blockquotes
 To insert a blockquote into your page press **Create Blockquote** from the context menu.  

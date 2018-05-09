@@ -1,3 +1,9 @@
+### v0.6.4
+
+#### Features
+
+- `<font>`-elements and custom style classes can now be removed
+
 ### v0.6.3
 
 #### Fixes
