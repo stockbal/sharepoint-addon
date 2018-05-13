@@ -1,5 +1,5 @@
 <template>
-  <div class="context-menu" @contextmenu.prevent="close()" @click.prevent.stop="close()" @keyup.esc="close()">
+  <div class="context-menu" @contextmenu.prevent="close()" @click.prevent.stop="close()">
     <div class="context-menu__inner menu-list" tabindex="0"
          :style="{left: coordinates.left + 'px', top: top + 'px'}">
       <menu-node v-for="(item, idx) in items" :key="idx" :item="item" :space-to-bottom="bottomSpace"/>
