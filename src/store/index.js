@@ -10,6 +10,7 @@ import modal from './modal';
 import layout from './layout';
 import contextMenu from './contextMenu';
 import imagePreview from './imagePreview';
+import quickMenu from './quickMenu';
 
 Vue.use(Vuex);
 
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
     modal,
     layout,
     contextMenu,
-    imagePreview
+    imagePreview,
+    quickMenu
   },
   state: {
     editMode: false,
