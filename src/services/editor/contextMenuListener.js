@@ -1,17 +1,15 @@
 /* eslint-disable no-unused-vars */
 import $ from 'jquery';
 import Logger from 'js-logger';
-import store from '../../store';
-import config from '../../config';
-import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
+import store from '../../store/index';
+import config from '../../config/index';
+import { CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
-import eventProxy from '../../util/eventProxy';
+import { ContextMenuItemCreator } from './contextMenuItemCreator';
+import { QuickMenuItem, QuickMenuType } from './quickMenuItem';
+import prismConfig from './../../config/prismConfig';
 
 const logger = Logger.get('ContextMenuListener');
-
-const command = id => () => {
-  document.execCommand(id);
-};
 
 const isKeyBoardEvent = evt => {
   if (browser.isIE() || browser.isEdge()) {
@@ -25,203 +23,7 @@ const isKeyBoardEvent = evt => {
   }
 };
 
-const createItem = (name, icon, cb) => ({
-  type: 'item',
-  name,
-  icon,
-  perform: cb
-});
-
-const createActionItem = (icon, tooltip, cb, space = 0) => ({
-  type: 'action',
-  icon,
-  tooltip,
-  space,
-  perform: cb
-});
-
-const separator = { type: 'separator' };
-
-class MenuItemCreator {
-  /**
-   * Creates the context actions for clipboard
-   * interaction
-   * @private
-   */
-  _createClipBoardActions($codingElement) {
-    let actions = [];
-
-    if ($codingElement) {
-      const copyCoding = () => {
-        store.commit('setClipboardData', { content: $codingElement[0], type: 'code' });
-      };
-      actions.push(
-        createItem('Cut', 'cut', () => {
-          copyCoding();
-          $codingElement.remove();
-        })
-      );
-      actions.push(
-        createItem('Copy', 'copy', () => {
-          copyCoding();
-        })
-      );
-    } else {
-      const copyContent = (extract = false) => () => {
-        const selectionData = store.state.selectionData;
-        const range = selectionData.range;
-        const content = range.cloneContents();
-
-        if (extract) {
-          range.deleteContents();
-        }
-
-        store.commit('setClipboardData', { content, type: 'content' });
-      };
-
-      if (store.getters.hasSelection(true)) {
-        actions.push(createItem('Cut', 'cut', copyContent(true)));
-        actions.push(createItem('Copy', 'copy', copyContent()));
-      }
-      if (store.getters.hasClipboardData) {
-        actions.push(
-          createItem('Paste', 'paste', () => {
-            eventProxy.$trigger('paste');
-          })
-        );
-      }
-    }
-
-    if (actions.length > 0) {
-      actions.push(separator);
-    }
-
-    return actions;
-  }
-
-  /**
-   * Creates the menu items for a coding
-   * block
-   * @param $coding
-   * @returns {*[]}
-   */
-  createItemsForCoding($coding) {
-    return [
-      ...this._createClipBoardActions($coding),
-      createItem('Edit', 'edit', async () => eventProxy.$trigger('openEditorWith', $coding)),
-      createItem('Convert to Text', '', () => eventProxy.$trigger('convertToText', $coding)),
-      createItem('Delete', 'trash', () => $coding.remove()),
-      separator,
-      {
-        type: 'item',
-        name: 'Insert',
-        items: [
-          createItem('Paragraph before', '', () => {
-            $coding.before(`<p>${ZERO_WIDTH}</p>`);
-          }),
-          createItem('Paragraph after', '', () => {
-            $coding.after(`<p>${ZERO_WIDTH}</p>`);
-          })
-        ]
-      }
-    ];
-  }
-
-  /**
-   * Creates the menu items for normal text content
-   * in the editor
-   * @returns {*[]}
-   */
-  createItemsForNormalContent() {
-    let clipBoardActions = this._createClipBoardActions();
-    if (clipBoardActions.length) {
-      clipBoardActions = [separator, ...clipBoardActions];
-    } else {
-      clipBoardActions.push(separator);
-    }
-
-    const items = [
-      {
-        type: 'actions',
-        actions: [
-          createActionItem('bold', 'Make Selection bold', command('bold')),
-          createActionItem('italic', 'Make Selection Italic', command('italic')),
-          createActionItem('underline', 'Underline text', command('underline')),
-          createActionItem('strikethrough', 'Strike through text', command('strikethrough')),
-          createActionItem('eraser', 'Remove all formats', command('removeFormat'), 3)
-        ]
-      },
-      {
-        type: 'actions',
-        actions: [
-          createActionItem('indent', 'Indent selection', command('indent')),
-          createActionItem('outdent', 'Outdent selection', command('outdent')),
-          createActionItem('list-ol', 'Insert ordered list', command('insertOrderedList'), 3),
-          createActionItem('list-ul', 'Insert unordered list', command('insertUnorderedList'))
-        ]
-      },
-      ...clipBoardActions
-    ];
-
-    items.push({
-      type: 'item',
-      icon: 'font',
-      name: 'Special Formatting',
-      items: [
-        createItem('Remove background color', '', () =>
-          eventProxy.$trigger('removeFormatting', 'background')
-        ),
-        createItem('Remove foreground color', '', () =>
-          eventProxy.$trigger('removeFormatting', 'foreground')
-        ),
-        createItem('Reset font size', '', () =>
-          eventProxy.$trigger('removeFormatting', 'fontsize')
-        ),
-        separator,
-        createItem('Remove all text formatting', 'trash', () =>
-          eventProxy.$trigger('removeFormatting', 'all')
-        )
-      ]
-    });
-
-    items.push(separator);
-
-    items.push(
-      createItem('Create Blockquote', 'quote-right', () => eventProxy.$trigger('blockquote'))
-    );
-    items.push({
-      type: 'item',
-      name: 'Create alert',
-      icon: 'info-circle',
-      perform: () => eventProxy.$trigger('alert', 'info'),
-      items: [
-        createItem('Success', 'check-circle', () => eventProxy.$trigger('alert', 'success')),
-        createItem('Warning', 'exclamation-triangle', () =>
-          eventProxy.$trigger('alert', 'warning')
-        ),
-        createItem('Danger', 'exclamation-circle', () => eventProxy.$trigger('alert', 'danger'))
-      ]
-    });
-
-    if (!store.state.settings.codeEditorDisabled) {
-      items.push(separator);
-      items.push(
-        createItem('Create Block Coding', 'code', () => eventProxy.$trigger('createCode'))
-      );
-      if (store.getters.hasSelection(true)) {
-        items.push(
-          createItem('Create Inline Coding', 'terminal', () =>
-            eventProxy.$trigger('createInlineCode')
-          )
-        );
-      }
-    }
-
-    return items;
-  }
-}
-
-const menuItemCreator = new MenuItemCreator();
+const menuItemCreator = new ContextMenuItemCreator();
 
 const getContextMenuEventTargetData = evt => {
   const eventData = {};
@@ -277,10 +79,11 @@ export default {
       evt.preventDefault();
 
       try {
-        (await store.dispatch('contextMenu/open', {
+        await store.dispatch('quickMenu/open', {
           coordinates,
-          items: menuItemCreator.createItemsForCoding($coding)
-        })).perform();
+          items: menuItemCreator.createItemsForCoding($coding),
+          title: 'Settings'
+        });
       } catch (e) {
         logger.error(e);
       }
