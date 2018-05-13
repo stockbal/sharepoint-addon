@@ -7,9 +7,10 @@
         <icon icon="caret-down" fixed-width focusable="false"/>
       </span>
     </button>
-    <div class="select-menu__menu" v-if="menuVisible" :style="{width: menuWidth}">
-      <ul tabindex="0" role="listbox" @keydown="onItemKeyDown">
-        <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)" tabindex="-1" role="option"
+    <div class="select-menu__menu" v-if="menuVisible"
+         :style="{width: `${menuWidth}px`, top: `${top}px`, left: `${left}px`}">
+      <ul @keydown="onItemKeyDown">
+        <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)"
             :class="{'select-menu__menu-item--selected': value === selectedItem}">{{value}}
         </li>
       </ul>
@@ -20,7 +21,7 @@
 <script>
 import utils from '../services/utils';
 import KeyStrokes from '../services/keystrokes';
-// import $ from 'jquery';
+import $ from 'jquery';
 
 export default {
   name: 'select-menu',
@@ -29,9 +30,10 @@ export default {
     menuVisible: false,
     selectedItem: null,
     menuWidth: 'inherit',
-    uid: utils.uid()
+    uid: utils.uid(),
+    top: 0,
+    left: 0
   }),
-  created() {},
   beforeMount() {
     this.selectedItem = this.items[this.selected];
     if (this.selectedItem === undefined) {
@@ -43,17 +45,12 @@ export default {
     }
   },
   mounted() {
-    this.$el.addEventListener('focusout', e => {
-      if (!e.relatedTarget) {
-        this.menuVisible = false;
-      }
-    });
-    this.menuWidth = this.$el.clientWidth + 'px';
     this.$refs.button = this.$el.querySelector('button');
-
-    this.$refs.button.addEventListener('click', () => {
-      this.$refs.button.focus();
-    });
+    this.menuWidth = this.$refs.button.offsetWidth;
+    document.addEventListener('mousedown', this.mouseListener);
+  },
+  beforeDestroy() {
+    document.removeEventListener('mousedown', this.mouseListener);
   },
   methods: {
     onItemKeyDown(evt) {
@@ -68,15 +65,26 @@ export default {
       this.$emit('change', itemKey);
     },
     toggleMenu() {
+      if (!this.menuVisible) {
+        this.setPosition();
+      }
       this.menuVisible = !this.menuVisible;
-      // if (this.menuVisible) {
-      //   setTimeout(() => {
-      //     document.querySelector('.select-menu__menu ul li:first-child').focus();
-      //   }, 2);
-      // }
+    },
+    setPosition() {
+      const button = this.$el.firstElementChild;
+      const buttonBoundRect = button.getBoundingClientRect();
+
+      this.top = button.offsetHeight + pageYOffset + buttonBoundRect.top;
+      this.left = buttonBoundRect.left + pageXOffset;
+      console.log(this.top, this.left);
     },
     onEsc() {
       this.menuVisible = false;
+    },
+    mouseListener(evt) {
+      if (!$(evt.target).closest('.select-menu').length) {
+        this.menuVisible = false;
+      }
     }
   }
 };
@@ -134,10 +142,12 @@ export default {
 
 .select-menu__menu {
   position: fixed;
-  background: $primary-color;
+  left: 0;
+  top: 0;
+  background-color: $primary-color;
   max-height: 300px;
   overflow: auto;
-  z-index: 3000;
+  z-index: 9999;
   border: 1px solid $dark-grey;
   @include box-shadow(0px 8px 13px $shadow-color);
 

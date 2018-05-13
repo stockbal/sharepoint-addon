@@ -102,7 +102,9 @@ export default {
     color: $primary-color;
   }
   .button {
-    text-align: right;
+    /*text-align: right;*/
+    flex: none;
+    margin: 0;
   }
 }
 </style>
