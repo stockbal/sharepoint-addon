@@ -1,7 +1,6 @@
 import store from '../store';
 import selectionSvc from './selectionSvc';
 import Prism from 'prismjs';
-import codeCreatorSvc from './codeCreatorSvc';
 import Logger from 'js-logger';
 import config from '../config';
 import utils from './utils';
@@ -34,77 +33,45 @@ export default {
     };
   },
   /**
-   * Opens the editor modal for the past element
-   * @param $coding jquery element
-   * @returns {Promise<void>}
+   * Creates a coding area element into editor
+   * @param text
+   * @param inline
    */
-  async _openEditorForElement($coding) {
-    try {
-      await selectionSvc.selectionListener.stop();
-      let code = await store.dispatch('modal/open', {
-        type: 'editor',
-        ...this._getCodingInfo($coding)
-      });
-      this.createCode({ ...code, element: $coding });
-    } catch (e) {
-      if (e) {
-        logger.error(e);
+  createCodingArea(text = '', inline = false) {
+    const codingArea = document.createElement(inline ? 'span' : 'div');
+    codingArea.classList.add('coding--editable');
+
+    const createCodingLine = (text, type) => {
+      const codingLine = document.createElement(type);
+      codingLine.classList.add('coding-line');
+      codingLine.innerText = text;
+
+      codingArea.appendChild(codingLine);
+    };
+
+    if (inline) {
+      createCodingLine(text, 'span');
+    } else {
+      const codingLines = text === '' ? ['Enter Coding here...'] : text.split('\n');
+      for (const codingLine of codingLines) {
+        createCodingLine(codingLine, 'div');
       }
     }
-    selectionSvc.selectionListener.start();
-  },
-  /**
-   * Inserts/updates styled coding
-   * @param printLineNumbers
-   * @param inline
-   * @param text
-   * @param language
-   * @param element
-   * @param fromSelection
-   */
-  createCode({
-    printLineNumbers = false,
-    inline,
-    text,
-    language = 'markup',
-    element = null,
-    fromSelection = false
-  }) {
-    if (text === '') {
-      logger.error('No code was passed for saving...');
-      // for testing only
-      return;
-    }
 
-    codeCreatorSvc.createCoding({
-      element,
-      code: text,
-      language,
-      makeInline: inline,
-      printLineNumbers,
-      fromSelection
-    });
+    codingArea.setData('language', 'markup');
 
-    // highlight contentBox
-    this.highlightCode();
+    store.state.selectionData.range.insertNode(codingArea);
   },
-  async addCoding() {
+  async addCoding(inline = false) {
     try {
-      // check if there is a text selection
-      const text = store.state.selectionData ? store.state.selectionData.text : '';
       await selectionSvc.selectionListener.stop();
-
-      const code = await store.dispatch('modal/open', {
-        type: 'editor',
-        text
-      });
 
       const selectedText = store.state.selectionData ? store.state.selectionData.text : '';
       if (selectedText) {
         store.state.selectionData.range.deleteContents();
       }
 
-      this.createCode(code);
+      this.createCodingArea(selectedText, inline);
     } catch (e) {
       if (e) {
         logger.error(e);
@@ -118,47 +85,6 @@ export default {
 
     range.deleteContents();
     range.insertNode(clipBoard.content.cloneNode(true));
-  },
-  /**
-   * Connverts the passed coding element to text form
-   * @param $coding
-   */
-  _convertCodeToText($coding) {
-    const text = $coding.find('code').text();
-
-    const newSpan = text => {
-      const span = document.createElement('span');
-      span.textContent = text;
-      return span;
-    };
-
-    if ($coding[0].getData('inline')) {
-      $coding.replaceWith(document.createTextNode(text));
-    } else {
-      const paragraph = document.createElement('p');
-      const textLines = text.split('\n');
-
-      for (let line of textLines) {
-        // split beginning tabs and the rest of the text
-        let beginningTabs = /^\t*/.exec(line);
-        if (beginningTabs) {
-          const tabs = newSpan(beginningTabs[0]);
-          tabs.style.whiteSpace = 'pre';
-          paragraph.appendChild(tabs);
-          // remove found tabs from line
-          line = line.replace(/^\t*/g, '');
-        }
-
-        const span = newSpan(line);
-        paragraph.appendChild(span);
-
-        const spanBreak = newSpan('');
-        spanBreak.innerHTML = '\n<br>';
-        paragraph.appendChild(spanBreak);
-      }
-
-      $coding.replaceWith(paragraph);
-    }
   },
   /**
    * Removes the defined background from the selected nodes
@@ -273,20 +199,8 @@ export default {
       }
 
       // connect some listeners
-      eventProxy.on('openEditorWith', $coding => {
-        this._openEditorForElement($coding);
-      });
-
-      eventProxy.on('createCode', async () => this.addCoding());
-      eventProxy.on('createInlineCode', () => {
-        this.createCode({
-          inline: true,
-          text: store.state.selectionData.text,
-          language: 'markdown',
-          fromSelection: true
-        });
-      });
-      eventProxy.on('convertToText', $coding => this._convertCodeToText($coding));
+      eventProxy.on('createCode', () => this.addCoding());
+      eventProxy.on('createInlineCode', () => this.addCoding(true));
       eventProxy.on('blockquote', () => this._createBlockQuote());
       eventProxy.on('alert', type => this._createAlert(type));
       eventProxy.on('paste', () => this._pasteClipboard());
