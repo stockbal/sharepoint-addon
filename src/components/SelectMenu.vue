@@ -76,7 +76,6 @@ export default {
 
       this.top = button.offsetHeight + pageYOffset + buttonBoundRect.top;
       this.left = buttonBoundRect.left + pageXOffset;
-      console.log(this.top, this.left);
     },
     onEsc() {
       this.menuVisible = false;
