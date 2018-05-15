@@ -97,6 +97,7 @@ export default {
 
   > span {
     width: 100%;
+    flex: 1;
     text-transform: uppercase;
     font-weight: bold;
     color: $primary-color;
