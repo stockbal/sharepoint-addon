@@ -51,7 +51,7 @@ export default {
       this.$store.dispatch('quickMenu/close');
     },
     mouseListener(evt) {
-      if (!$(evt.target).closest('.quick-menu__inner').length) {
+      if (!$(evt.target).closest('.quick-menu__inner, .select-menu__menu').length) {
         evt.preventDefault();
         this.close();
       }

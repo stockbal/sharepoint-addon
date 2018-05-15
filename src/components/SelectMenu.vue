@@ -7,7 +7,7 @@
         <icon icon="caret-down" fixed-width focusable="false"/>
       </span>
     </button>
-    <div class="select-menu__menu" v-if="menuVisible"
+    <div class="select-menu__menu" v-show="menuVisible" ref="menu" @contextmenu.prevent="toggleMenu"
          :style="{width: `${menuWidth}px`, top: `${top}px`, left: `${left}px`}">
       <ul @keydown="onItemKeyDown">
         <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)"
@@ -48,9 +48,13 @@ export default {
     this.$refs.button = this.$el.querySelector('button');
     this.menuWidth = this.$refs.button.offsetWidth;
     document.addEventListener('mousedown', this.mouseListener);
+    // move select menu to body
+    const selectMenu = this.$el.querySelector('.select-menu__menu');
+    document.body.appendChild(selectMenu);
   },
   beforeDestroy() {
     document.removeEventListener('mousedown', this.mouseListener);
+    document.body.removeChild(this.$refs.menu);
   },
   methods: {
     onItemKeyDown(evt) {
@@ -81,7 +85,7 @@ export default {
       this.menuVisible = false;
     },
     mouseListener(evt) {
-      if (!$(evt.target).closest('.select-menu').length) {
+      if (!$(evt.target).closest('.select-menu, .select-menu__menu').length) {
         this.menuVisible = false;
       }
     }
@@ -95,14 +99,6 @@ export default {
 .select-menu {
   width: 100%;
   outline: none;
-
-  ul,
-  li {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    outline: none;
-  }
 
   button {
     margin: 0;
@@ -140,7 +136,7 @@ export default {
 }
 
 .select-menu__menu {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   background-color: $primary-color;
@@ -148,12 +144,20 @@ export default {
   overflow: auto;
   z-index: 9999;
   border: 1px solid $dark-grey;
-  @include box-shadow(0px 8px 13px $shadow-color);
+  box-shadow: 0 8px 13px $shadow-color;
+
+  ul,
+  li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    outline: none;
+  }
 
   li {
     color: white;
     padding: 3px 8px;
-    @include no-selection;
+    user-select: none;
     cursor: pointer;
 
     &:hover,
