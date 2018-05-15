@@ -12,6 +12,7 @@ import { ImagePreview } from './editor/imagePreview';
 import { BackgroundRemover } from './editor/backgroundRemover';
 import eventProxy from '../util/eventProxy';
 import './editorUtilsSvc';
+import { CodeConverter } from './editor/codeConverter';
 
 const logger = Logger.get('Editor Service');
 
@@ -207,6 +208,10 @@ export default {
       eventProxy.on('removeFormatting', type => this._removeFormatting(type));
     } else {
       ImagePreview.createImgListeners();
+
+      new CodeConverter().convertCodingAreas();
+      this._updatePrismStyle();
+      this.highlightCode();
     }
   },
   highlightCode() {
@@ -218,7 +223,7 @@ export default {
    * @private
    */
   _updatePrismStyle() {
-    if (store.state.settings.codeEditorDisabled) {
+    if (store.state.settings.codeEditorDisabled || store.state.editMode) {
       return;
     }
     let $editorArea = $(`#${config.elements.editorContentElementId}`);
@@ -295,7 +300,6 @@ export default {
   },
   async init() {
     keyListener.start();
-    await this._updateEditMode();
     eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
     eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
     eventProxy.on('disableEditor', () => this._disableEditor());
@@ -306,8 +310,9 @@ export default {
     );
     eventProxy.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
     eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
+
+    await this._updateEditMode();
     this._setCustomEditorStyle();
-    this._updatePrismStyle();
     this._scrollToLoadedLocation();
   }
 };
