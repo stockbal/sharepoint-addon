@@ -1,8 +1,9 @@
 <template>
   <div class="context-menu" @contextmenu.prevent="close()" @click.prevent.stop="close()">
     <div class="context-menu__inner menu-list" tabindex="0"
-         :style="{left: coordinates.left + 'px', top: top + 'px'}">
-      <menu-node v-for="(item, idx) in items" :key="idx" :item="item" :space-to-bottom="bottomSpace"/>
+         :style="{left: left + 'px', top: top + 'px'}">
+      <menu-node v-for="(item, idx) in items" :key="idx" :item="item" :space-to-bottom="bottomSpace"
+                 :space-to-right="rightSpace"/>
     </div>
   </div>
 </template>
@@ -12,21 +13,27 @@ import { mapState } from 'vuex';
 import MenuNode from './MenuNode';
 import KeyCodes from '../services/keystrokes';
 import $ from 'jquery';
+import utils from '../services/utils';
 
 export default {
   name: 'context-menu',
   components: { MenuNode },
   data: () => ({
-    topOffset: 0,
-    spaceToBottom: 0
+    sizeData: {}
   }),
   computed: {
     ...mapState('contextMenu', ['items', 'coordinates']),
+    left() {
+      return this.coordinates.left + this.sizeData.leftOffset;
+    },
     top() {
-      return this.coordinates.top - this.topOffset;
+      return this.coordinates.top + this.sizeData.topOffset;
     },
     bottomSpace() {
-      return this.spaceToBottom;
+      return this.sizeData.spaceToBottom;
+    },
+    rightSpace() {
+      return this.sizeData.spaceToRight;
     }
   },
   methods: {
@@ -79,15 +86,12 @@ export default {
     document.addEventListener('mousedown', this._mouseListener);
     this.$store.commit('contextMenu/setActiveNodeToFirst');
 
-    let contextMenuHeight = this.$el.querySelector('.context-menu__inner').offsetHeight;
-    let spaceForMenu = this.$el.offsetHeight - (this.coordinates.top + contextMenuHeight);
-
-    if (spaceForMenu < 0) {
-      this.topOffset = contextMenuHeight;
-      this.spaceToBottom = this.$el.offsetHeight - this.coordinates.top;
-    } else {
-      this.spaceToBottom = this.$el.offsetHeight - this.coordinates.top - contextMenuHeight;
-    }
+    this.sizeData = utils.calcOffsetForElement(
+      this.$el.querySelector('.context-menu__inner'),
+      document.body,
+      this.coordinates.top,
+      this.coordinates.left
+    );
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this._keyListener);

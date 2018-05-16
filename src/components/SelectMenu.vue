@@ -80,6 +80,20 @@ export default {
 
       this.top = button.offsetHeight + pageYOffset + buttonBoundRect.top;
       this.left = buttonBoundRect.left + pageXOffset;
+
+      const availableSizeData = utils.calcOffset(
+        button.offsetWidth,
+        300,
+        document.body,
+        this.top,
+        this.left
+      );
+
+      if (availableSizeData.topOffset < 0) {
+        availableSizeData.topOffset -= button.offsetHeight;
+      }
+
+      this.top += availableSizeData.topOffset;
     },
     onEsc() {
       this.menuVisible = false;

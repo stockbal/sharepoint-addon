@@ -28,6 +28,7 @@ import Slider from './Slider';
 import FormEntry from './FormEntry';
 import SelectMenu from './SelectMenu';
 import $ from 'jquery';
+import utils from '../services/utils';
 
 export default {
   name: 'QuickMenu',
@@ -36,14 +37,16 @@ export default {
     FormEntry,
     SelectMenu
   },
-  data: () => ({}),
+  data: () => ({
+    sizeData: {}
+  }),
   computed: {
     ...mapState('quickMenu', ['items', 'coordinates', 'title']),
     top() {
-      return this.coordinates.top;
+      return this.coordinates.top + this.sizeData.topOffset;
     },
     left() {
-      return this.coordinates.left;
+      return this.coordinates.left + this.sizeData.leftOffset;
     }
   },
   methods: {
@@ -59,6 +62,13 @@ export default {
   },
   mounted() {
     document.addEventListener('mousedown', this.mouseListener);
+
+    this.sizeData = utils.calcOffsetForElement(
+      this.$el.querySelector('.quick-menu__inner'),
+      document.body,
+      this.coordinates.top,
+      this.coordinates.left
+    );
   },
   beforeDestroy() {
     document.removeEventListener('mousedown', this.mouseListener);

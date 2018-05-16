@@ -108,6 +108,38 @@ export default {
     });
     return target;
   },
+  calcOffset(width = 0, height = 0, container, top, left) {
+    const sizeData = { topOffset: 0, spaceToBottom: 0, leftOffset: 0, spaceToRight: 0 };
+
+    // calculate top offset
+    let spaceForElement = container.offsetHeight - (top + height);
+
+    if (height) {
+      if (spaceForElement < 0) {
+        sizeData.topOffset = height * -1;
+        sizeData.spaceToBottom = container.offsetHeight - top;
+      } else {
+        sizeData.spaceToBottom = container.offsetHeight - top - height;
+      }
+    }
+
+    // calculate right offset
+    if (width) {
+      spaceForElement = container.offsetWidth - (left + width);
+
+      if (spaceForElement < 0) {
+        sizeData.leftOffset = width * -1;
+        sizeData.spaceToRight = container.offsetWidth - left;
+      } else {
+        sizeData.spaceToRight = container.offsetWidth - left - width;
+      }
+    }
+
+    return sizeData;
+  },
+  calcOffsetForElement(element, container, top, left = 0) {
+    return this.calcOffset(element.offsetWidth, element.offsetHeight, container, top, left);
+  },
   overrideProperties(target, source) {
     if (!source) {
       return target;

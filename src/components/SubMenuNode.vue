@@ -12,6 +12,10 @@ export default {
     spaceToBottom: {
       type: Number,
       default: 0
+    },
+    spaceToRight: {
+      type: Number,
+      default: 0
     }
   },
   data: () => ({
@@ -21,7 +25,6 @@ export default {
   mounted() {
     const top = this.$el.parentElement.offsetTop;
     const height = this.$el.parentElement.offsetHeight;
-    this.leftOffset = this.$el.parentElement.offsetWidth;
 
     let menuHeight = this.$el.offsetHeight;
     let spaceForMenu = this.spaceToBottom - menuHeight;
@@ -30,6 +33,15 @@ export default {
       this.topOffset = top - menuHeight + height;
     } else {
       this.topOffset = top;
+    }
+
+    let menuWidth = this.$el.offsetWidth;
+    spaceForMenu = this.spaceToRight - menuWidth;
+
+    if (spaceForMenu < 0) {
+      this.leftOffset = this.$el.offsetWidth * -1;
+    } else {
+      this.leftOffset = this.$el.parentElement.offsetWidth;
     }
   },
   computed: {
