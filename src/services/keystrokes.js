@@ -25,6 +25,8 @@ export default {
   Minus: 189,
   Zero: 48,
   C: 67,
+  E: 69,
   M: 77,
+  S: 83,
   T: 84
 };

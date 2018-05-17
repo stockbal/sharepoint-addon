@@ -36,6 +36,67 @@ const getSelection = () => {
   };
 };
 
+class SelectionReader {
+  /**
+   * Returns the all nodes in the current selection
+   * @returns {*}
+   */
+  getSelectedNodes() {
+    return this._getRangeSelectedNodes(getSelection().range);
+  }
+
+  _nextNode(node, endNode) {
+    if (node.hasChildNodes()) {
+      return node.firstChild;
+    } else {
+      while (node && !node.nextSibling) {
+        node = node.parentNode;
+        if (node === endNode) {
+          return null;
+        }
+      }
+      if (!node) {
+        return null;
+      }
+      return node.nextSibling;
+    }
+  }
+
+  /**
+   * Returns all background nodes in the selected Range
+   * @param range the currently selected range
+   * @returns {*}
+   * @private
+   */
+  _getRangeSelectedNodes(range) {
+    let node = range.startContainer;
+    const endNode = range.endContainer;
+
+    // Special case for a range that is contained within a single node
+    if (node === endNode) {
+      return [node];
+    }
+
+    // Iterate nodes until we hit the end container
+    const rangeNodes = [];
+    while (node && node !== endNode) {
+      node = this._nextNode(node, endNode);
+      if (node) {
+        rangeNodes.push(node);
+      }
+    }
+
+    // Add partially selected nodes at the start of the range
+    node = range.startContainer;
+    while (node && node !== range.commonAncestorContainer) {
+      rangeNodes.unshift(node);
+      node = node.parentNode;
+    }
+
+    return rangeNodes;
+  }
+}
+
 class SelectionListener {
   _listener(e) {
     Promise.resolve()
@@ -74,5 +135,6 @@ class SelectionListener {
 
 export default {
   selectionListener: new SelectionListener(),
-  getSelection
+  getSelection,
+  selectionReader: new SelectionReader()
 };

@@ -12,7 +12,9 @@ import prismConfig from './../../config/prismConfig';
 const logger = Logger.get('ContextMenuListener');
 
 const isKeyBoardEvent = evt => {
-  if (browser.isIE() || browser.isEdge()) {
+  if (browser.isIE()) {
+    return !evt.button;
+  } else if (browser.isEdge()) {
     return evt.pointerType === '';
   } else if (browser.isFirefox()) {
     return evt.button === 0;

@@ -9,7 +9,9 @@ export default {
     sideNavBoxElementId: 'sideNavBox',
     workspaceElementId: 's4-workspace',
     ribbonRowElementId: 's4-ribbonrow',
-    titleRowElementId: 's4-titlerow'
+    titleRowElementId: 's4-titlerow',
+    saveEditButtonId: 'ctl00_PageStateActionButton',
+    checkinCheckoutButton: 'Ribbon.EditingTools.CPEditTab.EditAndCheckout.Checkout-SelectedItem'
   },
   cssClasses: {
     workspaceAddonsLoadedClass: 's4-workspace--addons-loaded',

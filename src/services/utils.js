@@ -23,6 +23,13 @@ export default {
     }
     return _.map(array, value => alphabet[value % radix]).join('');
   },
+  escapeXML(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\s/g, '&nbsp;');
+  },
   randomize(value) {
     return Math.floor((1 + Math.random() * 0.2) * value);
   },

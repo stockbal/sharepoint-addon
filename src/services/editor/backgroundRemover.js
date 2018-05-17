@@ -1,3 +1,5 @@
+import selectionSvc from '../selectionSvc';
+
 export class BackgroundRemover {
   constructor(type) {
     switch (type) {
@@ -17,63 +19,6 @@ export class BackgroundRemover {
           this._checkAndRemoveForeground
         ];
     }
-  }
-  /**
-   * Retrieves the next node in the tree
-   * @param node
-   * @param endNode
-   * @returns {*}
-   * @private
-   */
-  _nextNode(node, endNode) {
-    if (node.hasChildNodes()) {
-      return node.firstChild;
-    } else {
-      while (node && !node.nextSibling) {
-        node = node.parentNode;
-        if (node === endNode) {
-          return null;
-        }
-      }
-      if (!node) {
-        return null;
-      }
-      return node.nextSibling;
-    }
-  }
-
-  /**
-   * Returns all background nodes in the selected Range
-   * @param range the currently selected range
-   * @returns {*}
-   * @private
-   */
-  _getRangeSelectedNodes(range) {
-    let node = range.startContainer;
-    const endNode = range.endContainer;
-
-    // Special case for a range that is contained within a single node
-    if (node === endNode) {
-      return [node];
-    }
-
-    // Iterate nodes until we hit the end container
-    const rangeNodes = [];
-    while (node && node !== endNode) {
-      node = this._nextNode(node, endNode);
-      if (node) {
-        rangeNodes.push(node);
-      }
-    }
-
-    // Add partially selected nodes at the start of the range
-    node = range.startContainer;
-    while (node && node !== range.commonAncestorContainer) {
-      rangeNodes.unshift(node);
-      node = node.parentNode;
-    }
-
-    return rangeNodes;
   }
 
   _checkAndRemoveFormatting(node) {
@@ -116,24 +61,11 @@ export class BackgroundRemover {
   }
 
   /**
-   * Returns the all nodes in the current selection
-   * @returns {*}
-   * @private
-   */
-  _getSelectedNodes() {
-    if (window.getSelection) {
-      const sel = window.getSelection();
-      return this._getRangeSelectedNodes(sel.getRangeAt(0));
-    }
-    return [];
-  }
-
-  /**
    * Removes the background color from all nodes
    * in the selection where a theme background color was found
    */
   removeFormattingFromSelection() {
-    let selectedNodes = this._getSelectedNodes();
+    let selectedNodes = selectionSvc.selectionReader.getSelectedNodes();
 
     if (selectedNodes.length === 1) {
       let singleNode = selectedNodes[0];

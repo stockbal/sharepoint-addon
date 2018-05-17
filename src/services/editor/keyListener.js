@@ -12,6 +12,7 @@ export default {
       return;
     }
     this._createMenuShortcuts();
+    this._connectSPActionButtons(store.state.editMode);
     this._listenersCreated = true;
   },
   _createBlockQuoteEscapeListener() {
@@ -81,6 +82,19 @@ export default {
   },
   unregisterEditModeListeners() {
     keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true });
+  },
+  _connectSPActionButtons(editMode) {
+    const defaultActionKeyStroke = editMode ? KeyStrokes.S : KeyStrokes.E;
+    keyListenerSvc.addKeyListener(defaultActionKeyStroke, { ctrl: true }, evt => {
+      const defaultButton = document.getElementById('ctl00_PageStateActionButton');
+      if (defaultButton) {
+        defaultButton.click();
+        evt.preventDefault();
+      }
+    });
+  },
+  _disconnectSPActionButtons(editMode) {
+    keyListenerSvc.removeKeyListener(editMode ? KeyStrokes.S : KeyStrokes.E, { ctrl: true });
   },
   start() {
     this._createListeners();

@@ -12,13 +12,15 @@
 
   .wiki-addon--dark & {
     color: rgba(255,255,255, 0.8);
-    background: #090909;
+    border: 2px dotted white;
+    background: #4b4b4b;
   }
 }
 
 .coding-line {
   font-family: Consolas, monospace;
   line-height: 1.5;
+  //white-space: pre;
 }
 
 .content-box--no-coding-selection .coding {

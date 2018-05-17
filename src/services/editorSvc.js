@@ -13,6 +13,7 @@ import { BackgroundRemover } from './editor/backgroundRemover';
 import eventProxy from '../util/eventProxy';
 import './editorUtilsSvc';
 import { CodeConverter } from './editor/codeConverter';
+import { ClipBoardListener } from './editor/clipboardListener';
 
 const logger = Logger.get('Editor Service');
 
@@ -39,6 +40,7 @@ export default {
    * @param inline
    */
   createCodingArea(text = '', inline = false) {
+    const { range, sel } = store.state.selectionData;
     const codingArea = document.createElement(inline ? 'span' : 'div');
     codingArea.classList.add('coding--editable');
 
@@ -61,7 +63,13 @@ export default {
 
     codingArea.setData('language', 'markup');
 
-    store.state.selectionData.range.insertNode(codingArea);
+    range.insertNode(codingArea);
+
+    // select all coding lines
+    sel.removeAllRanges();
+    range.setStartBefore(codingArea.firstElementChild);
+    range.setEndAfter(codingArea.lastElementChild);
+    sel.addRange(range);
   },
   async addCoding(inline = false) {
     try {
@@ -182,6 +190,7 @@ export default {
    * @private
    */
   async _updateEditMode() {
+    const codeConverter = new CodeConverter();
     // check if wiki site resides in edit mode, by checking
     if (!$(`.${config.cssClasses.sharePointReadOnlyClass}`).length) {
       await store.dispatch('toggleEditMode');
@@ -206,10 +215,13 @@ export default {
       eventProxy.on('alert', type => this._createAlert(type));
       eventProxy.on('paste', () => this._pasteClipboard());
       eventProxy.on('removeFormatting', type => this._removeFormatting(type));
+
+      // one time conversion of coding preview areas to editing areas
+      codeConverter.convertPreviewAreasToEditableAreas();
     } else {
       ImagePreview.createImgListeners();
 
-      new CodeConverter().convertCodingAreas();
+      codeConverter.convertCodingAreas();
       this._updatePrismStyle();
       this.highlightCode();
     }
@@ -255,6 +267,7 @@ export default {
    * @private
    */
   _enableEditor() {
+    ClipBoardListener.start();
     contextMenuListener.start();
     keyListener.registerEditModeListeners();
     selectionSvc.selectionListener.start();
@@ -264,6 +277,7 @@ export default {
    * @private
    */
   _disableEditor() {
+    ClipBoardListener.stop();
     contextMenuListener.stop();
     keyListener.unregisterEditModeListeners();
     selectionSvc.selectionListener.stop();
@@ -299,7 +313,6 @@ export default {
     this._updatePrismStyle();
   },
   async init() {
-    keyListener.start();
     eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
     eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
     eventProxy.on('disableEditor', () => this._disableEditor());
@@ -312,6 +325,7 @@ export default {
     eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
 
     await this._updateEditMode();
+    keyListener.start();
     this._setCustomEditorStyle();
     this._scrollToLoadedLocation();
   }
