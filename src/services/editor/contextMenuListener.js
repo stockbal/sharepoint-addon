@@ -6,14 +6,16 @@ import config from '../../config/index';
 import { CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
 import { ContextMenuItemCreator } from './contextMenuItemCreator';
-import { QuickMenuItem, QuickMenuType } from './quickMenuItem';
-import prismConfig from './../../config/prismConfig';
 
 const logger = Logger.get('ContextMenuListener');
 
 const isKeyBoardEvent = evt => {
   if (browser.isIE()) {
-    return !evt.button;
+    if (evt.pointerType !== undefined) {
+      return evt.pointerType === '';
+    } else {
+      return !evt.button;
+    }
   } else if (browser.isEdge()) {
     return evt.pointerType === '';
   } else if (browser.isFirefox()) {
