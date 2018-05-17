@@ -11,7 +11,8 @@ export default {
     ribbonRowElementId: 's4-ribbonrow',
     titleRowElementId: 's4-titlerow',
     saveEditButtonId: 'ctl00_PageStateActionButton',
-    checkinCheckoutButton: 'Ribbon.EditingTools.CPEditTab.EditAndCheckout.Checkout-SelectedItem'
+    checkinCheckoutButton: 'Ribbon.EditingTools.CPEditTab.EditAndCheckout.Checkout-SelectedItem',
+    editSourceCodeButtonId: 'Ribbon.EditingTools.CPEditTab.Markup.Html.Menu.Html.EditSource-Large'
   },
   cssClasses: {
     workspaceAddonsLoadedClass: 's4-workspace--addons-loaded',

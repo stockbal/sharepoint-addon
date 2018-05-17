@@ -2,6 +2,7 @@ import $ from 'jquery';
 import keyListenerSvc from '../keyListenerSvc';
 import KeyStrokes from '../keystrokes';
 import store from '../../store';
+import config from '../../config';
 import { ZERO_WIDTH } from '../../config/constants';
 
 export default {
@@ -86,12 +87,38 @@ export default {
   _connectSPActionButtons(editMode) {
     const defaultActionKeyStroke = editMode ? KeyStrokes.S : KeyStrokes.E;
     keyListenerSvc.addKeyListener(defaultActionKeyStroke, { ctrl: true }, evt => {
-      const defaultButton = document.getElementById('ctl00_PageStateActionButton');
+      const defaultButton = document.getElementById(config.elements.saveEditButtonId);
       if (defaultButton) {
         defaultButton.click();
         evt.preventDefault();
       }
     });
+    if (editMode) {
+      keyListenerSvc.addKeyListener(KeyStrokes.E, { ctrl: true, alt: true }, evt => {
+        const editSourceButton = document.getElementById(config.elements.editSourceCodeButtonId);
+        if (editSourceButton) {
+          editSourceButton.click();
+          evt.preventDefault();
+        }
+      });
+    }
+    if (editMode) {
+      keyListenerSvc.addKeyListener(KeyStrokes.Q, { ctrl: true }, evt => {
+        const editDropdownButton = document.querySelector('a.ms-cui-ctl-a2[title="Bearbeiten"]');
+        if (editDropdownButton) {
+          editDropdownButton.click();
+
+          setTimeout(() => {
+            const quitWithoutSavingButton = document.querySelector(
+              'a[aria-describedby="Ribbon.EditingTools.CPEditTab.EditAndCheckout.SaveEdit.Menu.SaveEdit.StopEditing_ToolTip"]'
+            );
+            if (quitWithoutSavingButton) {
+              quitWithoutSavingButton.click();
+            }
+          }, 1);
+        }
+      });
+    }
   },
   _disconnectSPActionButtons(editMode) {
     keyListenerSvc.removeKeyListener(editMode ? KeyStrokes.S : KeyStrokes.E, { ctrl: true });
