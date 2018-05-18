@@ -1,7 +1,3 @@
-import $ from 'jquery';
-import store from '../store';
-import config from '../config';
-
 /**
  * Retrieves the current selection data
  * @returns {{text: string, node: Range, containerElement: Element}}
@@ -97,44 +93,7 @@ class SelectionReader {
   }
 }
 
-class SelectionListener {
-  _listener(e) {
-    Promise.resolve()
-      .then(() => {
-        let selection = {};
-        if (e.target.activeElement) {
-          let $activeElement = $(e.target.activeElement);
-
-          if (
-            $activeElement.hasClass(config.elements.sharePointEditorArea) ||
-            $activeElement.closest(`.${config.elements.sharePointEditorArea}`).length
-          ) {
-            selection = getSelection();
-          } else {
-            // store previous selection until new selection in edtitorial area occurs
-            selection = store.state.selectionData;
-          }
-        }
-        return selection;
-      })
-      .then(selection => {
-        store.dispatch('updateSelection', selection);
-      });
-  }
-  start() {
-    return Promise.resolve().then(() =>
-      document.addEventListener('selectionchange', this._listener)
-    );
-  }
-  stop() {
-    return Promise.resolve().then(() =>
-      document.removeEventListener('selectionchange', this._listener)
-    );
-  }
-}
-
 export default {
-  selectionListener: new SelectionListener(),
   getSelection,
   selectionReader: new SelectionReader()
 };
