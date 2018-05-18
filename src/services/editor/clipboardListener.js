@@ -5,6 +5,7 @@ import $ from 'jquery';
 import { CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
 import utils from '../utils';
+import selectionSvc from '../selectionSvc';
 
 /**
  * Listener for ClipBoard events
@@ -12,10 +13,10 @@ import utils from '../utils';
  */
 export class ClipBoardListener {
   static start() {
-    document.addEventListener('paste', ClipBoardListener._listener);
+    document.body.addEventListener('paste', ClipBoardListener._listener, true);
   }
   static stop() {
-    document.removeEventListener('paste', ClipBoardListener._listener);
+    document.body.removeEventListener('paste', ClipBoardListener._listener);
   }
   static _createNewCodingLines(range, selectionHasText, rangeInCodingLine, rangeContainer, text) {
     const codingLines = browser.isIE() ? text.split('\r\n') : text.split('\n');
@@ -62,7 +63,7 @@ export class ClipBoardListener {
   }
   static _listener(evt) {
     // first check the current selection
-    const { text, range, containerElement, sel } = store.state.selectionData;
+    const { text, range, containerElement, sel } = selectionSvc.getSelection();
 
     let $containerElement = $(containerElement);
     if ($containerElement.is(`.${config.elements.sharePointEditorArea}`)) {
@@ -99,5 +100,6 @@ export class ClipBoardListener {
       );
     }
     evt.preventDefault();
+    return false;
   }
 }

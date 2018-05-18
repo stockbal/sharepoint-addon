@@ -1,5 +1,4 @@
 import store from '../store';
-import selectionSvc from './selectionSvc';
 import Prism from 'prismjs';
 import Logger from 'js-logger';
 import config from '../config';
@@ -71,22 +70,13 @@ export default {
     range.setEndAfter(codingArea.lastElementChild);
     sel.addRange(range);
   },
-  async addCoding(inline = false) {
-    try {
-      await selectionSvc.selectionListener.stop();
-
-      const selectedText = store.state.selectionData ? store.state.selectionData.text : '';
-      if (selectedText) {
-        store.state.selectionData.range.deleteContents();
-      }
-
-      this.createCodingArea(selectedText, inline);
-    } catch (e) {
-      if (e) {
-        logger.error(e);
-      }
+  addCoding(inline = false) {
+    const selectedText = store.state.selectionData ? store.state.selectionData.text : '';
+    if (selectedText) {
+      store.state.selectionData.range.deleteContents();
     }
-    return selectionSvc.selectionListener.start();
+
+    this.createCodingArea(selectedText, inline);
   },
   _pasteClipboard() {
     const clipBoard = store.state.clipboardData;
@@ -270,7 +260,6 @@ export default {
     ClipBoardListener.start();
     contextMenuListener.start();
     keyListener.registerEditModeListeners();
-    selectionSvc.selectionListener.start();
   },
   /**
    * Disables the editor
@@ -280,7 +269,6 @@ export default {
     ClipBoardListener.stop();
     contextMenuListener.stop();
     keyListener.unregisterEditModeListeners();
-    selectionSvc.selectionListener.stop();
   },
   /**
    * Disables the prism theming for all code blocks

@@ -6,6 +6,7 @@ import config from '../../config/index';
 import { CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
 import { ContextMenuItemCreator } from './contextMenuItemCreator';
+import selectionSvc from '../selectionSvc';
 
 const logger = Logger.get('ContextMenuListener');
 
@@ -73,6 +74,9 @@ export default {
       return;
     }
 
+    evt.preventDefault();
+    await store.dispatch('updateSelection', selectionSvc.getSelection());
+
     const { $target, coordinates } = getContextMenuEventTargetData(evt);
 
     let $coding = $target;
@@ -80,8 +84,6 @@ export default {
       $coding = $target.closest(CODING_SELECTOR);
     }
     if ($coding.length && !store.state.settings.codeEditorDisabled) {
-      evt.preventDefault();
-
       try {
         await store.dispatch('quickMenu/open', {
           coordinates,
@@ -93,7 +95,6 @@ export default {
       }
     } else {
       // check if right mouse click was fired inside editor
-      evt.preventDefault();
       try {
         (await store.dispatch('contextMenu/open', {
           coordinates,

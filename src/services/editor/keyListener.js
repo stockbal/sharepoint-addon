@@ -119,6 +119,26 @@ export default {
         }
       });
     }
+
+    keyListenerSvc.addKeyListener(KeyStrokes.F11, { ctrl: true }, evt => {
+      const fullScreenModeButton = document.getElementById(config.elements.fullScreenModeElementId);
+
+      if (fullScreenModeButton.style.display === 'none') {
+        const exitFullScreenmodeButton = document.getElementById(
+          config.elements.exitFullScreenModeButtonId
+        );
+        if (exitFullScreenmodeButton) {
+          exitFullScreenmodeButton.click();
+          evt.preventDefault();
+        }
+      } else {
+        const fullscreenModeButton = document.getElementById(config.elements.fullScreeModeButtonId);
+        if (fullscreenModeButton) {
+          fullscreenModeButton.click();
+          evt.preventDefault();
+        }
+      }
+    });
   },
   _disconnectSPActionButtons(editMode) {
     keyListenerSvc.removeKeyListener(editMode ? KeyStrokes.S : KeyStrokes.E, { ctrl: true });

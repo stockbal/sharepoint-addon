@@ -24,6 +24,7 @@ export default {
   Plus: 187,
   Minus: 189,
   Zero: 48,
+  F11: 122,
   C: 67,
   E: 69,
   M: 77,

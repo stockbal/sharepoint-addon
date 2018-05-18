@@ -12,7 +12,10 @@ export default {
     titleRowElementId: 's4-titlerow',
     saveEditButtonId: 'ctl00_PageStateActionButton',
     checkinCheckoutButton: 'Ribbon.EditingTools.CPEditTab.EditAndCheckout.Checkout-SelectedItem',
-    editSourceCodeButtonId: 'Ribbon.EditingTools.CPEditTab.Markup.Html.Menu.Html.EditSource-Large'
+    editSourceCodeButtonId: 'Ribbon.EditingTools.CPEditTab.Markup.Html.Menu.Html.EditSource-Large',
+    fullScreeModeButtonId: 'ctl00_fullscreenmodeBtn',
+    exitFullScreenModeButtonId: 'ctl00_exitfullscreenmodeBtn',
+    fullScreenModeElementId: 'fullscreenmode'
   },
   cssClasses: {
     workspaceAddonsLoadedClass: 's4-workspace--addons-loaded',
