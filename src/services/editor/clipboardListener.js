@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import store from '../../store';
 import config from '../../config';
 import $ from 'jquery';
 import { CODING_SELECTOR } from '../../config/constants';
@@ -20,24 +19,33 @@ export class ClipBoardListener {
   }
   static _createNewCodingLines(range, selectionHasText, rangeInCodingLine, rangeContainer, text) {
     const codingLines = browser.isIE() ? text.split('\r\n') : text.split('\n');
-
     let codingLine;
+    const singleCodingLine = codingLines.length === 1;
+
     for (let textLine of codingLines) {
       if (codingLine) {
         range.setStartAfter(codingLine);
         range.setEndAfter(codingLine);
       }
 
-      if (!selectionHasText && rangeInCodingLine) {
+      if (rangeInCodingLine) {
+        let offsetText = rangeContainer.innerText;
         if (range.startOffset) {
-          let offsetText = rangeContainer.innerText;
-          offsetText =
-            offsetText.substring(0, range.startOffset) +
-            textLine +
-            offsetText.substring(range.startOffset);
+          let remainingTextInLine = offsetText.substring(range.startOffset);
+          offsetText = offsetText.substring(0, range.startOffset) + textLine;
+
+          if (singleCodingLine) {
+            offsetText += remainingTextInLine;
+          } else {
+            codingLines[codingLines.length - 1] += remainingTextInLine;
+          }
           rangeContainer.innerHTML = utils.escapeXML(offsetText);
         } else {
-          rangeContainer.innerHTML = utils.escapeXML(textLine);
+          if (singleCodingLine) {
+            rangeContainer.innerHTML = utils.escapeXML(textLine + offsetText);
+          } else {
+            codingLines[codingLines.length - 1] += offsetText;
+          }
         }
 
         range.setStartAfter(rangeContainer);
@@ -99,6 +107,7 @@ export class ClipBoardListener {
         paste
       );
     }
+    sel.removeAllRanges();
     evt.preventDefault();
     return false;
   }

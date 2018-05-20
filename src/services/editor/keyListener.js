@@ -3,7 +3,8 @@ import keyListenerSvc from '../keyListenerSvc';
 import KeyStrokes from '../keystrokes';
 import store from '../../store';
 import config from '../../config';
-import { ZERO_WIDTH } from '../../config/constants';
+import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
+import selectionSvc from '../selectionSvc';
 
 export default {
   _listenersCreated: false,
@@ -18,25 +19,52 @@ export default {
   },
   _createBlockQuoteEscapeListener() {
     keyListenerSvc.addKeyListener(KeyStrokes.Enter, { ctrl: true }, evt => {
-      const { range, containerElement, sel: selection } = store.state.selectionData;
+      const { range, containerElement, sel: selection } = selectionSvc.getSelection();
       const $nearestBlockquote = $(containerElement).closest('blockquote, .alert');
 
-      range.setStartAfter($nearestBlockquote[0]);
-      range.setEndAfter($nearestBlockquote[0]);
+      const updateRange = () => {
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        evt.preventDefault();
+      };
 
-      const zeroWidthSpace = document.createTextNode(ZERO_WIDTH);
-      const p = document.createElement('p');
-      p.appendChild(zeroWidthSpace);
+      const insertBreak = element => {
+        range.setStartAfter(element);
+        range.setEndAfter(element);
 
-      range.insertNode(p);
-      range.setStartBefore(zeroWidthSpace);
-      range.setEndBefore(zeroWidthSpace);
+        const zeroWidthSpace = document.createTextNode(ZERO_WIDTH);
+        const p = document.createElement('p');
+        p.appendChild(zeroWidthSpace);
 
-      if (selection) {
-        selection.removeAllRanges();
-        selection.addRange(range);
+        range.insertNode(p);
+        range.setStartBefore(zeroWidthSpace);
+        range.setEndBefore(zeroWidthSpace);
+      };
+
+      if ($nearestBlockquote.length) {
+        insertBreak($nearestBlockquote[0]);
+        updateRange();
+      } else {
+        const $codingArea = $(containerElement).closest(CODING_SELECTOR);
+        if ($codingArea.length) {
+          if ($codingArea.prop('tagName') === 'DIV') {
+            insertBreak($codingArea[0]);
+          } else {
+            range.setStartAfter($codingArea[0]);
+            range.setEndAfter($codingArea[0]);
+
+            const spaceSpan = document.createElement('span');
+            spaceSpan.innerHTML = '&nbsp;';
+            range.insertNode(spaceSpan);
+            range.setStartBefore(spaceSpan);
+            range.setEndAfter(spaceSpan);
+          }
+
+          updateRange();
+        }
       }
-      evt.preventDefault();
     });
   },
   _createMenuShortcuts() {

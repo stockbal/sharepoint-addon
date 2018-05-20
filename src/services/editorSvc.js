@@ -66,8 +66,9 @@ export default {
 
     // select all coding lines
     sel.removeAllRanges();
-    range.setStartBefore(codingArea.firstElementChild);
-    range.setEndAfter(codingArea.lastElementChild);
+
+    range.setStartBefore(codingArea.firstElementChild.childNodes[0]);
+    range.setEndAfter(codingArea.lastElementChild.childNodes[0]);
     sel.addRange(range);
   },
   addCoding(inline = false) {
