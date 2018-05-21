@@ -6,6 +6,50 @@ import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
 import selectionSvc from '../selectionSvc';
 
+const updateRange = (selection, range, evt) => {
+  if (selection) {
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  evt.preventDefault();
+};
+
+const insertBreak = (element, range, afterElement) => {
+  if (afterElement) {
+    range.setStartAfter(element);
+    range.setEndAfter(element);
+  } else {
+    range.setStartBefore(element);
+    range.setEndBefore(element);
+  }
+
+  const zeroWidthSpace = document.createTextNode(ZERO_WIDTH);
+  const p = document.createElement('p');
+  p.appendChild(zeroWidthSpace);
+
+  range.insertNode(p);
+  range.setStartBefore(zeroWidthSpace);
+  range.setEndBefore(zeroWidthSpace);
+};
+
+const insertSpace = (element, range, afterElement) => {
+  if (afterElement) {
+    range.setStartAfter(element);
+    range.setEndAfter(element);
+  } else {
+    range.setStartBefore(element);
+    range.setEndBefore(element);
+  }
+
+  const spaceSpan = document.createElement('span');
+  const zeroWidth = document.createTextNode(ZERO_WIDTH);
+  spaceSpan.appendChild(zeroWidth);
+
+  range.insertNode(spaceSpan);
+  range.setStartAfter(zeroWidth);
+  range.setEndAfter(zeroWidth);
+};
+
 export default {
   _listenersCreated: false,
   _started: false,
@@ -17,54 +61,32 @@ export default {
     this._connectSPActionButtons(store.state.editMode);
     this._listenersCreated = true;
   },
-  _createBlockQuoteEscapeListener() {
-    keyListenerSvc.addKeyListener(KeyStrokes.Enter, { ctrl: true }, evt => {
-      const { range, containerElement, sel: selection } = selectionSvc.getSelection();
-      const $nearestBlockquote = $(containerElement).closest('blockquote, .alert');
+  _escapeElement(evt, escapeAfter = true) {
+    const { range, containerElement, sel: selection } = selectionSvc.getSelection();
+    const $nearestBlockquote = $(containerElement).closest('blockquote, .alert');
 
-      const updateRange = () => {
-        if (selection) {
-          selection.removeAllRanges();
-          selection.addRange(range);
+    if ($nearestBlockquote.length) {
+      insertBreak($nearestBlockquote[0], range, escapeAfter);
+      updateRange(selection, range, evt);
+    } else {
+      const $codingArea = $(containerElement).closest(CODING_SELECTOR);
+      if ($codingArea.length) {
+        if ($codingArea.prop('tagName') === 'DIV') {
+          insertBreak($codingArea[0], range, escapeAfter);
+        } else {
+          insertSpace($codingArea[0], range, escapeAfter);
         }
-        evt.preventDefault();
-      };
 
-      const insertBreak = element => {
-        range.setStartAfter(element);
-        range.setEndAfter(element);
-
-        const zeroWidthSpace = document.createTextNode(ZERO_WIDTH);
-        const p = document.createElement('p');
-        p.appendChild(zeroWidthSpace);
-
-        range.insertNode(p);
-        range.setStartBefore(zeroWidthSpace);
-        range.setEndBefore(zeroWidthSpace);
-      };
-
-      if ($nearestBlockquote.length) {
-        insertBreak($nearestBlockquote[0]);
-        updateRange();
-      } else {
-        const $codingArea = $(containerElement).closest(CODING_SELECTOR);
-        if ($codingArea.length) {
-          if ($codingArea.prop('tagName') === 'DIV') {
-            insertBreak($codingArea[0]);
-          } else {
-            range.setStartAfter($codingArea[0]);
-            range.setEndAfter($codingArea[0]);
-
-            const spaceSpan = document.createElement('span');
-            spaceSpan.innerHTML = '&nbsp;';
-            range.insertNode(spaceSpan);
-            range.setStartBefore(spaceSpan);
-            range.setEndAfter(spaceSpan);
-          }
-
-          updateRange();
-        }
+        updateRange(selection, range, evt);
       }
+    }
+  },
+  _createEscapeListeners() {
+    keyListenerSvc.addKeyListener(KeyStrokes.Enter, { ctrl: true }, evt => {
+      this._escapeElement(evt);
+    });
+    keyListenerSvc.addKeyListener(KeyStrokes.Enter, { ctrl: true, shift: true }, evt => {
+      this._escapeElement(evt, false);
     });
   },
   _createMenuShortcuts() {
@@ -107,7 +129,7 @@ export default {
     keyListenerSvc.removeKeyListener(KeyStrokes.Minus, { shift: true, alt: true });
   },
   registerEditModeListeners() {
-    this._createBlockQuoteEscapeListener();
+    this._createEscapeListeners();
   },
   unregisterEditModeListeners() {
     keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true });

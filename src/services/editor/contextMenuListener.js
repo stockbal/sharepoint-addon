@@ -88,7 +88,7 @@ export default {
         await store.dispatch('quickMenu/open', {
           coordinates,
           items: menuItemCreator.createItemsForCoding($coding),
-          title: 'Settings'
+          title: 'Properties'
         });
       } catch (e) {
         logger.error(e);

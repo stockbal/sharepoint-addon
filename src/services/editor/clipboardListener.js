@@ -19,13 +19,14 @@ export class ClipBoardListener {
   }
   static _createNewCodingLines(range, selectionHasText, rangeInCodingLine, rangeContainer, text) {
     const codingLines = browser.isIE() ? text.split('\r\n') : text.split('\n');
+    const newRange = document.createRange();
     let codingLine;
     const singleCodingLine = codingLines.length === 1;
 
     for (let textLine of codingLines) {
       if (codingLine) {
-        range.setStartAfter(codingLine);
-        range.setEndAfter(codingLine);
+        newRange.setStartAfter(codingLine);
+        newRange.setEndAfter(codingLine);
       }
 
       if (rangeInCodingLine) {
@@ -48,8 +49,9 @@ export class ClipBoardListener {
           }
         }
 
-        range.setStartAfter(rangeContainer);
-        range.setEndAfter(rangeContainer);
+        newRange.setStartAfter(rangeContainer);
+        newRange.setEndAfter(rangeContainer);
+
         rangeInCodingLine = false;
       } else {
         codingLine = document.createElement('div');
@@ -58,6 +60,8 @@ export class ClipBoardListener {
         range.insertNode(codingLine);
       }
     }
+
+    return newRange;
   }
   static _createNewCodingLineForInline(text) {
     // remove any line breaks
@@ -99,15 +103,16 @@ export class ClipBoardListener {
       const textNode = ClipBoardListener._createNewCodingLineForInline(paste);
       range.insertNode(textNode);
     } else {
-      ClipBoardListener._createNewCodingLines(
+      const newRange = ClipBoardListener._createNewCodingLines(
         range,
         selectionHasText,
         isCodingLine,
         $containerElement[0],
         paste
       );
+      sel.removeAllRanges();
+      sel.addRange(newRange);
     }
-    sel.removeAllRanges();
     evt.preventDefault();
     return false;
   }
