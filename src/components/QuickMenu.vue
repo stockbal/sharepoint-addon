@@ -23,16 +23,16 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  import Slider from './Slider';
-  import FormEntry from './FormEntry';
-  import SelectMenu from './SelectMenu';
-  import $ from 'jquery';
-  import utils from '../services/utils';
+import { mapState } from 'vuex';
+import Slider from './Slider';
+import FormEntry from './FormEntry';
+import SelectMenu from './SelectMenu';
+import $ from 'jquery';
+import utils from '../services/utils';
 
-  import keystrokes from '../services/keystrokes';
+import keystrokes from '../services/keystrokes';
 
-  export default {
+export default {
   name: 'QuickMenu',
   components: {
     Slider,
