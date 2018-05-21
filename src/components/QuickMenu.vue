@@ -23,14 +23,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import Slider from './Slider';
-import FormEntry from './FormEntry';
-import SelectMenu from './SelectMenu';
-import $ from 'jquery';
-import utils from '../services/utils';
+  import { mapState } from 'vuex';
+  import Slider from './Slider';
+  import FormEntry from './FormEntry';
+  import SelectMenu from './SelectMenu';
+  import $ from 'jquery';
+  import utils from '../services/utils';
+  import keystrokes from '../services/keystrokes';
 
-export default {
+  export default {
   name: 'QuickMenu',
   components: {
     Slider,
@@ -53,6 +54,12 @@ export default {
     close() {
       this.$store.dispatch('quickMenu/close');
     },
+    keyListener(evt) {
+      if (evt.keyCode === keystrokes.Escape) {
+        evt.preventDefault();
+        this.close();
+      }
+    },
     mouseListener(evt) {
       if (!$(evt.target).closest('.quick-menu__inner, .select-menu__menu').length) {
         evt.preventDefault();
@@ -62,6 +69,7 @@ export default {
   },
   mounted() {
     document.addEventListener('mousedown', this.mouseListener);
+    document.addEventListener('keydown', this.keyListener);
 
     this.sizeData = utils.calcOffsetForElement(
       this.$el.querySelector('.quick-menu__inner'),
@@ -72,6 +80,7 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('mousedown', this.mouseListener);
+    document.removeEventListener('keydown', this.keyListener);
   }
 };
 </script>
