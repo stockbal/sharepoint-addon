@@ -5,6 +5,8 @@ export default {
     webPartContainerClass: 'ms-rte-wpbox',
     sharePointEditorAreaRead: 'ms-rte-layoutszone-inner',
     sharePointEditorArea: 'ms-rte-layoutszone-inner-editable',
+    rangeStart: 'ms-rterangecursor-start',
+    rangeEnd: 'ms-rterangecursor-end',
     editorContentElementId: 'contentBox',
     sideNavBoxElementId: 'sideNavBox',
     workspaceElementId: 's4-workspace',

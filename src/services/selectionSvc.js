@@ -1,3 +1,10 @@
+/* eslint-disable no-unused-vars */
+class Selection {
+  constructor() {
+    this.nodes = [];
+  }
+  _getNodesInSelection() {}
+}
 /**
  * Retrieves the current selection data
  * @returns {{text: string, node: Range, containerElement: Element}}
@@ -12,6 +19,7 @@ const getSelection = () => {
     sel = window.getSelection();
     if (sel.rangeCount) {
       range = sel.getRangeAt(0);
+
       let ancestorContainer = range.commonAncestorContainer;
       containerElement =
         ancestorContainer.nodeType === Node.ELEMENT_NODE

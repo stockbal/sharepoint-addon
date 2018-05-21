@@ -130,6 +130,65 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 
   <script>
+    var RANGE_START = 'ms-rterangecursor-start';
+    var RANGE_END = 'ms-rterangecursor-end';
+
+    document.addEventListener('selectionchange', function(evt) {
+      var selection = window.getSelection();
+      var range = selection.getRangeAt(0);
+      const startOffset = range.startOffset;
+      const endOffset = range.endOffset;
+      const startCont = range.startContainer;
+      const endCont = range.endContainer;
+
+      var oldStart = document.getElementById(RANGE_START);
+      var oldEnd = document.getElementById(RANGE_END);
+
+      if (oldStart) {
+        oldStart.parentNode.removeChild(oldStart);
+      }
+      if (oldEnd) {
+        oldEnd.parentNode.removeChild(oldEnd);
+      }
+
+      var startRange = document.createElement('span');
+      startRange.id = RANGE_START;
+
+      var endRange = document.createElement('span');
+      endRange.id = RANGE_END;
+
+      if (startCont.nodeType === Node.TEXT_NODE) {
+        if (startOffset) {
+          let after = startCont.splitText(startOffset);
+          startCont.parentElement.insertBefore(startRange, after);
+
+          if (startCont === endCont && startOffset === endOffset) {
+            startCont.parentElement.insertBefore(endRange, after);
+            // range.commonAncestorContainer.normalize();
+            return;
+          }
+        } else {
+          startCont.parentNode.insertBefore(startRange, startCont);
+          if (startCont === endCont && startOffset === endOffset) {
+            startCont.parentElement.insertBefore(endRange, startCont);
+            // range.commonAncestorContainer.normalize();
+            return;
+          }
+        }
+      }
+
+      if (endCont.nodeType === Node.TEXT_NODE) {
+        if (endOffset) {
+          let after = endCont.splitText(endOffset);
+          endCont.parentElement.insertBefore(endRange, after);
+        } else {
+          endCont.parentElement.insertBefore(endRange, endCont);
+        }
+      }
+
+      // range.commonAncestorContainer.normalize();
+    });
+
     function closedRibbonBar() {
       $('#s4-ribbonrow').css('height', '35px');
       calcBodySize();
