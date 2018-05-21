@@ -29,6 +29,7 @@
   import SelectMenu from './SelectMenu';
   import $ from 'jquery';
   import utils from '../services/utils';
+
   import keystrokes from '../services/keystrokes';
 
   export default {

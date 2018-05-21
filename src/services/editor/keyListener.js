@@ -5,6 +5,7 @@ import store from '../../store';
 import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
 import selectionSvc from '../selectionSvc';
+import utils from '../utils';
 
 const updateRange = (selection, range, evt) => {
   if (selection) {
@@ -89,6 +90,58 @@ export default {
       this._escapeElement(evt, false);
     });
   },
+  _insertTabsAtStartOfCodingLines(range) {
+    const prependTab = element => {
+      element.innerHTML = utils.escapeXML('    ' + element.innerText);
+    };
+
+    if (range.startContainer === range.endContainer) {
+      prependTab(range.startContainer.parentElement);
+    } else {
+      // get all coding lines in selection
+      const selectedNodes = selectionSvc.selectionReader.getSelectedNodes(range);
+      for (const node of selectedNodes) {
+        if (node.nodeType === Node.TEXT_NODE || !node.classList.contains('coding-line')) {
+        } else {
+          prependTab(node);
+        }
+      }
+    }
+  },
+  _createTabListener() {
+    keyListenerSvc.addKeyListener(KeyStrokes.Tab, {}, evt => {
+      const { range, containerElement, text } = selectionSvc.getSelection();
+
+      const $coding = $(range.startContainer).closest('.coding-line');
+
+      if (!$coding.length) {
+        return;
+      }
+
+      if (text) {
+        this._insertTabsAtStartOfCodingLines(range);
+      } else {
+        let lineContent = $coding.text();
+        let { startOffset, endOffset } = range;
+
+        if (startOffset) {
+          lineContent =
+            lineContent.substring(0, startOffset) +
+            '    ' +
+            lineContent.substring(endOffset, lineContent.length);
+
+          containerElement.innerHTML = utils.escapeXML(lineContent);
+        } else {
+          containerElement.innerHTML = utils.escapeXML('    ' + lineContent);
+        }
+
+        range.setStart(containerElement.childNodes[0], startOffset + 4);
+        range.setEnd(containerElement.childNodes[0], startOffset + 4);
+      }
+
+      evt.preventDefault();
+    });
+  },
   _createMenuShortcuts() {
     keyListenerSvc.addKeyListener(KeyStrokes.T, { shift: true, alt: true }, evt => {
       store.dispatch('layoutSettings/toggleMenu', 'toc');
@@ -130,9 +183,12 @@ export default {
   },
   registerEditModeListeners() {
     this._createEscapeListeners();
+    this._createTabListener();
   },
   unregisterEditModeListeners() {
     keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true });
+    keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true, shift: true });
+    keyListenerSvc.removeKeyListener(KeyStrokes.Tab);
   },
   _connectSPActionButtons(editMode) {
     const defaultActionKeyStroke = editMode ? KeyStrokes.S : KeyStrokes.E;

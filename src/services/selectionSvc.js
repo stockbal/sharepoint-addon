@@ -37,8 +37,8 @@ class SelectionReader {
    * Returns the all nodes in the current selection
    * @returns {*}
    */
-  getSelectedNodes() {
-    return this._getRangeSelectedNodes(getSelection().range);
+  getSelectedNodes(range = null) {
+    return this._getRangeSelectedNodes(range || getSelection().range);
   }
 
   _nextNode(node, endNode) {
