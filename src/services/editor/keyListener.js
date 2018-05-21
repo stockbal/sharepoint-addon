@@ -96,7 +96,11 @@ export default {
     };
 
     if (range.startContainer === range.endContainer) {
-      prependTab(range.startContainer.parentElement);
+      prependTab(
+        range.startContainer.nodeType === Node.TEXT_NODE
+          ? range.startContainer.parentElement
+          : range.startContainer
+      );
     } else {
       // get all coding lines in selection
       const selectedNodes = selectionSvc.selectionReader.getSelectedNodes(range);
