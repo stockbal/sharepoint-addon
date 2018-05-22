@@ -4,7 +4,7 @@ import KeyStrokes from '../keystrokes';
 import store from '../../store';
 import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
-import selectionSvc from '../selectionSvc';
+import selectionSvc, { Selection } from '../selectionSvc';
 import utils from '../utils';
 
 const updateRange = (selection, range, evt) => {
@@ -51,6 +51,20 @@ const insertSpace = (element, range, afterElement) => {
   range.setEndAfter(zeroWidth);
 };
 
+const getTab = node => {
+  if (node.parentNode.classList.contains('tab')) {
+    return node.parentNode;
+  } else if (
+    node.previousSibling &&
+    node.previousSibling.nodeType !== Node.TEXT_NODE &&
+    node.previousSibling.classList.contains('tab')
+  ) {
+    return node.previousSibling;
+  } else {
+    return null;
+  }
+};
+
 export default {
   _listenersCreated: false,
   _started: false,
@@ -90,57 +104,124 @@ export default {
       this._escapeElement(evt, false);
     });
   },
-  _insertTabsAtStartOfCodingLines(range) {
-    const prependTab = element => {
-      element.innerHTML = utils.escapeXML('    ' + element.innerText);
-    };
-
-    if (range.startContainer === range.endContainer) {
-      prependTab(
-        range.startContainer.nodeType === Node.TEXT_NODE
-          ? range.startContainer.parentElement
-          : range.startContainer
-      );
+  _insertTabsAtStartOfCodingLines(selection) {
+    if (selection.isSingleElementSelection()) {
+      selection.startParent.insertBefore(utils.createTabElement(), selection.start);
     } else {
       // get all coding lines in selection
-      const selectedNodes = selectionSvc.selectionReader.getSelectedNodes(range);
+      const selectedNodes = selection.getNodesInSelection();
+      const uniqueCodingLines = new Set();
+
       for (const node of selectedNodes) {
-        if (node.nodeType === Node.TEXT_NODE || !node.classList.contains('coding-line')) {
+        const codingLine = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+        if (codingLine.classList.contains('coding-line')) {
+          uniqueCodingLines.add(codingLine);
+        }
+      }
+
+      for (const codingLine of uniqueCodingLines) {
+        if (codingLine.firstChild) {
+          codingLine.insertBefore(utils.createTabElement(), codingLine.firstChild);
         } else {
-          prependTab(node);
+          codingLine.append(utils.createTabElement());
         }
       }
     }
   },
+  _removeTabsAtStartOfCodingLines(selection) {
+    if (selection.isSingleElementSelection()) {
+      const tab = getTab(selection.start);
+      if (tab) {
+        tab.remove();
+      }
+    } else {
+      // get all coding lines in selection
+      const selectedNodes = selection.getNodesInSelection();
+      const tabs = new Set();
+
+      for (const node of selectedNodes) {
+        const codingLine = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+        if (
+          codingLine.classList.contains('coding-line') &&
+          codingLine.firstChild &&
+          codingLine.firstChild.classList.contains('tab')
+        ) {
+          tabs.add(codingLine.firstChild);
+        }
+      }
+
+      for (const tab of tabs) {
+        tab.remove();
+      }
+    }
+  },
   _createTabListener() {
+    // insert tabulator listener
     keyListenerSvc.addKeyListener(KeyStrokes.Tab, {}, evt => {
-      const { range, containerElement, text } = selectionSvc.getSelection();
+      const selection = new Selection();
 
-      const $coding = $(range.startContainer).closest('.coding-line');
-
-      if (!$coding.length) {
+      if (!selection.hasClass('coding-line')) {
         return;
       }
 
-      if (text) {
-        this._insertTabsAtStartOfCodingLines(range);
+      if (selection.hasContent) {
+        this._insertTabsAtStartOfCodingLines(selection);
       } else {
-        let lineContent = $coding.text();
-        let { startOffset, endOffset } = range;
+        const newTab = utils.createTabElement();
 
-        if (startOffset) {
-          lineContent =
-            lineContent.substring(0, startOffset) +
-            '    ' +
-            lineContent.substring(endOffset, lineContent.length);
-
-          containerElement.innerHTML = utils.escapeXML(lineContent);
+        if (selection.end.nextSibling) {
+          selection.endParent.insertBefore(newTab, selection.end.nextSibling);
         } else {
-          containerElement.innerHTML = utils.escapeXML('    ' + lineContent);
+          selection.endParent.appendChild(newTab);
+        }
+        const sel = document.getSelection();
+        const range = document.createRange();
+
+        range.setStartAfter(newTab);
+        range.setEndAfter(newTab);
+
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      evt.preventDefault();
+    });
+    // remove tabulator listener
+    keyListenerSvc.addKeyListener(KeyStrokes.Tab, { shift: true }, evt => {
+      const selection = new Selection();
+
+      if (!selection.hasClass('coding-line')) {
+        return;
+      }
+
+      if (selection.hasContent) {
+        // this._insertTabsAtStartOfCodingLines(selection);
+        this._removeTabsAtStartOfCodingLines(selection);
+      } else {
+        let tabEl;
+        if (selection.startParent.classList.contains('tab')) {
+          tabEl = selection.startParent;
+        } else if (
+          selection.start.previousSibling &&
+          selection.start.previousSibling.nodeType !== Node.TEXT_NODE &&
+          selection.start.previousSibling.classList.contains('tab')
+        ) {
+          tabEl = selection.start.previousElementSibling;
         }
 
-        range.setStart(containerElement.childNodes[0], startOffset + 4);
-        range.setEnd(containerElement.childNodes[0], startOffset + 4);
+        if (tabEl) {
+          const sel = document.getSelection();
+          const range = document.createRange();
+
+          range.setStartBefore(tabEl);
+          range.setEndBefore(tabEl);
+
+          sel.removeAllRanges();
+          sel.addRange(range);
+
+          // remove the tab
+          tabEl.remove();
+        }
       }
 
       evt.preventDefault();
@@ -188,11 +269,27 @@ export default {
   registerEditModeListeners() {
     this._createEscapeListeners();
     this._createTabListener();
+
+    keyListenerSvc.addKeyListener(KeyStrokes.Backspace, { alt: true }, evt => {
+      const selection = new Selection();
+
+      if (!selection.hasClass('coding--editable')) {
+        return;
+      }
+
+      const $codingArea = $(selection.start).closest(CODING_SELECTOR);
+      if ($codingArea.length) {
+        $codingArea.remove();
+        evt.preventDefault();
+      }
+    });
   },
   unregisterEditModeListeners() {
     keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true });
     keyListenerSvc.removeKeyListener(KeyStrokes.Enter, { ctrl: true, shift: true });
     keyListenerSvc.removeKeyListener(KeyStrokes.Tab);
+    keyListenerSvc.removeKeyListener(KeyStrokes.Backspace, { alt: true });
+    keyListenerSvc.removeKeyListener(KeyStrokes.Tab, { shift: true });
   },
   _connectSPActionButtons(editMode) {
     const defaultActionKeyStroke = editMode ? KeyStrokes.S : KeyStrokes.E;

@@ -30,6 +30,12 @@ export default {
       .replace(/>/g, '&gt;')
       .replace(/\s/g, '&nbsp;');
   },
+  createTabElement(size = 4) {
+    const tab = document.createElement('span');
+    tab.classList.add('tab');
+    tab.innerHTML = '&nbsp;'.repeat(size);
+    return tab;
+  },
   randomize(value) {
     return Math.floor((1 + Math.random() * 0.2) * value);
   },

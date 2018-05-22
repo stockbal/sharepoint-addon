@@ -31,3 +31,7 @@ HTMLElement.prototype.removeClass = function(pattern) {
     }
   }
 };
+
+HTMLElement.prototype.remove = function() {
+  this.parentNode.removeChild(this);
+};

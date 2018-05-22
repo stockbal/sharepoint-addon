@@ -175,6 +175,31 @@
             return;
           }
         }
+      } else {
+
+        if (range.startOffset !== 0) {
+          const startNode = startCont.childNodes[range.startOffset - 1];
+
+          if (startNode) {
+            if (startNode.nextSibling) {
+              startCont.insertBefore(startRange, startNode.nextSibling);
+            } else {
+              startCont.appendChild(startRange);
+            }
+
+            if (range.collapsed) {
+              if (startRange.nextSibling) {
+                startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+              } else {
+                startRange.parentNode.appendChild(endRange);
+              }
+              return;
+            }
+          }
+        } else {
+          startCont.parentNode.insertBefore(startRange, startCont);
+        }
+
       }
 
       if (endCont.nodeType === Node.TEXT_NODE) {
@@ -184,6 +209,7 @@
         } else {
           endCont.parentElement.insertBefore(endRange, endCont);
         }
+      } else {
       }
 
       // range.commonAncestorContainer.normalize();
