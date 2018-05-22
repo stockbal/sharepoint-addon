@@ -195,7 +195,6 @@ export default {
       }
 
       if (selection.hasContent) {
-        // this._insertTabsAtStartOfCodingLines(selection);
         this._removeTabsAtStartOfCodingLines(selection);
       } else {
         let tabEl;
@@ -271,13 +270,9 @@ export default {
     this._createTabListener();
 
     keyListenerSvc.addKeyListener(KeyStrokes.Backspace, { alt: true }, evt => {
-      const selection = new Selection();
+      const { containerElement } = selectionSvc.getSelection();
 
-      if (!selection.hasClass('coding--editable')) {
-        return;
-      }
-
-      const $codingArea = $(selection.start).closest(CODING_SELECTOR);
+      const $codingArea = $(containerElement).closest(CODING_SELECTOR);
       if ($codingArea.length) {
         $codingArea.remove();
         evt.preventDefault();
