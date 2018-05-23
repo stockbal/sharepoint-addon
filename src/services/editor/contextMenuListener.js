@@ -174,7 +174,9 @@ class MenuItemCreator {
 
     items.push(separator);
 
-    items.push();
+    items.push(
+      createItem('Create Blockquote', 'quote-right', () => eventProxy.$trigger('blockquote'))
+    );
     items.push({
       type: 'item',
       name: 'Create alert',
