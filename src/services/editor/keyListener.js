@@ -4,7 +4,7 @@ import KeyStrokes from '../keystrokes';
 import store from '../../store';
 import config from '../../config';
 import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
-import selectionSvc, { Selection } from '../selectionSvc';
+import selectionSvc, { RangeCursor } from '../selectionSvc';
 import utils from '../utils';
 
 const updateRange = (selection, range, evt) => {
@@ -106,7 +106,7 @@ export default {
   },
   _insertTabsAtStartOfCodingLines(selection) {
     if (selection.isSingleElementSelection()) {
-      selection.startParent.insertBefore(utils.createTabElement(), selection.start);
+      utils.createTabElement().insertBeforeNode(selection.start);
     } else {
       // get all coding lines in selection
       const selectedNodes = selection.getNodesInSelection();
@@ -121,7 +121,7 @@ export default {
 
       for (const codingLine of uniqueCodingLines) {
         if (codingLine.firstChild) {
-          codingLine.insertBefore(utils.createTabElement(), codingLine.firstChild);
+          utils.createTabElement().insertBeforeNode(codingLine.firstChild);
         } else {
           codingLine.append(utils.createTabElement());
         }
@@ -158,22 +158,18 @@ export default {
   _createTabListener() {
     // insert tabulator listener
     keyListenerSvc.addKeyListener(KeyStrokes.Tab, {}, evt => {
-      const selection = new Selection();
+      const rangeCursor = new RangeCursor();
 
-      if (!selection.hasClass('coding-line')) {
+      if (!rangeCursor.isClosestTo('coding-line')) {
         return;
       }
 
-      if (selection.hasContent) {
-        this._insertTabsAtStartOfCodingLines(selection);
+      if (rangeCursor.hasContent) {
+        this._insertTabsAtStartOfCodingLines(rangeCursor);
       } else {
         const newTab = utils.createTabElement();
 
-        if (selection.end.nextSibling) {
-          selection.endParent.insertBefore(newTab, selection.end.nextSibling);
-        } else {
-          selection.endParent.appendChild(newTab);
-        }
+        newTab.insertBeforeNode(rangeCursor.end);
         const sel = document.getSelection();
         const range = document.createRange();
 
@@ -188,24 +184,24 @@ export default {
     });
     // remove tabulator listener
     keyListenerSvc.addKeyListener(KeyStrokes.Tab, { shift: true }, evt => {
-      const selection = new Selection();
+      const rangeCursor = new RangeCursor();
 
-      if (!selection.hasClass('coding-line')) {
+      if (!rangeCursor.isClosestTo('coding-line')) {
         return;
       }
 
-      if (selection.hasContent) {
-        this._removeTabsAtStartOfCodingLines(selection);
+      if (rangeCursor.hasContent) {
+        this._removeTabsAtStartOfCodingLines(rangeCursor);
       } else {
         let tabEl;
-        if (selection.startParent.classList.contains('tab')) {
-          tabEl = selection.startParent;
+        if (rangeCursor.startParent.classList.contains('tab')) {
+          tabEl = rangeCursor.startParent;
         } else if (
-          selection.start.previousSibling &&
-          selection.start.previousSibling.nodeType !== Node.TEXT_NODE &&
-          selection.start.previousSibling.classList.contains('tab')
+          rangeCursor.start.previousSibling &&
+          rangeCursor.start.previousSibling.nodeType !== Node.TEXT_NODE &&
+          rangeCursor.start.previousSibling.classList.contains('tab')
         ) {
-          tabEl = selection.start.previousElementSibling;
+          tabEl = rangeCursor.start.previousElementSibling;
         }
 
         if (tabEl) {

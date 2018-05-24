@@ -2,16 +2,24 @@
 
 import config from '../config';
 
-export class Selection {
+export class RangeCursor {
   constructor() {
     this._nodes = [];
     this._start = document.getElementById(config.elements.rangeStart);
     this._end = document.getElementById(config.elements.rangeEnd);
+    this._selection = window.getSelection();
+    this._range = this._selection.getRangeAt(0);
     this._hasContent = this._start && this._end && this._end !== this._start.nextSibling;
     this._startParent = this._start.parentElement;
     this._endParent = this._end.parentElement;
 
     this._startParent.parentElement.normalize();
+  }
+  get currentRange() {
+    return this._range;
+  }
+  get selection() {
+    return this._selection;
   }
   get start() {
     return this._start;
@@ -31,16 +39,30 @@ export class Selection {
   isSingleElementSelection() {
     return this._startParent === this._endParent;
   }
-  hasClass(className) {
-    let startNode = this._startParent;
-    while (startNode && startNode !== document) {
-      if (startNode.classList.contains(className)) {
-        return true;
+  getClosestToStart(className) {
+    return this._getClosest(className, this._startParent);
+  }
+  getClosestToEnd(className) {
+    return this._getClosest(className, this._endParent);
+  }
+  _getClosest(className, element) {
+    while (element && element !== document) {
+      if (element.classList.contains(className)) {
+        return element;
       }
 
-      startNode = startNode.parentNode;
+      element = element.parentNode;
     }
-    return false;
+    return null;
+  }
+  isClosestTo(className) {
+    return this.getClosestToStart(className) && this.getClosestToEnd(className);
+  }
+  insertAfter(element) {
+    element.insertAfterNode(this._end);
+  }
+  insertBefore(element) {
+    element.insertBeforeNode(this._start);
   }
   getNodesInSelection() {
     if (this._start === undefined || this._end === undefined || !this._hasContent) {

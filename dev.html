@@ -160,18 +160,20 @@
       if (startCont.nodeType === Node.TEXT_NODE) {
         if (startOffset) {
           let after = startCont.splitText(startOffset);
-          startCont.parentElement.insertBefore(startRange, after);
+          // startCont.parentElement.insertBefore(startRange, after);
+          $(startRange).insertBefore(after);
 
           if (startCont === endCont && startOffset === endOffset) {
-            startCont.parentElement.insertBefore(endRange, after);
-            // range.commonAncestorContainer.normalize();
+            // startCont.parentElement.insertBefore(endRange, after);
+            $(endRange).insertBefore(after);
             return;
           }
         } else {
-          startCont.parentNode.insertBefore(startRange, startCont);
+          // startCont.parentNode.insertBefore(startRange, startCont);
+          $(startRange).insertBefore(startCont);
           if (startCont === endCont && startOffset === endOffset) {
-            startCont.parentElement.insertBefore(endRange, startCont);
-            // range.commonAncestorContainer.normalize();
+            // startCont.parentElement.insertBefore(endRange, startCont);
+            $(endRange).insertBefore(startCont);
             return;
           }
         }
@@ -182,14 +184,16 @@
 
           if (startNode) {
             if (startNode.nextSibling) {
-              startCont.insertBefore(startRange, startNode.nextSibling);
+              // startCont.insertBefore(startRange, startNode.nextSibling);
+              $(startRange).insertBefore(startCont.nextSibling);
             } else {
               startCont.appendChild(startRange);
             }
 
             if (range.collapsed) {
               if (startRange.nextSibling) {
-                startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+                // startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+                $(endRange).insertBefore(startRange.nextSibling);
               } else {
                 startRange.parentNode.appendChild(endRange);
               }
@@ -197,7 +201,22 @@
             }
           }
         } else {
-          startCont.parentNode.insertBefore(startRange, startCont);
+          if (startCont.firstChild) {
+            // startCont.insertBefore(startRange, startCont.firstChild);
+            $(startRange).insertBefore(startCont.firstChild);
+          } else {
+            startCont.appendChild(startRange);
+          }
+
+          if (range.collapsed) {
+            if (startRange.nextSibling) {
+              // startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+              $(endRange).insertBefore(startRange.nextSibling);
+            } else {
+              startRange.parentNode.appendChild(endRange);
+            }
+            return;
+          }
         }
 
       }
@@ -205,14 +224,33 @@
       if (endCont.nodeType === Node.TEXT_NODE) {
         if (endOffset) {
           let after = endCont.splitText(endOffset);
-          endCont.parentElement.insertBefore(endRange, after);
+          // endCont.parentElement.insertBefore(endRange, after);
+          $(endRange).insertBefore(after);
         } else {
-          endCont.parentElement.insertBefore(endRange, endCont);
+          // endCont.parentElement.insertBefore(endRange, endCont);
+          $(endRange).insertBefore(endCont);
         }
       } else {
-      }
+        if (range.endOffset !== 0) {
+          const endNode = endCont.childNodes[range.endOffset - 1];
 
-      // range.commonAncestorContainer.normalize();
+          if (endNode) {
+            if (endNode.nextSibling) {
+              // endCont.insertBefore(endRange, endNode.nextSibling);
+              $(endRange).insertBefore(endNode.nextSibling);
+            } else {
+              endCont.appendChild(endRange);
+            }
+          }
+        } else {
+          if (endCont.firstChild) {
+            // endCont.insertBefore(endRange, endCont.firstChild);
+            $(endRange).insertBefore(endCont.firstChild);
+          } else {
+            endCont.appendChild(endRange);
+          }
+        }
+      }
     });
 
     function closedRibbonBar() {

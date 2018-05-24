@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import config from '../../config';
-import $ from 'jquery';
-import { CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
+import $ from 'jquery';
 import utils from '../utils';
 import selectionSvc from '../selectionSvc';
+import { CODING_SELECTOR } from '../../config/constants';
+import config from '../../config';
 
 /**
  * Listener for ClipBoard events
@@ -17,47 +17,58 @@ export class ClipBoardListener {
   static stop() {
     document.body.removeEventListener('paste', ClipBoardListener._listener);
   }
-  static _createNewCodingLines(range, selectionHasText, rangeInCodingLine, rangeContainer, text) {
+  static _createNewCodingLines(rangeCursor, text) {
     const codingLines = browser.isIE() ? text.split('\r\n') : text.split('\n');
+
     const newRange = document.createRange();
-    let codingLine;
-    const singleCodingLine = codingLines.length === 1;
+    let codingLine = null;
+    const restNodes = [];
+    let isFirstLine = true;
+    let lastInserted;
 
     for (let textLine of codingLines) {
-      if (codingLine) {
-        newRange.setStartAfter(codingLine);
-        newRange.setEndAfter(codingLine);
-      }
+      if (isFirstLine) {
+        const spanInCodingLine = document.createElement('span');
+        spanInCodingLine.innerHTML = utils.escapeXML(textLine);
+        spanInCodingLine.insertBeforeNode(rangeCursor.start);
 
-      if (rangeInCodingLine) {
-        let offsetText = rangeContainer.innerText;
-        if (range.startOffset) {
-          let remainingTextInLine = offsetText.substring(range.startOffset);
-          offsetText = offsetText.substring(0, range.startOffset) + textLine;
-
-          if (singleCodingLine) {
-            offsetText += remainingTextInLine;
-          } else {
-            codingLines[codingLines.length - 1] += remainingTextInLine;
+        if (codingLines.length > 1) {
+          let node = rangeCursor.end.nextSibling;
+          while (node) {
+            restNodes.push(node);
+            node = node.nextSibling;
           }
-          rangeContainer.innerHTML = utils.escapeXML(offsetText);
         } else {
-          if (singleCodingLine) {
-            rangeContainer.innerHTML = utils.escapeXML(textLine + offsetText);
-          } else {
-            codingLines[codingLines.length - 1] += offsetText;
-          }
+          // no more lines exist, so the new range starts after the inserted content
+          newRange.setStartAfter(spanInCodingLine);
+          newRange.setEndAfter(spanInCodingLine);
         }
-
-        newRange.setStartAfter(rangeContainer);
-        newRange.setEndAfter(rangeContainer);
-
-        rangeInCodingLine = false;
+        isFirstLine = false;
       } else {
+        lastInserted = codingLine;
         codingLine = document.createElement('div');
         codingLine.classList.add('coding-line');
         codingLine.innerHTML = utils.escapeXML(textLine);
-        range.insertNode(codingLine);
+
+        // insert new line
+        if (lastInserted) {
+          codingLine.insertAfterNode(lastInserted);
+        } else {
+          codingLine.insertAfterNode(rangeCursor.startParent);
+        }
+      }
+    }
+
+    if (codingLine) {
+      if (restNodes.length) {
+        for (const node of restNodes) {
+          codingLine.appendChild(node);
+        }
+        newRange.setStartAfter(codingLine.lastChild ? codingLine.lastChild : codingLine);
+        newRange.setEndAfter(codingLine.lastChild ? codingLine.lastChild : codingLine);
+      } else {
+        newRange.setStartAfter(codingLine.lastChild ? codingLine.lastChild : codingLine);
+        newRange.setEndAfter(codingLine.lastChild ? codingLine.lastChild : codingLine);
       }
     }
 
@@ -75,7 +86,7 @@ export class ClipBoardListener {
   }
   static _listener(evt) {
     // first check the current selection
-    const { text, range, containerElement, sel } = selectionSvc.getSelection();
+    const { sel, containerElement } = selectionSvc.getSelection();
 
     let $containerElement = $(containerElement);
     if ($containerElement.is(`.${config.elements.sharePointEditorArea}`)) {
@@ -86,34 +97,23 @@ export class ClipBoardListener {
     const isCodingArea = $containerElement.is(CODING_SELECTOR);
     const isCodingLine = $containerElement.is('.coding-line');
 
-    if (!isCodingArea && !isCodingLine) {
-      return;
-    }
-    const selectionHasText = text !== '';
-    let $codingArea = isCodingArea ? $containerElement : $containerElement.closest(CODING_SELECTOR);
-    const isInline = $codingArea.prop('tagName') === 'SPAN';
+    if (isCodingArea || isCodingLine) {
+      setTimeout(() => {
+        const $codingArea = $containerElement.closest(CODING_SELECTOR);
 
-    let paste = (evt.clipboardData || window.clipboardData).getData('text');
+        const codingLines = browser.isIE()
+          ? $codingArea[0].innerText.split('\r\n')
+          : $codingArea[0].innerText.split('\n');
 
-    if (selectionHasText) {
-      range.deleteContents();
-    }
+        $codingArea.children().remove();
 
-    if (isInline) {
-      const textNode = ClipBoardListener._createNewCodingLineForInline(paste);
-      range.insertNode(textNode);
-    } else {
-      const newRange = ClipBoardListener._createNewCodingLines(
-        range,
-        selectionHasText,
-        isCodingLine,
-        $containerElement[0],
-        paste
-      );
-      sel.removeAllRanges();
-      sel.addRange(newRange);
+        for (const line of codingLines) {
+          if (line === '') {
+            continue;
+          }
+          $codingArea.append(`<div class="coding-line">${utils.escapeXML(line)}</div>`);
+        }
+      }, 500);
     }
-    evt.preventDefault();
-    return false;
   }
 }
