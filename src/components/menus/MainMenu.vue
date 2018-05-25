@@ -16,6 +16,11 @@
       <span>Configure the styling for the editor and the add on</span>
     </menu-entry>
     <hr/>
+    <menu-entry @click.native="openWiki()">
+      <icon icon="book" slot="icon" />
+      <div>Wiki</div>
+      <span>Documentation of the Add-On</span>
+    </menu-entry>
     <menu-entry @click.native="about()" class="about flex--end">
       <icon icon="question-circle" slot="icon"/>
       <div>About the Add-On</div>
@@ -43,6 +48,9 @@ export default {
       try {
         await this.$store.dispatch('modal/open', 'about');
       } catch (e) {}
+    },
+    openWiki() {
+      window.open(`${REPOSITORY}/wiki`, 'Google', 'width=1080,height=950');
     },
     async customStyle() {
       try {

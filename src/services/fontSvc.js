@@ -59,6 +59,7 @@ import * as faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircl
 import * as faFlask from '@fortawesome/fontawesome-free-solid/faFlask';
 import * as faStickyNote from '@fortawesome/fontawesome-free-regular/faStickyNote';
 import * as faComment from '@fortawesome/fontawesome-free-regular/faComment';
+import * as faBook from '@fortawesome/fontawesome-free-solid/faBook';
 
 // brand icons
 import * as faCss3Alt from '@fortawesome/fontawesome-free-brands/faCss3Alt';
@@ -68,6 +69,7 @@ import fontawesome from '@fortawesome/fontawesome';
 Vue.component('icon', FontAwesomeIcon);
 fontawesome.library.add(
   faCog,
+  faBook,
   faCircle,
   faPlus,
   faCode,
