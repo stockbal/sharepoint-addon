@@ -1,9 +1,8 @@
 <template>
   <modal-inner class="modal__inner-1--settings" aria-label="Style">
+    <h2 slot="title">Style Settings</h2>
+    <icon slot="title-icon" :icon="['fab', 'css3-alt']" size="2x"></icon>
     <div class="modal__content">
-      <div class="flex flex--row">
-        <h2 class="modal__title">Style Settings</h2>
-      </div>
       <div class="tabs flex flex--row">
         <tab :active="tab === 'custom'" @click="tab = 'custom'">
           Custom Style
@@ -101,7 +100,7 @@ export default {
 @import '../common/variables';
 
 .modal__inner-1--settings {
-  max-width: 850px;
+  max-width: 850px !important;
 }
 
 .modal__error--settings {

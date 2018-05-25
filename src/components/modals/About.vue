@@ -1,7 +1,8 @@
 <template>
   <modal-inner class="modal__inner-1--about-modal" aria-label="Editor">
+    <h2 slot="title">SharePoint Add-On</h2>
+    <icon slot="title-icon" icon="question-circle" size="2x"></icon>
     <div class="modal__content">
-      <h2 class="modal__title">SharePoint Add-On</h2>
       <small>v{{version}} -- &copy; 2018 {{author}}</small>
       <hr/>
       <a class="link" target="_blank" :href="issueTracker">

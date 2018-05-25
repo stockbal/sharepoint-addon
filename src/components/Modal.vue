@@ -1,16 +1,18 @@
 <template>
-  <div class="modal" @keyup.esc="onEscape" @keydown.tab="onTab">
-    <editor v-if="config.type === 'editor'" />
-    <about v-else-if="config.type === 'about'" />
-    <style-settings-modal v-else-if="config.type === 'editorStyle'" />
-    <modal-inner v-else aria-label="Dialog">
-      <div class="modal__content" v-html="config.content"></div>
-      <div class="modal__button-bar">
-        <button class="button" v-if="config.rejectText" @click="config.reject()">{{config.rejectText}}</button>
-        <button class="button" v-if="config.resolveText" @click="config.resolve()">{{config.resolveText}}</button>
-      </div>
-    </modal-inner>
-  </div>
+  <transition name="fade">
+    <div class="modal" @keyup.esc="onEscape" @keydown.tab="onTab">
+      <editor v-if="config.type === 'editor'"/>
+      <about v-else-if="config.type === 'about'"/>
+      <style-settings-modal v-else-if="config.type === 'editorStyle'"/>
+      <modal-inner v-else aria-label="Dialog">
+        <div class="modal__content" v-html="config.content"></div>
+        <div class="modal__button-bar">
+          <button class="button" v-if="config.rejectText" @click="config.reject()">{{config.rejectText}}</button>
+          <button class="button" v-if="config.resolveText" @click="config.resolve()">{{config.resolveText}}</button>
+        </div>
+      </modal-inner>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -83,14 +85,26 @@ export default {
 <style lang="scss">
 @import 'common/variables.scss';
 
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+.fade-enter .modal__inner-1,
+.fade-leave-active .modal__inner-1 {
+  transform: scale(1.1);
+  transition: 0.3s ease all;
+}
+
 .modal {
   position: fixed;
   top: 0;
   z-index: 1090;
   width: 100%;
   height: 100%;
-  background-color: rgba(160, 160, 160, 0.5);
+  background-color: rgba(160, 160, 160, 0.7);
   overflow: auto;
+  transition: 0.3s ease opacity;
 
   hr {
     margin: 0.5em 0;
@@ -100,45 +114,6 @@ export default {
   h3 {
     text-align: left;
     margin: 14px 0;
-  }
-}
-.modal__title {
-  text-transform: uppercase;
-  color: $primary-color;
-}
-
-.modal__inner-1 {
-  margin: 0 auto;
-  width: 100%;
-  min-width: 320px;
-  max-width: 480px;
-}
-
-.modal__inner-2 {
-  margin: 40px 10px 100px;
-  background-color: #f8f8f8;
-  padding: 40px 50px 30px;
-  border-radius: $border-radius-base;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: $border-radius-base;
-    width: 100%;
-    background-color: $primary-color;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: $border-radius-base;
-    width: 100%;
-    background-color: $darker-primary-color;
   }
 }
 
