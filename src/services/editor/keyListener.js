@@ -144,6 +144,7 @@ export default {
         if (
           codingLine.classList.contains('coding-line') &&
           codingLine.firstChild &&
+          codingLine.firstChild.nodeType !== Node.TEXT_NODE &&
           codingLine.firstChild.classList.contains('tab')
         ) {
           tabs.add(codingLine.firstChild);
