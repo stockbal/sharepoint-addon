@@ -101,7 +101,7 @@ export default {
 @import '../common/variables';
 
 .modal__inner-1--settings {
-  max-width: 750px;
+  max-width: 850px;
 }
 
 .modal__error--settings {

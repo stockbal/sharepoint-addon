@@ -10,11 +10,11 @@ headingStyleConfig:
   h4SizeFactor: 1.25
 
 textStyle:
-  font-family: [Helvetica Neue, Helvetica, Segoe UI, Arial, freesans, sans-serif]
+  font-family: [-apple-system,Segoe UI,Roboto,Helvetica Neue, Arial, sans-serif]
 
 # style for headings
 headingStyle:
-  font-family: [Lato, Helvetica Neue, Arial, Helvetica, sans-serif]
+  font-family: [-apple-system,Segoe UI,Roboto,Helvetica Neue, Arial, sans-serif]
   font-weight: bold
 
 # default light theme settings
