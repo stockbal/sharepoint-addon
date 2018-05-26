@@ -2,7 +2,7 @@
   <div class="side-bar__panel side-bar__panel--menu">
     <menu-entry @click.native="setPanel('toc')">
       <icon icon="list" slot="icon"/>
-      <div>Table of contents</div>
+      <div>Table of Contents</div>
     </menu-entry>
     <hr/>
     <menu-entry @click.native="setPanel('config')">
@@ -50,7 +50,11 @@ export default {
       } catch (e) {}
     },
     openWiki() {
-      window.open(`${REPOSITORY}/wiki`, 'Google', 'width=1080,height=950');
+      window.open(
+        `${REPOSITORY}/wiki`,
+        'sharepoint-addon Wiki',
+        'width=1080,height=950,scrollbars=1,resizable=1,left=50,top=50'
+      );
     },
     async customStyle() {
       try {
