@@ -11,7 +11,7 @@
         <div class="toc-node__link-without-expander flex flex-column flex--center" v-else></div>
         <div class="toc-node__active-link-indicator flex flex--column flex--center"></div>
         <a class="toc-node__link-text flex flex--column" :class="tocLevelClass" :style="{paddingLeft: leftPadding}"
-           :href="'#' + node.item.headingId">
+           @click="navigate(node.item.headingId)">
           {{node.item.headingName}}
         </a>
       </div>
@@ -25,6 +25,8 @@
 
 <script>
 import { mapActions } from 'vuex';
+import $ from 'jquery';
+import config from '../config';
 
 export default {
   name: 'toc-node',
@@ -52,7 +54,12 @@ export default {
       toggle: 'toggleOpenNode'
     }),
     navigate(id) {
-      window.location.href = window.location.href = `#${id}`;
+      history.pushState({ headingId: `#${id}` }, 'TOC Nav', `#${id}`);
+      const $workspace = $(`#${config.elements.workspaceElementId}`);
+
+      $workspace.scrollTop(
+        $(`#${id}`).offset().top - $workspace.offset().top + $workspace.scrollTop()
+      );
     }
   }
 };

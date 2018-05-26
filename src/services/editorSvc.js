@@ -282,17 +282,28 @@ export default {
       $editorArea.removeClass(currentlyAppliedPrismStyle);
     }
   },
-  _scrollToLoadedLocation() {
-    if (!window.location.hash) {
-      return;
+  _scrollToStateLocation(state) {
+    if (state) {
+      if (state['headingId']) {
+        this._scrollToElementInWorkspace(state.headingId);
+      } else if (state['workspaceTop']) {
+        $(`#${config.elements.workspaceElementId}`).scrollTop(state.workspaceTop);
+      }
+    } else {
+      // check if hash is filled
+      this._scrollToElementInWorkspace(window.location.hash);
     }
+  },
+  _scrollToElementInWorkspace(elementId) {
+    const $workspace = $(`#${config.elements.workspaceElementId}`);
 
-    setTimeout(() => {
-      const $workSpace = $(`#${config.elements.workspaceElementId}`);
-      $workSpace.scrollTop(
-        $workSpace.scrollTop() - $workSpace.offset().top + $(window.location.hash).offset().top
+    if (elementId) {
+      $workspace.scrollTop(
+        $(elementId).offset().top - $workspace.offset().top + $workspace.scrollTop()
       );
-    }, 2);
+    } else {
+      $workspace.scrollTop(0);
+    }
   },
   /**
    * Creates the custom editor style sheet
@@ -317,6 +328,21 @@ export default {
     await this._updateEditMode();
     keyListener.start();
     this._setCustomEditorStyle();
-    this._scrollToLoadedLocation();
+    this._scrollToStateLocation(history.state, true);
+
+    eventProxy.on('navigateToHeading', headingIdSelector => {
+      history.pushState({ headingId: headingIdSelector }, '', headingIdSelector);
+      this._scrollToElementInWorkspace(headingIdSelector);
+    });
+    window.addEventListener('beforeunload', evt => {
+      history.replaceState(
+        { workspaceTop: $(`#${config.elements.workspaceElementId}`).scrollTop() },
+        '',
+        '#'
+      );
+    });
+    window.addEventListener('popstate', evt => {
+      this._scrollToStateLocation(evt.state);
+    });
   }
 };

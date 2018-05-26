@@ -9,7 +9,6 @@
   color: rgba(0, 0, 0, .75);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  anti
 
   ::-webkit-scrollbar-track {
     background-color: transparent;
@@ -57,6 +56,25 @@
 
   :focus {
     outline: none;
+  }
+}
+
+h1, h2, h3, h4 {
+  $anchor-margin-left: 4px;
+  margin-left: -1 * $anchor-margin-left;
+
+  .heading-anchor {
+    float: left;
+    padding-right: $anchor-margin-left;
+    margin-left: -20px;
+    text-decoration: none;
+    color: #4a4a4a;
+    visibility: hidden;
+    cursor: pointer;
+  }
+
+  &:hover .heading-anchor {
+    visibility: visible;
   }
 }
 
