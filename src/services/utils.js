@@ -23,6 +23,19 @@ export default {
     }
     return _.map(array, value => alphabet[value % radix]).join('');
   },
+  escapeXML(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\s/g, '&nbsp;');
+  },
+  createTabElement(size = 4) {
+    const tab = document.createElement('span');
+    tab.classList.add('tab');
+    tab.innerHTML = '&nbsp;'.repeat(size);
+    return tab;
+  },
   randomize(value) {
     return Math.floor((1 + Math.random() * 0.2) * value);
   },
@@ -107,6 +120,38 @@ export default {
       }
     });
     return target;
+  },
+  calcOffset(width = 0, height = 0, container, top, left) {
+    const sizeData = { topOffset: 0, spaceToBottom: 0, leftOffset: 0, spaceToRight: 0 };
+
+    // calculate top offset
+    let spaceForElement = container.offsetHeight - (top + height);
+
+    if (height) {
+      if (spaceForElement < 0) {
+        sizeData.topOffset = height * -1;
+        sizeData.spaceToBottom = container.offsetHeight - top;
+      } else {
+        sizeData.spaceToBottom = container.offsetHeight - top - height;
+      }
+    }
+
+    // calculate right offset
+    if (width) {
+      spaceForElement = container.offsetWidth - (left + width);
+
+      if (spaceForElement < 0) {
+        sizeData.leftOffset = width * -1;
+        sizeData.spaceToRight = container.offsetWidth - left;
+      } else {
+        sizeData.spaceToRight = container.offsetWidth - left - width;
+      }
+    }
+
+    return sizeData;
+  },
+  calcOffsetForElement(element, container, top, left = 0) {
+    return this.calcOffset(element.offsetWidth, element.offsetHeight, container, top, left);
   },
   overrideProperties(target, source) {
     if (!source) {

@@ -10,6 +10,7 @@ import modal from './modal';
 import layout from './layout';
 import contextMenu from './contextMenu';
 import imagePreview from './imagePreview';
+import quickMenu from './quickMenu';
 
 Vue.use(Vuex);
 
@@ -23,7 +24,8 @@ const store = new Vuex.Store({
     modal,
     layout,
     contextMenu,
-    imagePreview
+    imagePreview,
+    quickMenu
   },
   state: {
     editMode: false,
@@ -49,10 +51,7 @@ const store = new Vuex.Store({
         return false;
       } else {
         const $selectionNode = $(selection.containerElement);
-        return (
-          state.settings.codeEditorDisabled ||
-          (!$selectionNode.is('.coding') && !$selectionNode.closest('.coding').length)
-        );
+        return !$selectionNode.is('.coding') && !$selectionNode.closest('.coding').length;
       }
     },
     hasClipboardData: state => !!state.clipboardData.content,
@@ -66,8 +65,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    toggleEditMode({ commit, state }) {
-      commit('setEditMode', !state.editMode);
+    setEditMode({ commit, state }, value) {
+      commit('setEditMode', value);
     },
     updateSelection({ commit }, data) {
       commit('setSelection', data);

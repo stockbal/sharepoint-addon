@@ -86,7 +86,7 @@ export default {
   padding: 10px;
   position: fixed;
   overflow: hidden;
-  //@include box-shadow(0px 3px 3px $shadow-color);
+  font-size: 0.85 * $font-size-base;
 }
 
 .toc__nodes {
@@ -102,7 +102,6 @@ export default {
 
 .toc__navbar {
   width: 100%;
-  font-size: 1.1rem;
 }
 
 .toc__filter {

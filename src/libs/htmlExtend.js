@@ -31,3 +31,19 @@ HTMLElement.prototype.removeClass = function(pattern) {
     }
   }
 };
+
+Node.prototype.remove = function() {
+  this.parentNode.removeChild(this);
+};
+
+Node.prototype.insertBeforeNode = function(node) {
+  node.parentNode.insertBefore(this, node);
+};
+
+Node.prototype.insertAfterNode = function(node) {
+  if (node.nextSibling) {
+    node.parentNode.insertBefore(this, node.nextSibling);
+  } else {
+    node.parentNode.appendChild(this);
+  }
+};

@@ -11,3 +11,11 @@ export default {
   props: ['active']
 };
 </script>
+
+<style lang="scss">
+.tabs__tab {
+  a {
+    user-select: none;
+  }
+}
+</style>

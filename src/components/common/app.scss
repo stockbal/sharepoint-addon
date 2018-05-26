@@ -2,10 +2,10 @@
 @import './coding';
 
 #wiki-addons-container {
-  font-family: Lato, 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: $font-family-main;
   font-variant-ligatures: common-ligatures;
   line-height: 1.67;
-  font-size: 13px;
+  font-size: $font-size-base;
   color: rgba(0, 0, 0, .75);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -56,6 +56,25 @@
 
   :focus {
     outline: none;
+  }
+}
+
+h1, h2, h3, h4 {
+  $anchor-margin-left: 4px;
+  margin-left: -1 * $anchor-margin-left;
+
+  .heading-anchor {
+    float: left;
+    padding-right: $anchor-margin-left;
+    margin-left: -20px;
+    text-decoration: none;
+    color: #4a4a4a;
+    visibility: hidden;
+    cursor: pointer;
+  }
+
+  &:hover .heading-anchor {
+    visibility: visible;
   }
 }
 

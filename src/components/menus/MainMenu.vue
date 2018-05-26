@@ -2,7 +2,7 @@
   <div class="side-bar__panel side-bar__panel--menu">
     <menu-entry @click.native="setPanel('toc')">
       <icon icon="list" slot="icon"/>
-      <div>Table of contents</div>
+      <div>Table of Contents</div>
     </menu-entry>
     <hr/>
     <menu-entry @click.native="setPanel('config')">
@@ -16,6 +16,11 @@
       <span>Configure the styling for the editor and the add on</span>
     </menu-entry>
     <hr/>
+    <menu-entry @click.native="openWiki()">
+      <icon icon="book" slot="icon" />
+      <div>Wiki</div>
+      <span>Documentation of the Add-On</span>
+    </menu-entry>
     <menu-entry @click.native="about()" class="about flex--end">
       <icon icon="question-circle" slot="icon"/>
       <div>About the Add-On</div>
@@ -43,6 +48,13 @@ export default {
       try {
         await this.$store.dispatch('modal/open', 'about');
       } catch (e) {}
+    },
+    openWiki() {
+      window.open(
+        `${REPOSITORY}/wiki`,
+        'sharepoint-addon Wiki',
+        'width=1080,height=950,scrollbars=1,resizable=1,left=50,top=50'
+      );
     },
     async customStyle() {
       try {

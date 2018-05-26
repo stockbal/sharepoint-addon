@@ -3,6 +3,7 @@ import $ from 'jquery';
 import store from '../store';
 import Logger from 'js-logger';
 import _ from 'lodash';
+import eventProxy from '../util/eventProxy';
 
 const logger = Logger.get('Toc Service'); // eslint-disable-line no-unused-vars
 
@@ -70,6 +71,25 @@ const buildTocClosureTable = () => {
     newHeadingId = encodeURIComponent(newHeadingId);
 
     $(heading).attr('id', newHeadingId);
+
+    /* create anchor element inside heading element only if wiki page
+     * resides in read-only mode
+     */
+    if (store.state.editMode) {
+      $(heading).text(headingText);
+    } else {
+      // update heading element with new anchor tag
+      const anchor = document.createElement('a');
+      anchor.classList.add('heading-anchor');
+      anchor.innerText = '#';
+      anchor.onclick = () => {
+        eventProxy.$trigger('navigateToHeading', `#${newHeadingId}`);
+      };
+
+      $(heading)
+        .html(anchor)
+        .append(document.createTextNode(headingText));
+    }
 
     // create a new node for the current heading
     if (headingLevel === 1) {

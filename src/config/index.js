@@ -5,11 +5,19 @@ export default {
     webPartContainerClass: 'ms-rte-wpbox',
     sharePointEditorAreaRead: 'ms-rte-layoutszone-inner',
     sharePointEditorArea: 'ms-rte-layoutszone-inner-editable',
+    rangeStart: 'ms-rterangecursor-start',
+    rangeEnd: 'ms-rterangecursor-end',
     editorContentElementId: 'contentBox',
     sideNavBoxElementId: 'sideNavBox',
     workspaceElementId: 's4-workspace',
     ribbonRowElementId: 's4-ribbonrow',
-    titleRowElementId: 's4-titlerow'
+    titleRowElementId: 's4-titlerow',
+    saveEditButtonId: 'ctl00_PageStateActionButton',
+    checkinCheckoutButton: 'Ribbon.EditingTools.CPEditTab.EditAndCheckout.Checkout-SelectedItem',
+    editSourceCodeButtonId: 'Ribbon.EditingTools.CPEditTab.Markup.Html.Menu.Html.EditSource-Large',
+    fullScreeModeButtonId: 'ctl00_fullscreenmodeBtn',
+    exitFullScreenModeButtonId: 'ctl00_exitfullscreenmodeBtn',
+    fullScreenModeElementId: 'fullscreenmode'
   },
   cssClasses: {
     workspaceAddonsLoadedClass: 's4-workspace--addons-loaded',

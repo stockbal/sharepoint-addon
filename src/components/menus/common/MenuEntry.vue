@@ -16,7 +16,7 @@
   text-align: left;
   padding: 10px;
   height: auto;
-  font-size: 1.2rem;
+  font-size: 17px;
   line-height: 1.5;
   text-transform: none;
   white-space: normal;
@@ -85,6 +85,7 @@
 
 .menu-entry__text {
   width: 100%;
+  flex: 1;
   overflow: hidden;
 }
 </style>

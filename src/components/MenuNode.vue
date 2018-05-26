@@ -25,8 +25,8 @@
       </div>
     </div>
 
-    <sub-menu-node :item="item" :key="item.id" v-if="item.hasMenu && isMenuOpen"
-                   :space-to-bottom="spaceToBottom"></sub-menu-node>
+    <sub-menu-node :item="item" :key="item.id" v-if="item.hasMenu && isMenuOpen" :space-to-bottom="spaceToBottom"
+                   :space-to-right="spaceToRight"></sub-menu-node>
   </div>
 </template>
 
@@ -39,6 +39,10 @@ export default {
   props: {
     item: Object,
     spaceToBottom: {
+      type: Number,
+      default: 0
+    },
+    spaceToRight: {
       type: Number,
       default: 0
     }

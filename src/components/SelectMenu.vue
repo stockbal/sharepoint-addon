@@ -7,9 +7,10 @@
         <icon icon="caret-down" fixed-width focusable="false"/>
       </span>
     </button>
-    <div class="select-menu__menu" v-if="menuVisible" :style="{width: menuWidth}">
-      <ul tabindex="0" role="listbox" @keydown="onItemKeyDown">
-        <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)" tabindex="-1" role="option"
+    <div class="select-menu__menu" v-show="menuVisible" ref="menu" @contextmenu.prevent="toggleMenu"
+         :style="{width: `${menuWidth}px`, top: `${top}px`, left: `${left}px`}">
+      <ul @keydown="onItemKeyDown">
+        <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)"
             :class="{'select-menu__menu-item--selected': value === selectedItem}">{{value}}
         </li>
       </ul>
@@ -20,7 +21,7 @@
 <script>
 import utils from '../services/utils';
 import KeyStrokes from '../services/keystrokes';
-// import $ from 'jquery';
+import $ from 'jquery';
 
 export default {
   name: 'select-menu',
@@ -29,9 +30,10 @@ export default {
     menuVisible: false,
     selectedItem: null,
     menuWidth: 'inherit',
-    uid: utils.uid()
+    uid: utils.uid(),
+    top: 0,
+    left: 0
   }),
-  created() {},
   beforeMount() {
     this.selectedItem = this.items[this.selected];
     if (this.selectedItem === undefined) {
@@ -43,17 +45,16 @@ export default {
     }
   },
   mounted() {
-    this.$el.addEventListener('focusout', e => {
-      if (!e.relatedTarget) {
-        this.menuVisible = false;
-      }
-    });
-    this.menuWidth = this.$el.clientWidth + 'px';
     this.$refs.button = this.$el.querySelector('button');
-
-    this.$refs.button.addEventListener('click', () => {
-      this.$refs.button.focus();
-    });
+    this.menuWidth = this.$refs.button.offsetWidth;
+    document.addEventListener('mousedown', this.mouseListener);
+    // move select menu to body
+    const selectMenu = this.$el.querySelector('.select-menu__menu');
+    document.body.appendChild(selectMenu);
+  },
+  beforeDestroy() {
+    document.removeEventListener('mousedown', this.mouseListener);
+    document.body.removeChild(this.$refs.menu);
   },
   methods: {
     onItemKeyDown(evt) {
@@ -68,15 +69,39 @@ export default {
       this.$emit('change', itemKey);
     },
     toggleMenu() {
+      if (!this.menuVisible) {
+        this.setPosition();
+      }
       this.menuVisible = !this.menuVisible;
-      // if (this.menuVisible) {
-      //   setTimeout(() => {
-      //     document.querySelector('.select-menu__menu ul li:first-child').focus();
-      //   }, 2);
-      // }
+    },
+    setPosition() {
+      const button = this.$el.firstElementChild;
+      const buttonBoundRect = button.getBoundingClientRect();
+
+      this.top = button.offsetHeight + pageYOffset + buttonBoundRect.top;
+      this.left = buttonBoundRect.left + pageXOffset;
+
+      const availableSizeData = utils.calcOffset(
+        button.offsetWidth,
+        300,
+        document.body,
+        this.top,
+        this.left
+      );
+
+      if (availableSizeData.topOffset < 0) {
+        availableSizeData.topOffset -= button.offsetHeight;
+      }
+
+      this.top += availableSizeData.topOffset;
     },
     onEsc() {
       this.menuVisible = false;
+    },
+    mouseListener(evt) {
+      if (!$(evt.target).closest('.select-menu, .select-menu__menu').length) {
+        this.menuVisible = false;
+      }
     }
   }
 };
@@ -88,14 +113,6 @@ export default {
 .select-menu {
   width: 100%;
   outline: none;
-
-  ul,
-  li {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    outline: none;
-  }
 
   button {
     margin: 0;
@@ -133,18 +150,28 @@ export default {
 }
 
 .select-menu__menu {
-  position: fixed;
-  background: $primary-color;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: $primary-color;
   max-height: 300px;
   overflow: auto;
-  z-index: 3000;
+  z-index: 9999;
   border: 1px solid $dark-grey;
-  @include box-shadow(0px 8px 13px $shadow-color);
+  box-shadow: 0 8px 13px $shadow-color;
+
+  ul,
+  li {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    outline: none;
+  }
 
   li {
     color: white;
     padding: 3px 8px;
-    @include no-selection;
+    user-select: none;
     cursor: pointer;
 
     &:hover,

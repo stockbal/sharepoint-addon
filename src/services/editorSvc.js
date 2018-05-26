@@ -1,22 +1,18 @@
 import store from '../store';
-import layoutSvc from './layoutSvc';
-import selectionSvc from './selectionSvc';
 import Prism from 'prismjs';
-import codeCreatorSvc from './codeCreatorSvc';
 import Logger from 'js-logger';
 import config from '../config';
 import utils from './utils';
 import $ from 'jquery';
-import browser from './browser';
-import doubleClickListener from './editor/doubleClickListener';
 import contextMenuListener from './editor/contextMenuListener';
 import keyListener from './editor/keyListener';
 import { styleSvc } from './styleSvc';
-import { CODING_SELECTOR } from '../config/constants';
 import { ImagePreview } from './editor/imagePreview';
 import { TextStyleRemover } from './editor/textStyleRemover';
 import eventProxy from '../util/eventProxy';
 import './editorUtilsSvc';
+import { CodeConverter } from './editor/codeConverter';
+import { ClipBoardListener } from './editor/clipboardListener';
 
 const logger = Logger.get('Editor Service');
 
@@ -38,83 +34,50 @@ export default {
     };
   },
   /**
-   * Opens the editor modal for the past element
-   * @param $coding jquery element
-   * @returns {Promise<void>}
-   */
-  async _openEditorForElement($coding) {
-    try {
-      await selectionSvc.selectionListener.stop();
-      let code = await store.dispatch('modal/open', {
-        type: 'editor',
-        ...this._getCodingInfo($coding)
-      });
-      this.createCode({ ...code, element: $coding });
-    } catch (e) {
-      if (e) {
-        logger.error(e);
-      }
-    }
-    selectionSvc.selectionListener.start();
-  },
-  /**
-   * Inserts/updates styled coding
-   * @param printLineNumbers
-   * @param inline
+   * Creates a coding area element into editor
    * @param text
-   * @param language
-   * @param element
-   * @param fromSelection
+   * @param inline
    */
-  createCode({
-    printLineNumbers = false,
-    inline,
-    text,
-    language = 'markup',
-    element = null,
-    fromSelection = false
-  }) {
-    if (text === '') {
-      logger.error('No code was passed for saving...');
-      // for testing only
-      return;
+  createCodingArea(text = '', inline = false) {
+    const { range, sel } = store.state.selectionData;
+    const codingArea = document.createElement(inline ? 'span' : 'div');
+    codingArea.classList.add('coding--editable');
+
+    const createCodingLine = (text, type) => {
+      const codingLine = document.createElement(type);
+      codingLine.classList.add('coding-line');
+      codingLine.innerText = text;
+
+      codingArea.appendChild(codingLine);
+    };
+
+    if (inline) {
+      createCodingLine(text, 'span');
+    } else {
+      const codingLines = text === '' ? ['Enter Coding here...'] : text.split('\n');
+      for (const codingLine of codingLines) {
+        createCodingLine(codingLine, 'div');
+      }
     }
 
-    codeCreatorSvc.createCoding({
-      element,
-      code: text,
-      language,
-      makeInline: inline,
-      printLineNumbers,
-      fromSelection
-    });
+    codingArea.setData('language', 'markup');
 
-    // highlight contentBox
-    this.highlightCode();
+    range.insertNode(codingArea);
+
+    // select all coding lines
+    sel.removeAllRanges();
+
+    range.setStartBefore(codingArea.firstElementChild.childNodes[0]);
+    range.setEndAfter(codingArea.lastElementChild.childNodes[0]);
+    sel.addRange(range);
   },
-  async addCoding() {
-    try {
-      // check if there is a text selection
-      const text = store.state.selectionData ? store.state.selectionData.text : '';
-      await selectionSvc.selectionListener.stop();
-
-      const code = await store.dispatch('modal/open', {
-        type: 'editor',
-        text
-      });
-
-      const selectedText = store.state.selectionData ? store.state.selectionData.text : '';
-      if (selectedText) {
-        store.state.selectionData.range.deleteContents();
-      }
-
-      this.createCode(code);
-    } catch (e) {
-      if (e) {
-        logger.error(e);
-      }
+  addCoding(inline = false) {
+    const selectedText = store.state.selectionData ? store.state.selectionData.text : '';
+    if (selectedText) {
+      store.state.selectionData.range.deleteContents();
     }
-    return selectionSvc.selectionListener.start();
+
+    this.createCodingArea(selectedText, inline);
   },
   _pasteClipboard() {
     const clipBoard = store.state.clipboardData;
@@ -122,47 +85,6 @@ export default {
 
     range.deleteContents();
     range.insertNode(clipBoard.content.cloneNode(true));
-  },
-  /**
-   * Connverts the passed coding element to text form
-   * @param $coding
-   */
-  _convertCodeToText($coding) {
-    const text = $coding.find('code').text();
-
-    const newSpan = text => {
-      const span = document.createElement('span');
-      span.textContent = text;
-      return span;
-    };
-
-    if ($coding[0].getData('inline')) {
-      $coding.replaceWith(document.createTextNode(text));
-    } else {
-      const paragraph = document.createElement('p');
-      const textLines = text.split('\n');
-
-      for (let line of textLines) {
-        // split beginning tabs and the rest of the text
-        let beginningTabs = /^\t*/.exec(line);
-        if (beginningTabs) {
-          const tabs = newSpan(beginningTabs[0]);
-          tabs.style.whiteSpace = 'pre';
-          paragraph.appendChild(tabs);
-          // remove found tabs from line
-          line = line.replace(/^\t*/g, '');
-        }
-
-        const span = newSpan(line);
-        paragraph.appendChild(span);
-
-        const spanBreak = newSpan('');
-        spanBreak.innerHTML = '\n<br>';
-        paragraph.appendChild(spanBreak);
-      }
-
-      $coding.replaceWith(paragraph);
-    }
   },
   /**
    * Removes the defined background from the selected nodes
@@ -252,25 +174,26 @@ export default {
       selectionData.range.setEndAfter(alert);
     }
   },
+
   /**
-   * Checks if edit mode is active and performs necessary
-   * actions
-   * @returns {Promise<void>}
-   * @private
+   * Determines the
+   * @returns {Promise<*>}
    */
-  async _updateEditMode() {
+  async determineEditMode() {
+    return store.dispatch(
+      'setEditMode',
+      !$(`.${config.cssClasses.sharePointReadOnlyClass}`).length
+    );
+  },
+  /**
+   * Performs necessary actions according to edit/read-only mode
+   * @public
+   */
+  updateEditMode() {
+    const codeConverter = new CodeConverter();
     // check if wiki site resides in edit mode, by checking
-    if (!$(`.${config.cssClasses.sharePointReadOnlyClass}`).length) {
-      await store.dispatch('toggleEditMode');
-      const { editorDisabled, codeEditorDisabled } = store.state.settings;
-
-      this._fixCodingBlocks();
-
-      if (codeEditorDisabled) {
-        this._disableCodeEditor();
-      } else {
-        this._enableCodeEditor();
-      }
+    if (store.state.editMode) {
+      const { editorDisabled } = store.state.settings;
 
       if (editorDisabled) {
         this._disableEditor();
@@ -278,61 +201,25 @@ export default {
         this._enableEditor();
       }
 
-      if (browser.isIE()) {
-        selectionSvc.preventSelectionForCoding();
-      }
-
       // connect some listeners
-      eventProxy.on('openEditorWith', $coding => {
-        this._openEditorForElement($coding);
-      });
-
-      eventProxy.on('createCode', async () => this.addCoding());
-      eventProxy.on('createInlineCode', () => {
-        this.createCode({
-          inline: true,
-          text: store.state.selectionData.text,
-          language: 'markdown',
-          fromSelection: true
-        });
-      });
-      eventProxy.on('convertToText', $coding => this._convertCodeToText($coding));
+      eventProxy.on('createCode', () => this.addCoding());
+      eventProxy.on('createInlineCode', () => this.addCoding(true));
       eventProxy.on('blockquote', () => this._createBlockQuote());
       eventProxy.on('alert', type => this._createAlert(type));
       eventProxy.on('paste', () => this._pasteClipboard());
       eventProxy.on('removeFormatting', type => this._removeFormatting(type));
+
+      // one time conversion of coding preview areas to editing areas
+      codeConverter.convertPreviewAreasToEditableAreas();
+      codeConverter.convertLineBreaksToNonBreaking();
     } else {
       ImagePreview.createImgListeners();
+
+      codeConverter.convertCodingAreas();
+      this._updatePrismStyle();
+      this.highlightCode();
     }
   },
-  /**
-   * fix coding blocks that were created with a previous version of the addons
-   * @private
-   */
-  _fixCodingBlocks() {
-    const $codingBlocks = $(`#${config.elements.editorContentElementId} ${CODING_SELECTOR}`);
-
-    $codingBlocks.each((index, element) => {
-      const $element = $(element);
-      const $code = $element.find('code');
-
-      element.setData('inline', $element.hasClass('inline'));
-      element.setData('language', /language-(\w+)/.exec($code.attr('class'))[1]);
-      element.setData('line-numbers', ($element.children('.line-numbers').length > 0).toString());
-    });
-  },
-  setUpCodingBlocks(codeEditorDisabled) {
-    const $codingBlocks = $(`#${config.elements.editorContentElementId} ${CODING_SELECTOR}`);
-
-    if (codeEditorDisabled) {
-      $codingBlocks.removeAttr('contenteditable');
-    } else {
-      $codingBlocks.attr('contenteditable', false);
-    }
-  },
-  /**
-   * Highlights all existing coding blocks inside the document
-   */
   highlightCode() {
     Prism.highlightAllUnder(document.getElementById(config.elements.editorContentElementId));
   },
@@ -342,7 +229,7 @@ export default {
    * @private
    */
   _updatePrismStyle() {
-    if (store.state.settings.codeEditorDisabled) {
+    if (store.state.editMode) {
       return;
     }
     let $editorArea = $(`#${config.elements.editorContentElementId}`);
@@ -356,52 +243,22 @@ export default {
     this.highlightCode();
   },
   /**
-   * Disables the code editor features
-   * @private
-   */
-  _disableCodeEditor() {
-    this.disableCodeTheming();
-
-    if (store.state.editMode) {
-      if (!browser.isIE()) {
-        layoutSvc.enableCodingSelection();
-      }
-      doubleClickListener.stop();
-      this.setUpCodingBlocks(true);
-    }
-  },
-  /**
-   * Enables the code editor features
-   * @private
-   */
-  _enableCodeEditor() {
-    this._updatePrismStyle();
-
-    if (store.state.editMode) {
-      if (!browser.isIE()) {
-        layoutSvc.disableCodingSelection();
-      }
-      doubleClickListener.start();
-      this.setUpCodingBlocks(false);
-    }
-  },
-  /**
    * Enables the editor
    * @private
    */
   _enableEditor() {
+    ClipBoardListener.start();
     contextMenuListener.start();
     keyListener.registerEditModeListeners();
-    selectionSvc.selectionListener.start();
   },
   /**
    * Disables the editor
    * @private
    */
   _disableEditor() {
+    ClipBoardListener.stop();
     contextMenuListener.stop();
     keyListener.unregisterEditModeListeners();
-    selectionSvc.selectionListener.stop();
   },
   /**
    * Disables the prism theming for all code blocks
@@ -413,17 +270,28 @@ export default {
       $editorArea.removeClass(currentlyAppliedPrismStyle);
     }
   },
-  _scrollToLoadedLocation() {
-    if (!window.location.hash) {
-      return;
+  _scrollToStateLocation(state) {
+    if (state) {
+      if (state['headingId']) {
+        this._scrollToElementInWorkspace(state.headingId);
+      } else if (state['workspaceTop']) {
+        $(`#${config.elements.workspaceElementId}`).scrollTop(state.workspaceTop);
+      }
+    } else {
+      // check if hash is filled
+      this._scrollToElementInWorkspace(window.location.hash);
     }
+  },
+  _scrollToElementInWorkspace(elementId) {
+    const $workspace = $(`#${config.elements.workspaceElementId}`);
 
-    setTimeout(() => {
-      const $workSpace = $(`#${config.elements.workspaceElementId}`);
-      $workSpace.scrollTop(
-        $workSpace.scrollTop() - $workSpace.offset().top + $(window.location.hash).offset().top
+    if (elementId) {
+      $workspace.scrollTop(
+        $(elementId).offset().top - $workspace.offset().top + $workspace.scrollTop()
       );
-    }, 2);
+    } else {
+      $workspace.scrollTop(0);
+    }
   },
   /**
    * Creates the custom editor style sheet
@@ -433,9 +301,10 @@ export default {
     styleSvc.createCustomStyles(updateBaseFontSize);
     this._updatePrismStyle();
   },
-  async init() {
-    keyListener.start();
-    await this._updateEditMode();
+  /**
+   * Main initialisation for the editor functions
+   */
+  init() {
     eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
     eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
     eventProxy.on('disableEditor', () => this._disableEditor());
@@ -446,8 +315,28 @@ export default {
     );
     eventProxy.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
     eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
+
+    this.updateEditMode();
+    keyListener.start();
     this._setCustomEditorStyle();
-    this._updatePrismStyle();
-    this._scrollToLoadedLocation();
+
+    if (!store.state.editMode) {
+      this._scrollToStateLocation(history.state, true);
+    }
+
+    eventProxy.on('navigateToHeading', headingIdSelector => {
+      history.pushState({ headingId: headingIdSelector }, '', headingIdSelector);
+      this._scrollToElementInWorkspace(headingIdSelector);
+    });
+    window.addEventListener('beforeunload', evt => {
+      history.replaceState(
+        { workspaceTop: $(`#${config.elements.workspaceElementId}`).scrollTop() },
+        '',
+        '#'
+      );
+    });
+    window.addEventListener('popstate', evt => {
+      this._scrollToStateLocation(evt.state);
+    });
   }
 };

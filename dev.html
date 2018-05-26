@@ -58,6 +58,7 @@
       order: 1;
       margin-top: 2em;
       padding-left: 3rem !important;
+      padding-right: 3rem !important;
     }
 
     #sideNavBox {
@@ -126,26 +127,142 @@
     .ms-rteForeColor-1-0 {
       color: #9124bb;
     }
-
-    .ms-rteStyle-Normal {
-      font-family:"Segoe UI","Segoe",Tahoma,Helvetica,Arial,sans-serif;
-      font-size:13px;
-      color:#444;
-      background-color:#fff;
-      background-color:rgba(255, 255, 255, 0.85);
-      font-weight:normal;
-    }
-
-    .ms-rteStyle-Byline,
-    .ms-rteStyle-Quote,
-    .ms-rteStyle-IntenseQuote {
-      font-style:italic;
-      color:#444;
-    }
   </style>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 
   <script>
+    var RANGE_START = 'ms-rterangecursor-start';
+    var RANGE_END = 'ms-rterangecursor-end';
+
+    function resetCursor(evt) {
+      var selection = window.getSelection();
+      var range = selection.getRangeAt(0);
+      const startOffset = range.startOffset;
+      const endOffset = range.endOffset;
+      const startCont = range.startContainer;
+      const endCont = range.endContainer;
+
+      var oldStart = document.getElementById(RANGE_START);
+      var oldEnd = document.getElementById(RANGE_END);
+
+      if (oldStart) {
+        oldStart.parentNode.removeChild(oldStart);
+      }
+      if (oldEnd) {
+        oldEnd.parentNode.removeChild(oldEnd);
+      }
+
+      var startRange = document.createElement('span');
+      startRange.id = RANGE_START;
+
+      var endRange = document.createElement('span');
+      endRange.id = RANGE_END;
+
+      if (startCont.nodeType === Node.TEXT_NODE) {
+        if (startOffset) {
+          let after = startCont.splitText(startOffset);
+          // startCont.parentElement.insertBefore(startRange, after);
+          $(startRange).insertBefore(after);
+
+          if (startCont === endCont && startOffset === endOffset) {
+            // startCont.parentElement.insertBefore(endRange, after);
+            $(endRange).insertBefore(after);
+            return;
+          }
+        } else {
+          // startCont.parentNode.insertBefore(startRange, startCont);
+          $(startRange).insertBefore(startCont);
+          if (startCont === endCont && startOffset === endOffset) {
+            // startCont.parentElement.insertBefore(endRange, startCont);
+            $(endRange).insertBefore(startCont);
+            return;
+          }
+        }
+      } else {
+
+        if (range.startOffset !== 0) {
+          const startNode = startCont.childNodes[range.startOffset - 1];
+
+          if (startNode) {
+            if (startNode.nextSibling) {
+              // startCont.insertBefore(startRange, startNode.nextSibling);
+              $(startRange).insertBefore(startCont.nextSibling);
+            } else {
+              startCont.appendChild(startRange);
+            }
+
+            if (range.collapsed) {
+              if (startRange.nextSibling) {
+                // startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+                $(endRange).insertBefore(startRange.nextSibling);
+              } else {
+                startRange.parentNode.appendChild(endRange);
+              }
+              return;
+            }
+          }
+        } else {
+          if (startCont.firstChild) {
+            // startCont.insertBefore(startRange, startCont.firstChild);
+            $(startRange).insertBefore(startCont.firstChild);
+          } else {
+            startCont.appendChild(startRange);
+          }
+
+          if (range.collapsed) {
+            if (startRange.nextSibling) {
+              // startRange.parentNode.insertBefore(endRange, startRange.nextSibling);
+              $(endRange).insertBefore(startRange.nextSibling);
+            } else {
+              startRange.parentNode.appendChild(endRange);
+            }
+            return;
+          }
+        }
+
+      }
+
+      if (endCont.nodeType === Node.TEXT_NODE) {
+        if (endOffset) {
+          let after = endCont.splitText(endOffset);
+          // endCont.parentElement.insertBefore(endRange, after);
+          $(endRange).insertBefore(after);
+        } else {
+          // endCont.parentElement.insertBefore(endRange, endCont);
+          $(endRange).insertBefore(endCont);
+        }
+      } else {
+        if (range.endOffset !== 0) {
+          const endNode = endCont.childNodes[range.endOffset - 1];
+
+          if (endNode) {
+            if (endNode.nextSibling) {
+              // endCont.insertBefore(endRange, endNode.nextSibling);
+              $(endRange).insertBefore(endNode.nextSibling);
+            } else {
+              endCont.appendChild(endRange);
+            }
+          }
+        } else {
+          if (endCont.firstChild) {
+            // endCont.insertBefore(endRange, endCont.firstChild);
+            $(endRange).insertBefore(endCont.firstChild);
+          } else {
+            endCont.appendChild(endRange);
+          }
+        }
+      }
+    }
+    document.addEventListener('selectionchange', function(evt) {
+      var wikiContentEditable = document.getElementsByClassName('ms-rte-layoutszone-inner-editable');
+      if (!wikiContentEditable.length) {
+        return;
+      }
+      resetCursor(evt);
+      // normalize content
+      wikiContentEditable[0].normalize();
+    });
+
     function closedRibbonBar() {
       $('#s4-ribbonrow').css('height', '35px');
       calcBodySize();
@@ -172,7 +289,37 @@
       $workspace.css('height', height + 'px');
     }
 
+    function toggleEditMode() {
+      window.localStorage.setItem('dev_readOnly', !isReadOnly() ? 'true' : 'false');
+      window.location.reload();
+    }
+
+    function isReadOnly() {
+      var readOnlyLstValue = window.localStorage.getItem('dev_readOnly');
+      var readOnly = false;
+      if (readOnlyLstValue) {
+        readOnly = readOnlyLstValue === 'true';
+      }
+      return readOnly;
+    }
+
     jQuery(function () {
+
+      var editor = document.getElementById('editor');
+      editor.class = '';
+      var toggleButtonText = '';
+      if (isReadOnly()) {
+        toggleButtonText = 'Go to edit mode';
+        editor.classList.add('ms-rte-layoutszone-inner');
+        editor.classList.add('ms-wikicontent');
+        editor.contentEditable = false;
+      } else {
+        toggleButtonText = 'Go to read-only mode';
+        editor.classList.add('ms-rte-layoutszone-inner-editable');
+        editor.contentEditable = true;
+      }
+      document.getElementById('ctl00_PageStateActionButton').innerText = toggleButtonText;
+
       calcBodySize();
       window.addEventListener('resize', function() {
         calcBodySize();
@@ -191,6 +338,7 @@
   <button style="margin-left: 5px" onclick="closedRibbonBar()">Simulate closed Ribbon Bar</button>
   <button onclick="openRibbonBar()">Simulate Simple Ribbon bar</button>
   <button onclick="webPartRibbonBar()">Simulate web part Ribbon Bar</button>
+  <button id="ctl00_PageStateActionButton" onclick="toggleEditMode()">Toggle Edit mode</button>
 </header>
 
 <div id="s4-ribbonrow">
@@ -270,11 +418,21 @@
       <div id="contentBox">
         <div id="DeltaPlaceHolderMain">
           <div class="ms-rtestate-field  bd-content">
-            <!--<div class="ms-wikicontent" contenteditable="false" spellcheck="false">-->
-            <div class="ms-rte-layoutszone-inner-editable" contenteditable="true" spellcheck="false">
+            <div id="editor" class="ms-rte-layoutszone-inner-editable" contenteditable="true" spellcheck="false">
               <h2>Wrong Heading</h2>
+              <div class="coding--editable" data-language="javascript" data-line-numbers="true"><div class="coding-line">// Block Coding of some Javascript</div><div class="coding-line">var someVariable = '49034';</div><div class="coding-line"><br></div><div class="coding-line">// Call a function</div><div class="coding-line">var selection = wind<span id="ms-rterangecursor-start"></span><span id="ms-rterangecursor-end"></span>ow.getSelection();</div><div class="coding-line">var range = selection.getRangeAt(0);</div><div class="coding-line">range.deleteContents();</div><div class="coding-line">// end of coding block</div></div>
               <h1>1. Heading</h1>
               <h2>1.2 Heading</h2>
+              <div class="coding " data-inline="false" data-language="abap" data-line-numbers="false"><pre class=" code-toolbar  language-abap"><code class="  language-abap"><span class="token eol-comment comment">"! &lt;p class="shorttext synchronized"&gt;short description of the Dairy example&lt;/p&gt;</span>
+<span class="token keyword">CLASS</span> /dry/cl_abapdoc_example
+         <span class="token keyword">DEFINITION</span>
+         <span class="token keyword">PUBLIC</span>
+         <span class="token keyword">FINAL</span>
+         <span class="token keyword">CREATE</span>
+         <span class="token keyword">PUBLIC</span><span class="token punctuation">.</span>
+
+         <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">ENDCLASS</span><span class="token punctuation">.</span></code><div class="toolbar"><div class="toolbar-item"><span>ABAP</span></div></div></pre></div>
               <h3>1.2.1 Heading</h3>
               <h3>1.2.2 A really long heading to test if it fits</h3>
               <h2>1.3 Heading</h2>
@@ -282,45 +440,23 @@
                 <p>A blockquote example</p>
               </blockquote>
               <h1>2. Heading</h1>
-              <span id="code_3343" class="coding inline">
-                  <code class="language-abap">select * from mara
-                  </code>
+              <span class="coding--editable" data-language="abap" data-inline="true" data-line-numbers="false">
+                  <span class="coding-line">select * from mara</span>
                 </span>
               <h2>2.2 Heading</h2>
               <p>Image for zoom test</p>
-              <img src="http://futurefocusfoundation.us/wp-content/uploads/2016/07/coding.jpg" alt="Coding" style="max-height: 300px;"/>
+              <img src="https://coresites-cdn.factorymedia.com/mpora_new/wp-content/uploads/2017/07/Fifth-Highest-Mountain-In-The-World.jpg" alt="Mountain" style="max-height: 300px;"/>
               <p>Here comes some inline code:
-                <span class="coding inline" id="code_49204">
-                    <code class=" language-abap">SELECT * FROM mara INTO @DATA(lt_mara).</code>
+                <span class="coding--editable" data-language="abap" data-inline="true" data-line-numbers="false">
+                    <span class="coding-line">SELECT * FROM mara INTO @DATA(lt_mara).</span>
                   </span>
               </p>
               <h2>2.3 Heading</h2>
               <p> Some Example Coding</p>
-              <p>
-              <div id="code_3kb0w4dc4" class="coding">
-                    <pre class="language-javascript line-numbers "><code class="language-javascript">function getAsyncData() {
-	// The creation/reading of the OData model is not relevant here
-	var myResult;
-
-	oModel.read("/MyEntitySet(id='1')", {
-		// will get called if the service request was successful
-		success: function(oResult) {
-			// set the returned result to the variable
-			myResult = oResult;
-		},
-		// will get called if an error occurrs
-		error: function(oError) {
-		// print the error
-		console.log(oError);
-		}
-	});
-
-	// return the retrieved result from the odata service
-	return myResult;
-}</code></pre>
+              <div class="coding--editable" data-language="html" data-inline="false" data-line-numbers="true">
+                <div class="coding-line">&lt;html&gt;</div><div class="coding-line">&lt;head&gt;</div><div class="coding-line">&nbsp; &lt;title&gt;My Title&lt;/title&gt;</div><div class="coding-line">&nbsp; &lt;meta charset="utf-8"&gt;</div><div class="coding-line">&lt;/head&gt;</div><div class="coding-line"><br></div><div class="coding-line">&lt;body&gt;</div><div class="coding-line">&nbsp; &lt;h1&gt;Header&lt;/h1&gt;</div><div class="coding-line">&nbsp; &lt;p&gt;some Content&lt;/p&gt;</div><div class="coding-line">&lt;/body&gt;</div><div class="coding-line">&lt;html&gt;</div>
               </div>
               <br>
-              </p>
               <p>
                 <br>
               </p>
@@ -332,18 +468,18 @@
               </div>
               <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
                 et dolore ma<del>gna aliquyam erat, sed diam voluptua. <span class="ms-rteThemeBackColor-5-0">At vero eos et accusam et justo duo</span> dolores et ea rebum.
-                Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-                  amet, consetetur</del> sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+                  amet, consetetur</del> sadipscing elitr, sed diam nonumy eirmod  <span class="coding inline" id="code_3ywyi30yl" data-inline="true" data-language="abap" data-line-numbers="false"><code class="  language-abap"><span class="token keyword">LOOP</span> <span class="token keyword">AT</span> lt_table <span class="token keyword">ASSIGNING</span> <span class="token keyword">FIELD-SYMBOL</span><span class="token punctuation">(</span>&lt;ls_line&gt;<span class="token punctuation">)</span><span class="token punctuation">.</span></code></span> tempor invidunt ut labore et dolore magna
                 aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.Stet clita kasd
                 gubergren, no sea takimata sanctus est Lore<span style="background-color: lightgreen;">m ipsum dolor sit</span> amet. Lorem ipsum dolor sit amet, consetetur
                 sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-                voluptua. At <font face="Consolas, monospace" size="4" color="blue">vero eos et accusam et justo duo dolores</font> et ea rebum. Stet clita kasd gubergren, no sea
+                voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
                 takimata sanctus est Lorem ipsum dolor sit amet. </p>
               <p>Duis autem vel eum iriure dolor in hendrerit in<div class="alert alert--warning">A simple warning info</div> vulputate velit esse molestie consequat, vel illum dolore
-                eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum
-                zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer
-                adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-                volutpat. </p>
+              eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum
+              zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer
+              adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+              volutpat. </p>
               <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex
                 ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie
                 consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim
@@ -357,15 +493,25 @@
               <p>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
                 sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
                 nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. <div class="alert alert--danger">At vero eos et
-                accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
               ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </div> accusam aliquyam diam
-                diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et
-                gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet.
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-                et dolore magna aliquyam erat. </p>
+              diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et
+              gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet.
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat. </p>
               <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-                erat, sed <span class="ms-rteStyle-Normal">diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-                  gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</span> Lorem ipsum dolor sit amet, consetetur
+                erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+                gubergren,
+              <div class="coding--editable" data-line-numbers="true" data-language="js">
+              <div class="coding-line"></div>
+              <div class="coding-line">/* line comment */</div>
+              <div class="coding-line">var myVar&nbsp;= someVar + 4;</div>
+              <div class="coding-line"><br></div>
+              <div class="coding-line">// some other single line comment</div>
+              <div class="coding-line">const myFunction = (var1, var2) =&gt; {</div>
+              <div class="coding-line">&nbsp; doSomething(var1);</div>
+              <div class="coding-line">}<br></div>
+            </div>no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
                 sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
                 voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
                 takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
@@ -400,24 +546,14 @@
               <h1>4. Heading</h1>
               <img src="http://www.techsors.com/wp-content/uploads/2016/02/App-Development.jpg" alt="Programming code" style="max-width: 800px;" />
               <h2>4.2 Heading</h2>
-              <div id="code_49304" class="coding">
-                  <pre class="language-abap line-numbers"><code class="language-abap">" some comment
-" Some other comment
-SELECT matnr, prctr INTO @DATA(lt_marc_data)
-FROM marc
-WHERE matnr like 'F%'.
-
-LOOP AT lt_marc_data ASSIGNING FIELD-SYMBOL(<ls_field>).
-	" TODO: do some stuff here...
-ENDLOOP.</code></pre>
-              </div>
+              <div class="coding--editable" data-language="abap" data-line-numbers="true" data-inline="false"><div class="coding-line">" some comment&nbsp;</div><div class="coding-line">" Some other comment&nbsp;</div><div class="coding-line">SELECT matnr, prctr INTO @DATA(lt_marc_data)&nbsp;</div><div class="coding-line">FROM marc&nbsp;</div><div class="coding-line">WHERE matnr like 'F%'.&nbsp;</div><div class="coding-line"><br></div><div class="coding-line">LOOP AT lt_marc_data ASSIGNING FIELD-SYMBOL().&nbsp;</div><div class="coding-line">&nbsp; " TODO: do some stuff here...&nbsp;</div><div class="coding-line">ENDLOOP.&nbsp;</div></div>
               <h2>4.3 Heading</h2>
 
               <h1>5. Heading</h1>
               <h2>5.2 Heading</h2>
               <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
                 et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
+                Stet clita kasd gubergren, no sea takimata sanctus <span class="coding--editable" data-language="abap"><span class="coding-line">SELECT * FROM mara INTO @DATA(lt_mara).</span></span>est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
                 amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
                 aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
                 gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur

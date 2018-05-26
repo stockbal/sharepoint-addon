@@ -36,30 +36,20 @@ To leave the blockquote editing area you can enter the key combination `Ctrl+Ent
 
 To change the style of an alert to a different kind choose the corresponding type from the **Create Alert**-menu.
 #### Creating/Editing Coding
-This Add-On enhances the editor with ability to insert snippets of programming code with proper syntax styling into the
-page. The syntax highlighting is being done with [Prism](http://prismjs.com/index.html).   
-Code snippets can either be *inline* or in *block* format.  
+This Add-On enhances the editor with the feature to insert/edit coding snippets.  
+To insert a(n) (inline) coding block you open the context menu at the position in the wiki page and press the action
+`Create Coding Block` or `Create Inline Coding` - if there is some text selection present.
+The inserted Coding Area can be recognized the dotted border that surrounds it. To leave the Coding Area and start a 
+new paragraph/sentence you can press `Ctrl+Enter`.  
+To view/change the properties of the Coding Area you can call the context menu on the coding area, which will show a quick
+menu.
 
-To create a coding snippet you just open the context menu at the desired location in the text and press the menu entry
-**Create Block Coding** to open the coding editor.  
-If you are satisfied with the entered coding and the selected options (language, inline, line numbers) you press and
-save and the code will get inserted with the proper syntax highlighting at the current cursor position.  
-
-If you open the context menu over an existing coding block you get the following options
-- Cut
-- Copy
-- Edit
-- Convert To Text
-- Delete
-- Insert  
-  - Paragraph before
-  - Paragraph after 
-
-> Note: If you trigger the *cut/copy* action, pasting via `Ctrl+V` will not work. You must use the *Paste* action
-via the context menu
+Upon Saving the Wikipage and therefore leaving the edit mode the Coding Areas will be transformed into themed Coding 
+blocks with correct Syntax Highlighting (done woth [Prism](http://prismjs.com)) 
 
 #### Shortcuts for accessing the menus
 - Use `Alt+Shift+T` to access the table contents
+- Use `Alt+Shift+M` to show the main menu of the Add-On
 - Use `Alt+Shift+C` to access the config menu
 
 #### Additional features
@@ -73,7 +63,7 @@ keyboard
 ## Building the Add-On's for your site
 
 ### Installation of Node
-- Install [Node](https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi) if not already installed
+- Install [Node](https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi).
 
 ### Build
 ``` bash

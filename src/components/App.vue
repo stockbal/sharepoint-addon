@@ -1,14 +1,16 @@
 <template>
   <div id="wiki-addons-container">
-    <side-bar />
-    <modal v-if="showModal" />
+    <side-bar/>
+    <modal v-if="showModal"/>
     <context-menu v-if="showContextMenu"/>
-    <image-overlay v-if="showImagePreview" />
+    <image-overlay v-if="showImagePreview"/>
+    <quick-menu v-if="showQuickMenu"/>
   </div>
 </template>
 
 <script>
 import ImageOverlay from './ImageOverlay';
+import QuickMenu from './QuickMenu';
 import SideBar from './SideBar';
 import ContextMenu from './ContextMenu';
 import Modal from './Modal';
@@ -49,6 +51,7 @@ Vue.directive('tooltip', {
 
 export default {
   components: {
+    QuickMenu,
     ImageOverlay,
     SideBar,
     ContextMenu,
@@ -56,6 +59,7 @@ export default {
   },
   async created() {
     try {
+      await editorSvc.determineEditMode();
       await localDbSvc.syncLocalStorage();
       await tocSvc.synchronizeTableOfContents();
       tocSvc.startScrollListener();
@@ -78,6 +82,9 @@ export default {
     },
     showImagePreview() {
       return !!this.$store.state.imagePreview.source;
+    },
+    showQuickMenu() {
+      return this.$store.state.quickMenu.items.length > 0;
     }
   }
 };
