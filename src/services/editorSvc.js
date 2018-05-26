@@ -319,7 +319,10 @@ export default {
     this.updateEditMode();
     keyListener.start();
     this._setCustomEditorStyle();
-    this._scrollToStateLocation(history.state, true);
+
+    if (!store.state.editMode) {
+      this._scrollToStateLocation(history.state, true);
+    }
 
     eventProxy.on('navigateToHeading', headingIdSelector => {
       history.pushState({ headingId: headingIdSelector }, '', headingIdSelector);
