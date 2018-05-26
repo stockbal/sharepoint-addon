@@ -170,7 +170,12 @@ export default {
       } else {
         const newTab = utils.createTabElement();
 
-        newTab.insertBeforeNode(rangeCursor.end);
+        if (rangeCursor.getClosestToStart('tab')) {
+          newTab.insertAfterNode(rangeCursor.startParent);
+        } else {
+          newTab.insertBeforeNode(rangeCursor.start);
+        }
+
         const sel = document.getSelection();
         const range = document.createRange();
 
