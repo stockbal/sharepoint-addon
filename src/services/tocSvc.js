@@ -72,17 +72,24 @@ const buildTocClosureTable = () => {
 
     $(heading).attr('id', newHeadingId);
 
-    // update heading element with new anchor tag
-    const anchor = document.createElement('a');
-    anchor.classList.add('heading-anchor');
-    anchor.innerText = '#';
-    anchor.onclick = () => {
-      eventProxy.$trigger('navigateToHeading', `#${newHeadingId}`);
-    };
+    /* create anchor element inside heading element only if wiki page
+     * resides in read-only mode
+     */
+    if (store.state.editMode) {
+      $(heading).text(headingText);
+    } else {
+      // update heading element with new anchor tag
+      const anchor = document.createElement('a');
+      anchor.classList.add('heading-anchor');
+      anchor.innerText = '#';
+      anchor.onclick = () => {
+        eventProxy.$trigger('navigateToHeading', `#${newHeadingId}`);
+      };
 
-    $(heading)
-      .html(anchor)
-      .append(document.createTextNode(headingText));
+      $(heading)
+        .html(anchor)
+        .append(document.createTextNode(headingText));
+    }
 
     // create a new node for the current heading
     if (headingLevel === 1) {
