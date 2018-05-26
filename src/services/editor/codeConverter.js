@@ -100,4 +100,22 @@ export class CodeConverter {
     }
     return codingText;
   }
+
+  /**
+   * Replace &lt;br&gt; elements inside of
+   * coding lines to prevent the display of duplicate
+   * empty lines
+   *
+   * @public
+   */
+  convertLineBreaksToNonBreaking() {
+    for (const breakEl of document.querySelectorAll('.coding-line br')) {
+      const parentNode = breakEl.parentNode;
+      if (parentNode.childNodes.length === 1) {
+        parentNode.innerHTML = '&nbsp;';
+      } else {
+        breakEl.remove();
+      }
+    }
+  }
 }

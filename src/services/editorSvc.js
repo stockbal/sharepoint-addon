@@ -209,6 +209,7 @@ export default {
 
       // one time conversion of coding preview areas to editing areas
       codeConverter.convertPreviewAreasToEditableAreas();
+      codeConverter.convertLineBreaksToNonBreaking();
     } else {
       ImagePreview.createImgListeners();
 

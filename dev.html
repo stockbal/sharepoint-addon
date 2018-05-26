@@ -255,7 +255,7 @@
     }
     document.addEventListener('selectionchange', function(evt) {
       var wikiContentEditable = document.getElementsByClassName('ms-rte-layoutszone-inner-editable');
-      if (!wikiContentEditable) {
+      if (!wikiContentEditable.length) {
         return;
       }
       resetCursor(evt);
@@ -387,8 +387,8 @@
       <div id="contentBox">
         <div id="DeltaPlaceHolderMain">
           <div class="ms-rtestate-field  bd-content">
-            <!--<div class="ms-rte-layoutszone-inner ms-wikicontent" contenteditable="false" spellcheck="false">-->
-            <div class="ms-rte-layoutszone-inner-editable" contenteditable="true" spellcheck="false">
+            <div class="ms-rte-layoutszone-inner ms-wikicontent" contenteditable="false" spellcheck="false">
+            <!--<div class="ms-rte-layoutszone-inner-editable" contenteditable="true" spellcheck="false">-->
               <h2>Wrong Heading</h2>
               <div class="coding--editable" data-language="javascript" data-line-numbers="true"><div class="coding-line">// Block Coding of some Javascript</div><div class="coding-line">var someVariable = '49034';</div><div class="coding-line"><br></div><div class="coding-line">// Call a function</div><div class="coding-line">var selection = wind<span id="ms-rterangecursor-start"></span><span id="ms-rterangecursor-end"></span>ow.getSelection();</div><div class="coding-line">var range = selection.getRangeAt(0);</div><div class="coding-line">range.deleteContents();</div><div class="coding-line">// end of coding block</div></div>
               <h1>1. Heading</h1>
