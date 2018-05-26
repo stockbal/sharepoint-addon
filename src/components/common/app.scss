@@ -59,22 +59,40 @@
   }
 }
 
-h1, h2, h3, h4 {
-  $anchor-margin-left: 4px;
-  margin-left: -1 * $anchor-margin-left;
 
-  .heading-anchor {
-    float: left;
-    padding-right: $anchor-margin-left;
-    margin-left: -20px;
-    text-decoration: none;
-    color: #4a4a4a;
-    visibility: hidden;
-    cursor: pointer;
+.ms-rte-layoutszone-inner {
+  h1, h2, h3, h4 {
+    line-height: 1.25;
+
+    .heading-anchor {
+      float: left;
+      padding-right: 4px;
+      margin-left: -20px;
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1;
+
+      svg {
+        display: inline-block;
+        fill: currentColor;
+        color: black;
+        visibility: hidden;
+        vertical-align: middle;
+      }
+
+    }
+
+    &:hover .heading-anchor svg{
+      visibility: visible;
+    }
   }
+}
 
-  &:hover .heading-anchor {
-    visibility: visible;
+.wiki-addon--dark {
+  h1, h2, h3, h4 {
+    .heading-anchor svg {
+      color: white;
+    }
   }
 }
 

@@ -28,12 +28,18 @@ lightTheme:
   headingStyle:
     color: '#841439'
 
+  # special styling for biggest heading
+  h1:
+    border-bottom: 1px solid #eacef
+    padding-bottom: 0.3em
+    margin-bottom: 16px
+
   # style for blockquote (only colors)
   # -------------------------------
   .quote:
-    border-color: rgba(0, 0, 0, 0.2);
-    background: rgba(0, 0, 0, 0.05);
-    color: #333;
+    border-color: rgba(0, 0, 0, 0.2)
+    background: rgba(0, 0, 0, 0.05)
+    color: #333
 
 # default dark theme settings
 # ---------------------------------
@@ -42,26 +48,32 @@ darkTheme:
   # style for text content
   # ------------------------------
   textStyle:
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8)
     background: black
 
   # styles for heading level
   # ------------------------------
   headingStyle:
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8)
+
+  # special styling for biggest heading
+  h1:
+    border-bottom: 1px solid #eacef
+    padding-bottom: 0.3em
+    margin-bottom: 16px
 
   # style for links in side
   sideLinkStyle:
     link:
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.8)
 
     linkStates:
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.8)
       background: rgba(255, 255, 255, 0.3)
 
   # style for blockquote (only colors)
   # -------------------------------
   .quote:
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.2)
+    background: rgba(255, 255, 255, 0.2)
+    color: rgba(255, 255, 255, 0.8)
