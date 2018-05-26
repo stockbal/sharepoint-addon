@@ -1,6 +1,6 @@
 import selectionSvc from '../selectionSvc';
 
-export class BackgroundRemover {
+export class TextStyleRemover {
   constructor(type) {
     switch (type) {
       case 'background':
