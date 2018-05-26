@@ -59,6 +59,7 @@ export default {
   },
   async created() {
     try {
+      await editorSvc.determineEditMode();
       await localDbSvc.syncLocalStorage();
       await tocSvc.synchronizeTableOfContents();
       tocSvc.startScrollListener();

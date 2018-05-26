@@ -65,8 +65,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    toggleEditMode({ commit, state }) {
-      commit('setEditMode', !state.editMode);
+    setEditMode({ commit, state }, value) {
+      commit('setEditMode', value);
     },
     updateSelection({ commit }, data) {
       commit('setSelection', data);

@@ -174,17 +174,25 @@ export default {
       selectionData.range.setEndAfter(alert);
     }
   },
+
   /**
-   * Checks if edit mode is active and performs necessary
-   * actions
-   * @returns {Promise<void>}
-   * @private
+   * Determines the
+   * @returns {Promise<*>}
    */
-  async _updateEditMode() {
+  async determineEditMode() {
+    return store.dispatch(
+      'setEditMode',
+      !$(`.${config.cssClasses.sharePointReadOnlyClass}`).length
+    );
+  },
+  /**
+   * Performs necessary actions according to edit/read-only mode
+   * @public
+   */
+  updateEditMode() {
     const codeConverter = new CodeConverter();
     // check if wiki site resides in edit mode, by checking
-    if (!$(`.${config.cssClasses.sharePointReadOnlyClass}`).length) {
-      await store.dispatch('toggleEditMode');
+    if (store.state.editMode) {
       const { editorDisabled } = store.state.settings;
 
       if (editorDisabled) {
@@ -293,7 +301,10 @@ export default {
     styleSvc.createCustomStyles(updateBaseFontSize);
     this._updatePrismStyle();
   },
-  async init() {
+  /**
+   * Main initialisation for the editor functions
+   */
+  init() {
     eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
     eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
     eventProxy.on('disableEditor', () => this._disableEditor());
@@ -305,7 +316,7 @@ export default {
     eventProxy.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
     eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
 
-    await this._updateEditMode();
+    this.updateEditMode();
     keyListener.start();
     this._setCustomEditorStyle();
     this._scrollToStateLocation(history.state, true);
