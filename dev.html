@@ -306,7 +306,9 @@
     jQuery(function () {
 
       var editor = document.getElementById('editor');
-      editor.class = '';
+      editor.classList.forEach(function(cls) {
+        editor.classList.remove(cls);
+      });
       var toggleButtonText = '';
       if (isReadOnly()) {
         toggleButtonText = 'Go to edit mode';
