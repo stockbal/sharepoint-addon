@@ -83,7 +83,7 @@ export default {
 
   .button,
   button {
-    font-size: 14px;
+    /*font-size: 14px;*/
   }
   hr {
     margin: 10px 40px;

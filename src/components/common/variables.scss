@@ -1,8 +1,9 @@
-/* definition of colors */
 $sidebar-width-folded: 31px;
 $sidebar-width-full: 280px;
 $toolbar-height: 35px;
 $toolbar-line-height: 28px;
+
+$font-size-base: 16px;
 
 $primary-color: #841439;
 $light-gray: #eee;
@@ -12,7 +13,7 @@ $dark-grey: #333;
 $darker-primary-color: darken($primary-color, 10%);
 $button-hover-bg: rgba(0, 0, 0, 0.05);
 
-$font-family-main: Lato, 'Helvetica Neue', Helvetica, sans-serif;
+$font-family-main: -apple-system,Segoe UI,Roboto,Helvetica Neue, Arial, sans-serif;
 $font-family-monospace: 'Roboto Mono', 'Lucida Sans Typewriter', 'Lucida Console', monaco, Courrier, monospace;
 $body-color-light: rgba(0, 0, 0, 0.75);
 $line-height-base: 1.67;

@@ -2,13 +2,14 @@
 @import './coding';
 
 #wiki-addons-container {
-  font-family: -apple-system,Segoe UI,Roboto,Helvetica Neue, Arial, sans-serif;
+  font-family: $font-family-main;
   font-variant-ligatures: common-ligatures;
   line-height: 1.67;
-  font-size: 13px;
+  font-size: $font-size-base;
   color: rgba(0, 0, 0, .75);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  anti
 
   ::-webkit-scrollbar-track {
     background-color: transparent;

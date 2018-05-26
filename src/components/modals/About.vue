@@ -62,12 +62,6 @@ export default {
     }
   }
 
-  h2 {
-    text-align: center;
-    font-size: 19.5px;
-    font-weight: bold;
-  }
-
   .logo-background {
     height: 75px;
     margin: 0.5rem 0;

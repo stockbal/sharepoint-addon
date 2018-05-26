@@ -31,6 +31,7 @@ export default {
 .modal__title {
   background: $primary-color;
   height: 60px;
+  user-select: none;
   border-radius: 5px 5px 0 0;
   margin: -40px -50px 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
@@ -41,7 +42,12 @@ export default {
   h3,
   h4 {
     margin: 0 0 0 20px;
+    font-weight: bold;
     color: opacify(white, 0.5);
+  }
+
+  h2 {
+    font-size: 1.5 * $font-size-base;
   }
 }
 

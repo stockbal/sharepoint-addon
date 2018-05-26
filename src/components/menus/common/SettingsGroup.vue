@@ -42,7 +42,7 @@ $foreground: $dark-grey;
   text-align: left;
   padding: 10px;
   height: auto;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.5;
   text-transform: none;
   white-space: normal;
@@ -103,6 +103,7 @@ $foreground: $dark-grey;
 
 .settings-group__items {
   padding: 5px 10px;
+  font-size: 13.6px;
 
   > * {
     margin: 5px 0;

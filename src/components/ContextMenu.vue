@@ -105,6 +105,7 @@ export default {
 
 .context-menu {
   position: absolute;
+  font-size: 13px;
   width: 100%;
   height: 100%;
   top: 0;
