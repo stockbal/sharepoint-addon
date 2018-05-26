@@ -318,7 +318,7 @@
         editor.classList.add('ms-rte-layoutszone-inner-editable');
         editor.contentEditable = true;
       }
-      document.getElementById('toggle-edit-button').innerText = toggleButtonText;
+      document.getElementById('ctl00_PageStateActionButton').innerText = toggleButtonText;
 
       calcBodySize();
       window.addEventListener('resize', function() {
@@ -338,7 +338,7 @@
   <button style="margin-left: 5px" onclick="closedRibbonBar()">Simulate closed Ribbon Bar</button>
   <button onclick="openRibbonBar()">Simulate Simple Ribbon bar</button>
   <button onclick="webPartRibbonBar()">Simulate web part Ribbon Bar</button>
-  <button id="toggle-edit-button" onclick="toggleEditMode()">Toggle Edit mode</button>
+  <button id="ctl00_PageStateActionButton" onclick="toggleEditMode()">Toggle Edit mode</button>
 </header>
 
 <div id="s4-ribbonrow">
