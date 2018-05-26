@@ -198,18 +198,14 @@ export class ContextMenuItemCreator {
       ]
     });
 
-    if (!store.state.settings.codeEditorDisabled) {
-      items.push(separator);
+    items.push(separator);
+    items.push(createItem('Create Block Coding', 'code', () => eventProxy.$trigger('createCode')));
+    if (store.getters.hasSelection(true)) {
       items.push(
-        createItem('Create Block Coding', 'code', () => eventProxy.$trigger('createCode'))
+        createItem('Create Inline Coding', 'terminal', () =>
+          eventProxy.$trigger('createInlineCode')
+        )
       );
-      if (store.getters.hasSelection(true)) {
-        items.push(
-          createItem('Create Inline Coding', 'terminal', () =>
-            eventProxy.$trigger('createInlineCode')
-          )
-        );
-      }
     }
 
     return items;

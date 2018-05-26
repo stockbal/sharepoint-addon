@@ -83,7 +83,7 @@ export default {
     if (!$target.is(CODING_SELECTOR)) {
       $coding = $target.closest(CODING_SELECTOR);
     }
-    if ($coding.length && !store.state.settings.codeEditorDisabled) {
+    if ($coding.length) {
       try {
         await store.dispatch('quickMenu/open', {
           coordinates,

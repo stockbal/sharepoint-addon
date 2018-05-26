@@ -185,13 +185,7 @@ export default {
     // check if wiki site resides in edit mode, by checking
     if (!$(`.${config.cssClasses.sharePointReadOnlyClass}`).length) {
       await store.dispatch('toggleEditMode');
-      const { editorDisabled, codeEditorDisabled } = store.state.settings;
-
-      if (codeEditorDisabled) {
-        this._disableCodeEditor();
-      } else {
-        this._enableCodeEditor();
-      }
+      const { editorDisabled } = store.state.settings;
 
       if (editorDisabled) {
         this._disableEditor();
@@ -227,7 +221,7 @@ export default {
    * @private
    */
   _updatePrismStyle() {
-    if (store.state.settings.codeEditorDisabled || store.state.editMode) {
+    if (store.state.editMode) {
       return;
     }
     let $editorArea = $(`#${config.elements.editorContentElementId}`);
@@ -239,20 +233,6 @@ export default {
       $editorArea.addClass(settingsPrismTheme);
     }
     this.highlightCode();
-  },
-  /**
-   * Disables the code editor features
-   * @private
-   */
-  _disableCodeEditor() {
-    this.disableCodeTheming();
-  },
-  /**
-   * Enables the code editor features
-   * @private
-   */
-  _enableCodeEditor() {
-    this._updatePrismStyle();
   },
   /**
    * Enables the editor

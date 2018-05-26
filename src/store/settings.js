@@ -8,7 +8,6 @@ export default {
   state: {
     tocShowAtStart: false,
     tocCollapsedInitially: false,
-    codeEditorDisabled: false,
     codeEditorTheme: 'prism-default',
     editorCustomStyleActive: false,
     editorCustomStyleDark: false,

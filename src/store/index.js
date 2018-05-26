@@ -51,10 +51,7 @@ const store = new Vuex.Store({
         return false;
       } else {
         const $selectionNode = $(selection.containerElement);
-        return (
-          state.settings.codeEditorDisabled ||
-          (!$selectionNode.is('.coding') && !$selectionNode.closest('.coding').length)
-        );
+        return !$selectionNode.is('.coding') && !$selectionNode.closest('.coding').length;
       }
     },
     hasClipboardData: state => !!state.clipboardData.content,

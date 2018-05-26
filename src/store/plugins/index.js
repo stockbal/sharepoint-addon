@@ -18,12 +18,6 @@ export default {
           // check if prism theme was updated
           if (id === 'codeEditorTheme') {
             eventProxy.$trigger('updatePrismStyle');
-          } else if (id === 'codeEditorDisabled') {
-            if (value) {
-              eventProxy.$trigger('disableCodeEditor');
-            } else {
-              eventProxy.$trigger('enableCodeEditor');
-            }
           } else if (id === 'editorDisabled') {
             if (editMode) {
               if (value) {

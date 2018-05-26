@@ -6,8 +6,7 @@
               @change="update('tocCollapsedInitially', $event)"/>
     </settings-group>
     <hr/>
-    <settings-group title="Code Editor" subtitle="Configure Code Styling controls">
-      <slider label="Disa_ble" :active="codeEditorDisabled" @change="update('codeEditorDisabled', $event)"/>
+    <settings-group title="Code Styling" subtitle="Configure Code Styling">
       <form-entry label="Theme">
         <select-menu slot="field" v-form-el-focus :selected="codeEditorTheme" :items="prismThemes"
                      @change="update('codeEditorTheme', $event)"/>
@@ -55,7 +54,6 @@ export default {
     ...mapState('settings', [
       'tocShowAtStart',
       'tocCollapsedInitially',
-      'codeEditorDisabled',
       'codeEditorTheme',
       'editorCustomStyleActive',
       'editorCustomStyleDark',
