@@ -85,6 +85,7 @@
 
 .menu-entry__text {
   width: 100%;
+  flex: 1;
   overflow: hidden;
 }
 </style>
