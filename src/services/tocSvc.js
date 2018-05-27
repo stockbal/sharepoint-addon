@@ -149,6 +149,13 @@ export default {
     for (let [, node] of Object.entries(tocNodes)) {
       let $link = $(`#${node.item.headingId}`);
 
+      /* for some reason the heading for the link no longer
+       * exists in the wiki page
+       */
+      if (!$link.length) {
+        continue;
+      }
+
       if ($link.offset().top > top) {
         if (!activeNodeId) {
           activeNodeId = node.id;
