@@ -315,9 +315,9 @@
     jQuery(function () {
 
       var editor = document.getElementById('editor');
-      editor.classList.forEach(function(cls) {
-        editor.classList.remove(cls);
-      });
+      for (var i = 0; i < editor.classList.length; i++) {
+        editor.classList.remove(editor.classList[i]);
+      }
       var toggleButtonText = '';
       if (isReadOnly()) {
         toggleButtonText = 'Go to edit mode';
