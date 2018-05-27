@@ -272,9 +272,9 @@ export default {
   },
   _scrollToStateLocation(state) {
     if (state) {
-      if (state['headingId']) {
+      if (state.hasOwnProperty('headingId')) {
         this._scrollToElementInWorkspace(state.headingId);
-      } else if (state['workspaceTop']) {
+      } else if (state.hasOwnProperty('workspaceTop')) {
         $(`#${config.elements.workspaceElementId}`).scrollTop(state.workspaceTop);
       }
     } else {
