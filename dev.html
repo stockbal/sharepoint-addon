@@ -278,6 +278,11 @@
       calcBodySize();
     }
 
+    function resetPageContent() {
+      window.localStorage.removeItem('dev_pageContent');
+      window.location.reload();
+    }
+
     function calcBodySize() {
       var $workspace = $('#s4-workspace');
       var body = document.body,
@@ -290,7 +295,11 @@
     }
 
     function toggleEditMode() {
-      window.localStorage.setItem('dev_readOnly', !isReadOnly() ? 'true' : 'false');
+      var edit = !isReadOnly();
+      if (edit) {
+        window.localStorage.setItem('dev_pageContent', document.getElementById('editor').innerHTML);
+      }
+      window.localStorage.setItem('dev_readOnly', edit ? 'true' : 'false');
       window.location.reload();
     }
 
@@ -320,6 +329,10 @@
         editor.classList.add('ms-rte-layoutszone-inner-editable');
         editor.contentEditable = true;
       }
+      var pageContent = window.localStorage.getItem('dev_pageContent');
+      if (pageContent) {
+        editor.innerHTML = pageContent;
+      }
       document.getElementById('ctl00_PageStateActionButton').innerText = toggleButtonText;
 
       calcBodySize();
@@ -341,6 +354,7 @@
   <button onclick="openRibbonBar()">Simulate Simple Ribbon bar</button>
   <button onclick="webPartRibbonBar()">Simulate web part Ribbon Bar</button>
   <button id="ctl00_PageStateActionButton" onclick="toggleEditMode()">Toggle Edit mode</button>
+  <button onclick="resetPageContent()">Reset Page Content</button>
 </header>
 
 <div id="s4-ribbonrow">
