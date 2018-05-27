@@ -105,7 +105,7 @@ const buildTocClosureTable = () => {
         closureTable[parentId - 1].hasChildren = true;
       } else {
         // no node was inserted yet
-        closureTable.push(new FlatNode(nodeId++, headingLevel, newHeadingId, headingText));
+        closureTable.push(new FlatNode(nodeId++, depth, newHeadingId, headingText));
       }
     }
 
