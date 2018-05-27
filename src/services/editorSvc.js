@@ -13,6 +13,7 @@ import eventProxy from '../util/eventProxy';
 import './editorUtilsSvc';
 import { CodeConverter } from './editor/codeConverter';
 import { ClipBoardListener } from './editor/clipboardListener';
+import tocSvc from './tocSvc';
 
 const logger = Logger.get('Editor Service');
 
@@ -208,11 +209,12 @@ export default {
       eventProxy.on('alert', type => this._createAlert(type));
       eventProxy.on('paste', () => this._pasteClipboard());
       eventProxy.on('removeFormatting', type => this._removeFormatting(type));
-
+      eventProxy.on('updateToc', () => tocSvc.synchronizeTableOfContents());
       // one time conversion of coding preview areas to editing areas
       codeConverter.convertPreviewAreasToEditableAreas();
       codeConverter.convertLineBreaksToNonBreaking();
     } else {
+      this._scrollToStateLocation(history.state, true);
       ImagePreview.createImgListeners();
 
       codeConverter.convertCodingAreas();
@@ -271,6 +273,7 @@ export default {
     }
   },
   _scrollToStateLocation(state) {
+    console.log(state);
     if (state) {
       if (state.hasOwnProperty('headingId')) {
         this._scrollToElementInWorkspace(state.headingId);
@@ -316,13 +319,9 @@ export default {
     eventProxy.on('deactivateCustomEditorStyle', () => this._updatePrismStyle());
     eventProxy.on('activateCustomEditorStyle', () => this._updatePrismStyle());
 
+    this._setCustomEditorStyle();
     this.updateEditMode();
     keyListener.start();
-    this._setCustomEditorStyle();
-
-    if (!store.state.editMode) {
-      this._scrollToStateLocation(history.state, true);
-    }
 
     eventProxy.on('navigateToHeading', headingIdSelector => {
       history.pushState({ headingId: headingIdSelector }, '', headingIdSelector);

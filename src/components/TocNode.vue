@@ -1,6 +1,6 @@
 <template>
   <div class="toc-node">
-    <div class="toc-node__item" v-if="!node.isRoot && !isFiltered"
+    <div :id="`toc-item-${node.id}`" class="toc-node__item" v-if="!node.isRoot && !isFiltered"
          :class="{'toc-node__link--active': node.id === activeNode}">
       <div class="toc-node__link flex flex--row">
         <div class="toc-node__link-expander flex flex--column flex--center" v-if="node.isFolder"
@@ -110,7 +110,7 @@ export default {
 }
 
 .toc-node__link-expander {
-  padding-right: 5px;
+  padding-right: 2px;
   cursor: pointer;
   float: left;
   &:hover {

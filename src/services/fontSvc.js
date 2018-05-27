@@ -51,6 +51,8 @@ import * as faBug from '@fortawesome/fontawesome-free-solid/faBug';
 import * as faQuestionCircle from '@fortawesome/fontawesome-free-solid/faQuestionCircle';
 import * as faSearchPlus from '@fortawesome/fontawesome-free-solid/faSearchPlus';
 import * as faSearchMinus from '@fortawesome/fontawesome-free-solid/faSearchMinus';
+import * as faSync from '@fortawesome/fontawesome-free-solid/faSync';
+import * as faRedo from '@fortawesome/fontawesome-free-solid/faRedo';
 
 import * as faExclamationTriangle from '@fortawesome/fontawesome-free-solid/faExclamationTriangle';
 import * as faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
@@ -117,5 +119,7 @@ fontawesome.library.add(
   faInfoCircle,
   faFont,
   faSearchMinus,
-  faSearchPlus
+  faSearchPlus,
+  faSync,
+  faRedo
 );

@@ -8,6 +8,7 @@ export default {
   state: {
     tocShowAtStart: false,
     tocCollapsedInitially: false,
+    tocSynchronize: true,
     codeEditorTheme: 'prism-default',
     editorCustomStyleActive: false,
     editorCustomStyleDark: false,
@@ -54,6 +55,9 @@ export default {
     darkThemeDisabled: state => !state.editorCustomStyleActive
   },
   actions: {
+    toggleSetting({ commit }, id) {
+      commit('toggleSetting', id);
+    },
     updateSetting({ commit }, data) {
       commit('setSetting', data);
     },

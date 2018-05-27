@@ -5,10 +5,17 @@
         <a @click="scrollToTop" class="toc__nav-button button" title="To Top of Page">
           <icon icon="arrow-circle-up"/>
         </a>
+        <a @click="scrollSync" class="toc__nav-button button" :class="{'button--toggled': tocSynchronize}"
+           title="Synchronize scroll position with Wikipage">
+          <icon icon="sync"/>
+        </a>
+        <a v-if="editMode" @click="redo" class="button toc__nav-button" title="Refresh">
+          <icon icon="redo"></icon>
+        </a>
         <a class="button toc__nav-button" @click="expandAll" title="Expand all top menus">
           <icon icon="plus-circle"/>
         </a>
-        <a class="button toc__nav-button" v-on:click="collapseAll" title="Collapse all top menus">
+        <a class="button toc__nav-button" @click="collapseAll" title="Collapse all top menus">
           <icon icon="minus-circle"/>
         </a>
       </div>
@@ -24,7 +31,6 @@
         </form-entry>
       </span>
       </div>
-      <hr />
     </div>
     <div class="toc__nodes">
       <toc-node :node="rootNode"/>
@@ -33,11 +39,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import TocNode from './TocNode';
 import $ from 'jquery';
 import config from '../config';
 import FormEntry from './FormEntry';
+import eventProxy from '../util/eventProxy';
 
 export default {
   components: {
@@ -45,10 +52,14 @@ export default {
     FormEntry
   },
   data: () => ({
+    unwatchTocSync: () => {},
     filterText: ''
   }),
   computed: {
-    ...mapGetters('toc', ['rootNode'])
+    ...mapGetters('toc', ['rootNode']),
+    ...mapState('toc', ['activeNode']),
+    ...mapState('settings', ['tocSynchronize']),
+    ...mapState(['editMode'])
   },
   destroyed() {
     this.$store.dispatch('toc/clearFilter');
@@ -58,6 +69,12 @@ export default {
       expandAll: 'openAllNodes',
       collapseAll: 'closeAllNodes'
     }),
+    redo() {
+      eventProxy.$trigger('updateToc');
+    },
+    scrollSync() {
+      return this.$store.dispatch('settings/toggleSetting', 'tocSynchronize');
+    },
     scrollToTop() {
       $(`#${config.elements.workspaceElementId}`).scrollTop(0);
       $('.toc__nodes').scrollTop(0);
@@ -70,12 +87,39 @@ export default {
     },
     filter(e) {
       this.$store.dispatch('toc/filter', e.target.value);
+    },
+    scrollToActiveNodeItem(activeNodeItem) {
+      const $activeTocItem = $(`#toc-item-${activeNodeItem}`);
+      if (!$activeTocItem.length) {
+        return;
+      }
+
+      const $tocNodes = $('.toc__nodes');
+
+      $tocNodes.scrollTop(
+        $activeTocItem.offset().top - $tocNodes.offset().top + $tocNodes.scrollTop()
+      );
+    },
+    watchTocSynchronisation(watch) {
+      if (!watch) {
+        this.unwatchTocSync();
+        this.unwatchTocSync = () => {};
+      } else {
+        // listen for activeNode changes
+        this.unwatchTocSync = this.$watch('activeNode', this.scrollToActiveNodeItem);
+      }
     }
+  },
+  mounted() {
+    this.watchTocSynchronisation(this.tocSynchronize);
+    this.$watch('tocSynchronize', newVal => {
+      this.watchTocSynchronisation(newVal);
+    });
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import './common/base';
 
 .toc {
@@ -106,6 +150,8 @@ export default {
 
 .toc__filter {
   margin-top: -5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $hr-color;
   width: $sidebar-width-full - 20px;
 
   .form-entry {
@@ -138,6 +184,18 @@ export default {
     &:active {
       color: $primary-color;
     }
+  }
+}
+
+.button {
+  &:hover {
+    border-radius: 20px;
+  }
+  &.button--toggled {
+    color: $primary-color;
+    background: lightgray;
+    border-radius: 20px;
+    box-shadow: 1px 1px 2px darkgray inset;
   }
 }
 </style>
