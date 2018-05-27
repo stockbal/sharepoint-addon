@@ -1,3 +1,21 @@
+### v1.0.0
+
+#### Features
+
+- Inline coding areas for inserting/editing code snippets
+- Scroll synchronization of Table of Contents
+- Refresh option of Table of Contents in edit mode
+- Key binding for Saving / Editing 
+
+#### Changes
+
+- Style overhauls to modal dialogs
+- Updated the default light / dark theme
+
+#### Fixes
+
+- Fixes 'Context Menu is cut off if horizontal space is not enough' 
+
 ### v0.6.4
 
 #### Features
