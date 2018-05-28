@@ -187,6 +187,24 @@ export default {
     );
   },
   /**
+   * Hides the web part where the add on was loaded
+   * @private
+   */
+  _hideInitializingWebPartContainer() {
+    let webPart = document.getElementById('app');
+    if (!webPart) {
+      return;
+    }
+    while (webPart) {
+      if (webPart.classList.contains('ms-rte-wpbox')) {
+        // hide the outer webPart container
+        webPart.style.display = 'none';
+        break;
+      }
+      webPart = webPart.parentElement;
+    }
+  },
+  /**
    * Performs necessary actions according to edit/read-only mode
    * @public
    */
@@ -214,6 +232,7 @@ export default {
       codeConverter.convertPreviewAreasToEditableAreas();
       codeConverter.convertLineBreaksToNonBreaking();
     } else {
+      this._hideInitializingWebPartContainer();
       this._scrollToStateLocation(history.state, true);
       ImagePreview.createImgListeners();
 
