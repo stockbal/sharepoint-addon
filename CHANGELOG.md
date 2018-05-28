@@ -1,3 +1,9 @@
+### v1.0.1
+
+#### Features
+
+- Hide the web part container, where the app was loaded in (during read only mode)
+
 ### v1.0.0
 
 #### Features
