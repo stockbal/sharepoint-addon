@@ -71,17 +71,19 @@ const editorUtilsSvc = {
 };
 
 eventProxy.on('handleCodeEditorKeyDown', (evt, useTabs = true) => {
-  if (evt.keyCode === KeyStrokes.Enter || evt.keyCode === KeyStrokes.Tab) {
+  // only handle the tab key as enter key is still buggy
+  if (evt.keyCode === KeyStrokes.Tab) {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
 
-    if (evt.keyCode === KeyStrokes.Enter) {
-      if (!evt.shiftKey && !evt.altKey && !evt.ctrlKey) {
-        editorUtilsSvc.insertLineBreak(selection, range);
-        evt.preventDefault();
-      } else if (evt.ctrlKey && !evt.shiftKey && !evt.altKey) {
-      }
-    } else if (evt.keyCode === KeyStrokes.Tab && !evt.shiftKey && !evt.ctrlKey) {
+    // if (evt.keyCode === KeyStrokes.Enter) {
+    //   if (!evt.shiftKey && !evt.altKey && !evt.ctrlKey) {
+    //     editorUtilsSvc.insertLineBreak(selection, range);
+    //     evt.preventDefault();
+    //   } else if (evt.ctrlKey && !evt.shiftKey && !evt.altKey) {
+    //   }
+    // } else
+    if (evt.keyCode === KeyStrokes.Tab && !evt.shiftKey && !evt.ctrlKey) {
       editorUtilsSvc.insertTab(selection, range, useTabs);
       evt.preventDefault();
     }
