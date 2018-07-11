@@ -1278,6 +1278,10 @@ http://prismjs.com/download.html?themes=prism-coy&languages=markup+css+clike+jav
     color: #1990b8;
   }
 
+  .token.annotation {
+    color: #c92c2c;
+  }
+
   .token.regex,
   .token.important {
     color: #e90;
@@ -1849,7 +1853,8 @@ http://prismjs.com/download.html?themes=prism-dark&languages=markup+css+clike+ja
   }
 
   .token.regex,
-  .token.important {
+  .token.important,
+  .token.annotation {
     color: #e90;
   }
 
@@ -3848,6 +3853,7 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
   }
 
   .token.regex,
+  .token.annotation,
   .token.important {
     color: orange;
   }
@@ -6158,7 +6164,8 @@ http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascr
     color: #07a;
   }
 
-  .token.function {
+  .token.function,
+  .token.annotation {
     color: #dd4a68;
   }
 

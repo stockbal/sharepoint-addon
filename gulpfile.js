@@ -3,6 +3,7 @@ const gulp = require('gulp');
 const del = require('del');
 const inquirer = require('inquirer');
 const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
 const fs = require('fs');
 
 // include some language specs before processing all other languages
@@ -21,6 +22,8 @@ var prismScripts = [
 prismScripts.push(
   path.join(path.dirname(require.resolve('prismjs/components/prism-core')), 'prism-*.min.js')
 );
+// include custom prism languages
+prismScripts.push('./prism/min/prism-abap.js');
 
 // add the needed plugins to the prism file
 prismScripts = prismScripts.concat(
@@ -79,9 +82,18 @@ gulp.task(
   })
 );
 
-gulp.task('build-prism', () =>
+gulp.task('minify-prism', () =>
+  gulp
+    .src('./prism/prism-abap.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./prism/min'))
+);
+
+gulp.task('build-prism-lib', () =>
   gulp
     .src(prismScripts)
     .pipe(concat('prism.js'))
     .pipe(gulp.dest(path.dirname(require.resolve('prismjs'))))
 );
+
+gulp.task('build-prism', gulp.series('minify-prism', 'build-prism-lib'));

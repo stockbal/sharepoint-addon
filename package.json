@@ -79,6 +79,7 @@
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-prompt": "^1.0.1",
+    "gulp-uglify": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
     "inquirer": "^5.1.0",
     "jest": "^22.0.4",
