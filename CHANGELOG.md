@@ -1,3 +1,9 @@
+### v1.0.2
+
+### Features
+
+- Updated syntax styling for code snippets to better support ABAP CDS Views
+
 ### v1.0.1
 
 #### Features
