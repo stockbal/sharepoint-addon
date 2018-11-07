@@ -11,7 +11,7 @@
   background: rgb(237, 237, 237);
 
   .wiki-addon--dark & {
-    color: rgba(255,255,255, 0.8);
+    color: rgba(255, 255, 255, 0.8);
     border: 2px dotted white;
     background: #4b4b4b;
   }
@@ -59,11 +59,11 @@ blockquote.quote {
 
 .alert {
   position: relative;
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   margin: 1rem 0;
   border: 1px solid transparent;
-  border-radius: .25rem;
-  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  border-radius: 0.25rem;
+  font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif;
 
   &.alert--info {
     color: #004085;
@@ -102,6 +102,26 @@ blockquote.quote {
   }
 }
 
+.adt-link {
+  padding: 3px 5px;
+  margin: 3px 5px;
+  border: 1px blue dashed;
+  background: rgba(0, 0, 0, 0.05);
+  font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+  line-height: 1.5;
+}
+
+.adt-link--parse-error {
+  color: red;
+  font-weight: 400;
+}
+
+.adt-link-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: sub;
+  margin: 0 5px;
+}
 
 .ms-rte-layoutszone-inner {
   blockquote.quote,

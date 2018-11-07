@@ -15,6 +15,7 @@ import * as faMinusCircle from '@fortawesome/fontawesome-free-solid/faMinusCircl
 import * as faCircle from '@fortawesome/fontawesome-free-solid/faCircle';
 import * as faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import * as faArrowCircleUp from '@fortawesome/fontawesome-free-solid/faArrowCircleUp';
+import * as faExternalLinkAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkAlt';
 
 import * as faList from '@fortawesome/fontawesome-free-solid/faList';
 import * as faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
@@ -121,5 +122,6 @@ fontawesome.library.add(
   faSearchMinus,
   faSearchPlus,
   faSync,
-  faRedo
+  faRedo,
+  faExternalLinkAlt
 );

@@ -1,4 +1,4 @@
-import { CODING_SELECTOR } from '../../config/constants';
+import { ADT_LINK_SELECTOR, CODING_SELECTOR } from '../../config/constants';
 import browser from '../../services/browser';
 import utils from '../utils';
 const previewCodingClass = 'coding';
@@ -17,6 +17,34 @@ const getCodingText = code => {
 };
 
 export class CodeConverter {
+  convertADTLinks() {
+    for (const adtLink of document.querySelectorAll(ADT_LINK_SELECTOR)) {
+      // parse the content of the adt link span tag
+      let adtLinkParser = new RegExp('\\[(adt:/{2}[^\\]]+)\\]\\(([\\w\\s]+)\\)');
+      let adtLinkContent = adtLink.innerText.match(adtLinkParser);
+
+      const linkElement = document.createElement('a');
+      const linkTextSpan = document.createElement('span');
+      const linkIcon = document.createElement('img');
+
+      linkIcon.src =
+        'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmVyc2lvbj0iMSI+CiA8cmVjdCBmaWxsPSIjZmZhYjMwIiB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHg9Ii0zMCIgeT0iLTI4IiByeD0iMTQiIHJ5PSIxNCIgdHJhbnNmb3JtPSJtYXRyaXgoMCwtMSwtMSwwLDAsMCkiLz4KIDxwYXRoIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii4yIiBkPSJtMTQgMmMtNy43NTYgMC0xNCA2LjI0NC0xNCAxNC0yLjMxNjNlLTcgMC4xNjkgMC4wMTk1MjEgMC4zMzMgMC4wMjUzOSAwLjUgMC4yNjM3NC03LjUyMDYgNi4zODc0LTEzLjUgMTMuOTc1LTEzLjUgNy41ODcgMCAxMy43MTEgNS45Nzk0IDEzLjk3NSAxMy41IDAuMDA1LTAuMTY3IDAuMDI1LTAuMzMxIDAuMDI1LTAuNSAwLTcuNzU2LTYuMjQ0LTE0LTE0LTE0eiIvPgogPHBhdGggb3BhY2l0eT0iLjIiIGQ9Im0wLjAyNTM5IDE2LjVjLTAuMDA1ODY5IDAuMTY3LTAuMDI1MzkgMC4zMzEtMC4wMjUzOSAwLjUtMi4zMTYzZS03IDcuNzU2IDYuMjQ0IDE0IDE0IDE0czE0LTYuMjQ0IDE0LTE0YzAtMC4xNjktMC4wMi0wLjMzMy0wLjAyNS0wLjUtMC4yNjQgNy41MjEtNi4zODggMTMuNS0xMy45NzUgMTMuNS03LjU4NzIgMC0xMy43MTEtNS45NzktMTMuOTc1LTEzLjV6Ii8+CiA8cmVjdCBmaWxsPSIjNWU0MDk1IiB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHg9Ii0zMCIgeT0iLTMyIiByeD0iMTQiIHJ5PSIxNCIgdHJhbnNmb3JtPSJtYXRyaXgoMCwtMSwtMSwwLDAsMCkiLz4KIDxwYXRoIG9wYWNpdHk9Ii4yIiBkPSJtNC45Mjk3IDEyYy0wLjI0NjEgMC42NDYtMC40NTIyIDEuMzExLTAuNjAxNiAyaDI3LjM0NGMtMC4xNS0wLjY4OS0wLjM1Ni0xLjM1NC0wLjYwMi0yaC0yNi4xNHptLTAuODc4OSA0Yy0wLjAxMTcgMC4xNjYtMC4wMTU2IDAuMzM1LTAuMDI1NCAwLjUwMiAwLjAxNzggMC41MDcgMC4wNjI4IDEuMDA2IDAuMTMyOCAxLjQ5OGgyNy42ODRjMC4wNy0wLjQ5MiAwLjExNS0wLjk5MSAwLjEzMy0xLjQ5OC0wLjAxLTAuMTY3LTAuMDE0LTAuMzM2LTAuMDI2LTAuNTAyaC0yNy44OTh6bTAuNTMxMiA0YzAuMjA1IDAuNjkzIDAuNDcxIDEuMzU3IDAuNzc1NCAyaDI1LjI4NmMwLjMwNC0wLjY0MyAwLjU3LTEuMzA3IDAuNzc1LTJoLTI2LjgzNnoiLz4KIDxwYXRoIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44IiBkPSJtNC45Mjk3IDExYy0wLjI0NjEgMC42NDYtMC40NTIyIDEuMzExLTAuNjAxNiAyaDI3LjM0NGMtMC4xNS0wLjY4OS0wLjM1Ni0xLjM1NC0wLjYwMi0yaC0yNi4xNHptLTAuODc4OSA0Yy0wLjAyMzMgMC4zMzItMC4wNTA4IDAuNjYyLTAuMDUwOCAxczAuMDI3NSAwLjY2OCAwLjA1MDggMWgyNy44OThjMC4wMjMtMC4zMzIgMC4wNTEtMC42NjIgMC4wNTEtMXMtMC4wMjgtMC42NjgtMC4wNTEtMWgtMjcuODk4em0wLjI3NzMgNGMwLjE0OTQgMC42ODkgMC4zNTU1IDEuMzU0IDAuNjAxNiAyaDI2LjE0YzAuMjQ2LTAuNjQ2IDAuNDUyLTEuMzExIDAuNjAyLTJoLTI3LjM0NHoiLz4KIDxwYXRoIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii4xIiBkPSJtMTggMmMtNy43NTYgMC0xNCA2LjI0NC0xNCAxNCAwIDAuMTY4ODQgMC4wMTk1IDAuMzMyNjQgMC4wMjU0IDAuNSAwLjI2NDEtNy41MjA2IDYuMzg4LTEzLjUgMTMuOTc1LTEzLjUgNy41ODcyIDAgMTMuNzExIDUuOTc5NCAxMy45NzUgMTMuNSAwLjAwNi0wLjE2NzM2IDAuMDI1NC0wLjMzMTE2IDAuMDI1NC0wLjUgMC03Ljc1Ni02LjI0NC0xNC0xNC0xNHoiLz4KIDxwYXRoIG9wYWNpdHk9Ii4yIiBkPSJtMTggMzFjLTcuNzU2IDAtMTQtNi4yNDQtMTQtMTQgMC0wLjE2OSAwLjAxOTUtMC4zMzMgMC4wMjU0LTAuNSAwLjI2MzcgNy41MjEgNi4zODc2IDEzLjUgMTMuOTc1IDEzLjUgNy41ODcyIDAgMTMuNzExLTUuOTc5NCAxMy45NzUtMTMuNSAwLjAwNiAwLjE2NzM2IDAuMDI1NCAwLjMzMTE2IDAuMDI1NCAwLjUgMCA3Ljc1Ni02LjI0NCAxNC0xNCAxNHoiLz4KPC9zdmc+Cg==';
+      linkIcon.classList.add('adt-link-icon');
+      linkElement.appendChild(linkTextSpan);
+      linkElement.appendChild(linkIcon);
+
+      if (adtLinkContent && adtLinkContent.length === 3) {
+        linkElement.href = adtLinkContent[1];
+        linkTextSpan.innerText = adtLinkContent[2];
+        linkElement.title = 'ADT Link';
+      } else {
+        linkTextSpan.innerText = '<ADT Link could not be parsed>';
+        linkElement.classList.add('adt-link--parse-error');
+      }
+
+      adtLink.parentNode.replaceChild(linkElement, adtLink);
+    }
+  }
   convertPreviewAreasToEditableAreas() {
     for (const previewArea of document.querySelectorAll('.coding')) {
       const codingArea = document.createElement(previewArea.tagName);

@@ -127,7 +127,7 @@ export class ContextMenuItemCreator {
    * in the editor
    * @returns {*[]}
    */
-  createItemsForNormalContent() {
+  createItemsForNormalContent(isADTLink = false) {
     let clipBoardActions = this._createClipBoardActions();
     if (clipBoardActions.length) {
       clipBoardActions = [separator, ...clipBoardActions];
@@ -152,7 +152,13 @@ export class ContextMenuItemCreator {
           createActionItem('indent', 'Indent selection', command('indent')),
           createActionItem('outdent', 'Outdent selection', command('outdent')),
           createActionItem('list-ol', 'Insert ordered list', command('insertOrderedList'), 3),
-          createActionItem('list-ul', 'Insert unordered list', command('insertUnorderedList'))
+          createActionItem('list-ul', 'Insert unordered list', command('insertUnorderedList')),
+          createActionItem(
+            'external-link-alt',
+            'Insert ADT Link',
+            () => eventProxy.$trigger('insertADTLink'),
+            3
+          )
         ]
       },
       ...clipBoardActions

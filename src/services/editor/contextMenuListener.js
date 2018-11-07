@@ -3,7 +3,7 @@ import $ from 'jquery';
 import Logger from 'js-logger';
 import store from '../../store/index';
 import config from '../../config/index';
-import { CODING_SELECTOR } from '../../config/constants';
+import { ADT_LINK_SELECTOR, CODING_SELECTOR } from '../../config/constants';
 import browser from '../browser';
 import { ContextMenuItemCreator } from './contextMenuItemCreator';
 import selectionSvc from '../selectionSvc';
@@ -83,6 +83,7 @@ export default {
     if (!$target.is(CODING_SELECTOR)) {
       $coding = $target.closest(CODING_SELECTOR);
     }
+
     if ($coding.length) {
       try {
         await store.dispatch('quickMenu/open', {
@@ -94,11 +95,12 @@ export default {
         logger.error(e);
       }
     } else {
-      // check if right mouse click was fired inside editor
+      let isADTLink = $target.is(ADT_LINK_SELECTOR);
+
       try {
         (await store.dispatch('contextMenu/open', {
           coordinates,
-          items: menuItemCreator.createItemsForNormalContent()
+          items: menuItemCreator.createItemsForNormalContent(isADTLink)
         })).perform();
       } catch (e) {
         logger.error(e);

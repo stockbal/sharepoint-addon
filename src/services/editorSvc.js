@@ -237,6 +237,7 @@ export default {
       ImagePreview.createImgListeners();
 
       codeConverter.convertCodingAreas();
+      codeConverter.convertADTLinks();
       this._updatePrismStyle();
       this.highlightCode();
     }
@@ -324,14 +325,33 @@ export default {
     this._updatePrismStyle();
   },
   /**
+   * Inserts ADT Link section at the current position
+   * @private
+   */
+  _insertADTLink: function() {
+    let selectionData = store.state.selectionData;
+
+    // check if selection resides already inside adtLink
+    const adtLink = document.createElement('span');
+    adtLink.classList.add('adt-link');
+    adtLink.innerText = `[${
+      store.state.selectionData ? store.state.selectionData.text : 'adt://...'
+    }](Name of link)`;
+
+    selectionData.range.deleteContents();
+    selectionData.sel.removeAllRanges();
+    selectionData.range.insertNode(adtLink);
+    selectionData.range.setStartBefore(adtLink);
+    selectionData.range.setEndAfter(adtLink);
+  },
+  /**
    * Main initialisation for the editor functions
    */
   init() {
-    eventProxy.on('disableCodeEditor', () => this._disableCodeEditor());
-    eventProxy.on('enableCodeEditor', () => this._enableCodeEditor());
     eventProxy.on('disableEditor', () => this._disableEditor());
     eventProxy.on('enableEditor', () => this._enableEditor());
     eventProxy.on('updatePrismStyle', () => this._updatePrismStyle());
+    eventProxy.on('insertADTLink', () => this._insertADTLink());
     eventProxy.on('setCustomStyle', (updateBaseFontSize = true) =>
       this._setCustomEditorStyle(updateBaseFontSize)
     );
