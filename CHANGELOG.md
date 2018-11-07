@@ -1,3 +1,8 @@
+### v1.0.3
+
+#### Features
+
+- Added context menu entry for possiblity to insert ADT Links into wiki page
 ### v1.0.2
 
 #### Features
