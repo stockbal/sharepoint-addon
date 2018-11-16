@@ -1,6 +1,6 @@
 {
   "name": "sharepoint-addon",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Add-On for SharePoint Wiki pages",
   "author": "Ludwig Stockbauer-Muhr",
   "repository": {
