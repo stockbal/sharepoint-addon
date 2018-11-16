@@ -3,7 +3,7 @@ import keyListenerSvc from '../keyListenerSvc';
 import KeyStrokes from '../keystrokes';
 import store from '../../store';
 import config from '../../config';
-import { CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
+import { ADT_LINK_SELECTOR, CODING_SELECTOR, ZERO_WIDTH } from '../../config/constants';
 import selectionSvc, { RangeCursor } from '../selectionSvc';
 import utils from '../utils';
 
@@ -77,23 +77,43 @@ export default {
     this._listenersCreated = true;
   },
   _escapeElement(evt, escapeAfter = true) {
+    let $codingArea = null;
+    let $adtLinkArea = null;
+    let isCoding = false;
+    let isBlockQuote = false;
+    let isADTLink = false;
+
     const { range, containerElement, sel: selection } = selectionSvc.getSelection();
     const $nearestBlockquote = $(containerElement).closest('blockquote, .alert');
 
     if ($nearestBlockquote.length) {
+      isBlockQuote = true;
+    } else {
+      $codingArea = $(containerElement).closest(CODING_SELECTOR);
+      if ($codingArea.length) {
+        isCoding = true;
+      } else {
+        // is it inside ADT Link?
+        $adtLinkArea = $(containerElement).closest(ADT_LINK_SELECTOR);
+        if ($adtLinkArea.length) {
+          isADTLink = true;
+        }
+      }
+    }
+
+    if (isCoding) {
+      if ($codingArea.prop('tagName') === 'DIV') {
+        insertBreak($codingArea[0], range, escapeAfter);
+      } else {
+        insertSpace($codingArea[0], range, escapeAfter);
+      }
+      updateRange(selection, range, evt);
+    } else if (isBlockQuote) {
       insertBreak($nearestBlockquote[0], range, escapeAfter);
       updateRange(selection, range, evt);
-    } else {
-      const $codingArea = $(containerElement).closest(CODING_SELECTOR);
-      if ($codingArea.length) {
-        if ($codingArea.prop('tagName') === 'DIV') {
-          insertBreak($codingArea[0], range, escapeAfter);
-        } else {
-          insertSpace($codingArea[0], range, escapeAfter);
-        }
-
-        updateRange(selection, range, evt);
-      }
+    } else if (isADTLink) {
+      insertSpace($adtLinkArea[0], range, escapeAfter);
+      updateRange(selection, range, evt);
     }
   },
   _createEscapeListeners() {
