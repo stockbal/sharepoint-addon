@@ -1,7 +1,7 @@
 const constants = {
-  panelHeightRibbonClosed: '5.25rem',
-  panelHeightRibbonOpen: '11rem',
-  panelHeightRibbonWebPartOpen: '29.2rem',
+  panelHeightRibbonClosed: 85, // '5.25rem',
+  panelHeightRibbonOpen: 176, // '11rem',
+  panelHeightRibbonWebPartOpen: 530, // '29.2rem',
   sideBarOpenWidth: '280px',
   sideBarClosedWidth: '31px'
 };
