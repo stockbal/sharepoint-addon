@@ -83,7 +83,7 @@ export default {
   background: rgba(0, 0, 0, 0.9);
   overflow: auto;
   padding: 40px;
-  z-index: 1000;
+  z-index: 10000000;
 
   img {
     margin: auto;
