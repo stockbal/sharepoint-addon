@@ -1,3 +1,10 @@
+### v1.0.5
+
+#### Fixes
+
+- Recalculate the top distance of the Side Menu which could change due to extensions which
+add more height to the page
+
 ### v1.0.4
 
 #### Features
