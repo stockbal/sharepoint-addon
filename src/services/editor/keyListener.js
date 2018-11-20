@@ -15,6 +15,19 @@ const updateRange = (selection, range, evt) => {
   evt.preventDefault();
 };
 
+const getSelectedRibbonTab = () => {
+  const editingToolsTab = document.getElementById(config.elements.editingToolsRibbonContainer);
+  if (editingToolsTab) {
+    return 'editingToolsTab';
+  }
+  const pageTab = document.getElementById(config.elements.pageRibbonContainer);
+  if (pageTab) {
+    return 'pageTab';
+  }
+
+  return ''; // no usable tab selected
+};
+
 const insertBreak = (element, range, afterElement) => {
   if (afterElement) {
     range.setStartAfter(element);
@@ -325,17 +338,40 @@ export default {
           evt.preventDefault();
         }
       });
-    }
-    if (editMode) {
-      keyListenerSvc.addKeyListener(KeyStrokes.Q, { ctrl: true }, evt => {
-        const editDropdownButton = document.querySelector('a.ms-cui-ctl-a2[title="Bearbeiten"]');
+
+      // register save and stay button
+      keyListenerSvc.addKeyListener(KeyStrokes.S, { ctrl: true, alt: true }, evt => {
+        const tabConstId = getSelectedRibbonTab();
+        if (tabConstId === '') {
+          return;
+        }
+        const menuSelectors = config.selectors[tabConstId];
+        const editDropdownButton = document.querySelector(menuSelectors.saveEditButtonLarge);
         if (editDropdownButton) {
           editDropdownButton.click();
 
           setTimeout(() => {
-            const quitWithoutSavingButton = document.querySelector(
-              'a[aria-describedby="Ribbon.EditingTools.CPEditTab.EditAndCheckout.SaveEdit.Menu.SaveEdit.StopEditing_ToolTip"]'
-            );
+            const saveAndStayButton = document.querySelector(menuSelectors.saveAndStayMenu);
+            if (saveAndStayButton) {
+              saveAndStayButton.click();
+            }
+          }, 1);
+        }
+      });
+
+      // register stop editing button
+      keyListenerSvc.addKeyListener(KeyStrokes.Q, { ctrl: true }, evt => {
+        const tabConstId = getSelectedRibbonTab();
+        if (tabConstId === '') {
+          return;
+        }
+        const menuSelectors = config.selectors[tabConstId];
+        const editDropdownButton = document.querySelector(menuSelectors.saveEditButtonLarge);
+        if (editDropdownButton) {
+          editDropdownButton.click();
+
+          setTimeout(() => {
+            const quitWithoutSavingButton = document.querySelector(menuSelectors.stopEditingButton);
             if (quitWithoutSavingButton) {
               quitWithoutSavingButton.click();
             }
