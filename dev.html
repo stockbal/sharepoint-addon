@@ -258,7 +258,7 @@
       if (!wikiContentEditable.length) {
         return;
       }
-      resetCursor(evt);
+      // resetCursor(evt);
       // normalize content
       wikiContentEditable[0].normalize();
     });
@@ -346,15 +346,15 @@
 
 <body>
 <div id="wiki-addons"></div>
-
+<form>
 <!-- <header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar"> -->
 <header class="bd-navbar">
   <span style="font-size: 20px;">Testpage for SharePoint Wiki</span>
-  <button style="margin-left: 5px" onclick="closedRibbonBar()">Simulate closed Ribbon Bar</button>
-  <button onclick="openRibbonBar()">Simulate Simple Ribbon bar</button>
-  <button onclick="webPartRibbonBar()">Simulate web part Ribbon Bar</button>
-  <button id="ctl00_PageStateActionButton" onclick="toggleEditMode()">Toggle Edit mode</button>
-  <button onclick="resetPageContent()">Reset Page Content</button>
+  <button type="button"  style="margin-left: 5px" onclick="closedRibbonBar()">Simulate closed Ribbon Bar</button>
+  <button type="button" onclick="openRibbonBar()">Simulate Simple Ribbon bar</button>
+  <button type="button"  onclick="webPartRibbonBar()">Simulate web part Ribbon Bar</button>
+  <button type="button"  id="ctl00_PageStateActionButton" onclick="toggleEditMode()">Toggle Edit mode</button>
+  <button type="button"  onclick="resetPageContent()">Reset Page Content</button>
 </header>
 
 <div id="s4-ribbonrow">
@@ -636,5 +636,6 @@
     </div>
   </div>
 </div>
+</form>
 </body>
 </html>
