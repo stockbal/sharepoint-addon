@@ -12,8 +12,6 @@ export default {
       document.body.classList.remove(config.cssClasses.addonStyleDark);
       document.body.classList.add(config.cssClasses.addonStyleLight);
     }
-    // document.body.classList.toggle(config.cssClasses.addonStyleDark, true);
-    // document.body.classList.toggle(config.cssClasses.addonStyleLight, true);
   },
   deactivateAddonStyleTheme() {
     document.body.classList.remove(config.cssClasses.addonStyleDark);
@@ -49,18 +47,11 @@ export default {
           attributeFilter: ['style']
         },
         mutations => {
-          let mutation = mutations[0];
-
-          if (mutation.target) {
-            this.updateDistanceFromTop(mutation.target);
-          }
+          this.updateDistanceFromTop();
         }
       );
       mutationSvc.observe('body-add', document.body, { childList: true }, mutations => {
-        let mutation = mutations[0];
-        if (mutation.target) {
-          this.updateDistanceFromTop(mutation.target);
-        }
+        this.updateDistanceFromTop();
       });
     });
   },
@@ -89,31 +80,34 @@ export default {
     }
     return heightBeforeForm;
   },
-  updateDistanceFromTop(target) {
-    let styleConstants = store.getters['layout/constants'];
-    // get distance to form element
+  /**
+   * Calculate element height starting from first form element to
+   * the s4 workspace element
+   * @return {number}
+   */
+  calculateHeightInFormToWorkspace() {
+    let startElement = document.querySelector('form').firstElementChild;
+    const lastElement = document.getElementById(config.elements.workspaceElementId);
 
-    let distanceFromTop = 0;
-    const heightBeforeForm = this.calculateHeightToForm();
-
-    if (target) {
-      let ribbonRowHeight = parseInt(target.style.height);
-      if (isNaN(ribbonRowHeight)) {
-        distanceFromTop = styleConstants.panelHeightRibbonClosed;
-      } else {
-        if (ribbonRowHeight < 100) {
-          distanceFromTop = styleConstants.panelHeightRibbonClosed;
-        } else if (ribbonRowHeight < 400) {
-          distanceFromTop = styleConstants.panelHeightRibbonOpen;
-        } else {
-          distanceFromTop = styleConstants.panelHeightRibbonWebPartOpen;
+    let heightBeforeWorkspace = 0;
+    while (startElement !== lastElement) {
+      if (startElement.tagName !== 'SCRIPT' && startElement.getClientRects) {
+        const clientRects = startElement.getClientRects()[0];
+        if (clientRects) {
+          if (clientRects.height && clientRects.width) {
+            heightBeforeWorkspace += clientRects.height;
+          }
         }
       }
-      distanceFromTop = `${parseInt(distanceFromTop, 10) + heightBeforeForm}px`;
-
-      // update the layout store
-      store.dispatch('layout/updateDistanceFromTop', distanceFromTop);
+      startElement = startElement.nextElementSibling;
     }
+    return heightBeforeWorkspace;
+  },
+  updateDistanceFromTop() {
+    debugger;
+    let distanceFromTop = this.calculateHeightToForm() + this.calculateHeightInFormToWorkspace();
+    // update the layout store
+    store.dispatch('layout/updateDistanceFromTop', `${parseInt(distanceFromTop, 10)}px`);
   },
   enableCodingSelection() {
     $(`#${config.elements.editorContentElementId}`).removeClass(
