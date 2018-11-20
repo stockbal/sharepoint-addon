@@ -1,7 +1,7 @@
 const constants = {
-  panelHeightRibbonClosed: 85, // '5.25rem',
-  panelHeightRibbonOpen: 176, // '11rem',
-  panelHeightRibbonWebPartOpen: 530, // '29.2rem',
+  panelHeightRibbonClosed: 85,
+  panelHeightRibbonOpen: 176,
+  panelHeightRibbonWebPartOpen: 530,
   sideBarOpenWidth: '280px',
   sideBarClosedWidth: '31px'
 };
@@ -9,7 +9,7 @@ const constants = {
 export default {
   namespaced: true,
   state: {
-    distanceFromTop: constants.panelHeightRibbonClosed
+    distanceFromTop: `${constants.panelHeightRibbonClosed}px`
   },
   mutations: {
     setDistanceFromTop(state, value) {

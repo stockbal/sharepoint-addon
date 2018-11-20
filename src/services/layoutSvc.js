@@ -76,6 +76,10 @@ export default {
     let heightBeforeForm = 0;
     while (startElement !== lastElement) {
       if (startElement.getClientRects) {
+        // check if position fixed style is active
+        if (startElement.style.position && startElement.style.position === 'fixed') {
+          continue;
+        }
         const clientRects = startElement.getClientRects();
         if (clientRects && clientRects.length) {
           heightBeforeForm += clientRects[0].height;
