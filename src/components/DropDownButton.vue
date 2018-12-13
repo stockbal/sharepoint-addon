@@ -1,10 +1,19 @@
 <template>
-  <a class="dropdown-button" v-on:mouseenter="showMenu" v-on:mouseleave="menuVisible = false" :class="{'dropdown-button--disabled': disabled}">
-    <div class="dropdown-button__title">
-      <slot/>
-    </div>
+  <a
+    class="dropdown-button"
+    v-on:mouseenter="showMenu"
+    v-on:mouseleave="menuVisible = false"
+    :class="{ 'dropdown-button--disabled': disabled }"
+  >
+    <div class="dropdown-button__title"><slot /></div>
     <div class="dropdown-button__menu" v-if="menuVisible">
-      <a v-for="(value, key) in items" class="dropdown-button__menu-item" :key="key" @click="chooseItem(key)">{{ value }}</a>
+      <a
+        v-for="(value, key) in items"
+        class="dropdown-button__menu-item"
+        :key="key"
+        @click="chooseItem(key)"
+        >{{ value }}</a
+      >
     </div>
   </a>
 </template>

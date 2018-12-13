@@ -1,10 +1,10 @@
 <template>
   <div id="wiki-addons-container">
-    <side-bar/>
-    <modal v-if="showModal"/>
-    <context-menu v-if="showContextMenu"/>
-    <image-overlay v-if="showImagePreview"/>
-    <quick-menu v-if="showQuickMenu"/>
+    <side-bar />
+    <modal v-if="showModal" />
+    <context-menu v-if="showContextMenu" />
+    <image-overlay v-if="showImagePreview" />
+    <quick-menu v-if="showQuickMenu" />
   </div>
 </template>
 

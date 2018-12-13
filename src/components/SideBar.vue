@@ -1,19 +1,29 @@
 <template>
-  <div class="side-bar flex flex--column" :class="{visible: isOpen}" :style="{height: panelHeight}">
-
+  <div
+    class="side-bar flex flex--column"
+    :class="{ visible: isOpen }"
+    :style="{ height: panelHeight }"
+  >
     <div v-if="isOpen" class="side-title flex flex--row">
-      <button v-if="panel !== 'menu'" class="side-title__button button" @click="setPanel('menu')" title="Add-On's Menu">
-        <icon icon="arrow-left" fixed-width/>
+      <button
+        v-if="panel !== 'menu'"
+        class="side-title__button button"
+        @click="setPanel('menu')"
+        title="Add-On's Menu"
+      >
+        <icon icon="arrow-left" fixed-width />
       </button>
-      <div class="side-title__title">
-        {{ panelName }}
-      </div>
+      <div class="side-title__title">{{ panelName }}</div>
       <button class="side-title__button button" @click="toggleSideBar()" title="Close Sidebar">
         <icon icon="times" fixed-width />
       </button>
     </div>
     <div v-else class="side-title flex flex--row">
-      <button class="side-title__button side-title__button--open button" :title="toggleButtonText" @click="toggleSideBar()">
+      <button
+        class="side-title__button side-title__button--open button"
+        :title="toggleButtonText"
+        @click="toggleSideBar()"
+      >
         <icon v-if="panel === 'toc'" icon="list" fixed-width />
         <icon v-else-if="panel === 'config'" icon="cog" fixed-width />
         <icon v-else icon="bars" fixed-width />

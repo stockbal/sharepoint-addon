@@ -1,33 +1,56 @@
 <template>
   <div class="side-bar__panel side-bar__panel--menu">
     <settings-group title="Table of Contents" subtitle="Settings for TOC">
-      <slider label="Show at start" :active="tocShowAtStart" @change="update('tocShowAtStart', $event)"/>
-      <slider label="Show menus collapsed" :active="tocCollapsedInitially"
-              @change="update('tocCollapsedInitially', $event)"/>
+      <slider
+        label="Show at start"
+        :active="tocShowAtStart"
+        @change="update('tocShowAtStart', $event)"
+      />
+      <slider
+        label="Show menus collapsed"
+        :active="tocCollapsedInitially"
+        @change="update('tocCollapsedInitially', $event)"
+      />
     </settings-group>
-    <hr/>
+    <hr />
     <settings-group title="Code Styling" subtitle="Configure Code Styling">
       <form-entry label="Theme">
-        <select-menu slot="field" v-form-el-focus :selected="codeEditorTheme" :items="prismThemes"
-                     @change="update('codeEditorTheme', $event)"/>
+        <select-menu
+          slot="field"
+          v-form-el-focus
+          :selected="codeEditorTheme"
+          :items="prismThemes"
+          @change="update('codeEditorTheme', $event)"
+        />
       </form-entry>
     </settings-group>
-    <hr/>
+    <hr />
     <settings-group title="Editor" subtitle="Settings for Editor">
-      <slider label="Disa_ble" :active="editorDisabled" @change="update('editorDisabled', $event)"
-              title="Disables the context menu of the editor"/>
-      <slider label="Enable _Editor Theme" :active="editorCustomStyleActive" @change="update('editorCustomStyleActive', $event)"
-              title="Activate a custom stylesheet for the wiki page content"/>
-      <slider label="_Dark Theme" :active="editorCustomStyleDark" @change="update('editorCustomStyleDark', $event)"
-              title="Activate the custom dark theme" :disable="darkThemeDisabled"/>
+      <slider
+        label="Disa_ble"
+        :active="editorDisabled"
+        @change="update('editorDisabled', $event)"
+        title="Disables the context menu of the editor"
+      />
+      <slider
+        label="Enable _Editor Theme"
+        :active="editorCustomStyleActive"
+        @change="update('editorCustomStyleActive', $event)"
+        title="Activate a custom stylesheet for the wiki page content"
+      />
+      <slider
+        label="_Dark Theme"
+        :active="editorCustomStyleDark"
+        @change="update('editorCustomStyleDark', $event)"
+        title="Activate the custom dark theme"
+        :disable="darkThemeDisabled"
+      />
     </settings-group>
-    <hr/>
+    <hr />
   </div>
-
 </template>
 
 <script>
-import MenuEntry from './common/MenuEntry';
 import FormEntry from '../FormEntry';
 import SelectMenu from '../SelectMenu';
 import SettingsGroup from './common/SettingsGroup';
@@ -41,7 +64,6 @@ const logger = Logger.get('Config Menu');
 
 export default {
   components: {
-    MenuEntry,
     Slider,
     FormEntry,
     SettingsGroup,
@@ -70,6 +92,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

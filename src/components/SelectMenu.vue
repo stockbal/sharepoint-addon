@@ -1,17 +1,31 @@
 <template>
   <div class="select-menu" @keydown.esc="onEsc">
-    <button class="select-menu__button flex flex--row flex--align-center" @click="toggleMenu"
-            :accesskey="accesskey">
-      <span class="select-menu__button-text flex flex--column">{{selectedItem}}</span>
+    <button
+      class="select-menu__button flex flex--row flex--align-center"
+      @click="toggleMenu"
+      :accesskey="accesskey"
+    >
+      <span class="select-menu__button-text flex flex--column">{{ selectedItem }}</span>
       <span class="select-menu__button-icon flex flex--column">
-        <icon icon="caret-down" fixed-width focusable="false"/>
+        <icon icon="caret-down" fixed-width focusable="false" />
       </span>
     </button>
-    <div class="select-menu__menu" v-show="menuVisible" ref="menu" @contextmenu.prevent="toggleMenu"
-         :style="{width: `${menuWidth}px`, top: `${top}px`, left: `${left}px`}">
+    <div
+      class="select-menu__menu"
+      v-show="menuVisible"
+      ref="menu"
+      @contextmenu.prevent="toggleMenu"
+      :style="{ width: `${menuWidth}px`, top: `${top}px`, left: `${left}px` }"
+    >
       <ul @keydown="onItemKeyDown">
-        <li v-for="(value, key) in items" :value="key" :key="key" @click="chooseItem(key)"
-            :class="{'select-menu__menu-item--selected': value === selectedItem}">{{value}}
+        <li
+          v-for="(value, key) in items"
+          :value="key"
+          :key="key"
+          @click="chooseItem(key)"
+          :class="{ 'select-menu__menu-item--selected': value === selectedItem }"
+        >
+          {{ value }}
         </li>
       </ul>
     </div>

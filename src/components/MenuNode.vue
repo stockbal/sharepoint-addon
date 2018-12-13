@@ -3,30 +3,49 @@
     <div class="menu-node__item" v-on:mouseenter="toggleActive(true)">
       <div class="menu-node__item-separator" v-if="item.type === 'separator'"></div>
       <div class="menu-node__item--icon-buttons" v-else-if="item.type === 'actions'">
-        <span v-for="(action, idx3) in item.actions" :key="idx3" :class="{active: action.id === activeNodeId}"
-              v-on:mouseenter="toggleActionActive(action)"
-              class="menu-node__action-item" :title="action.tooltip" :style="{ marginLeft: (action.space || 0) + 'px'}"
-              @click.stop="close(action)" @mousedown.prevent @mouseup.prevent>
+        <span
+          v-for="(action, idx3) in item.actions"
+          :key="idx3"
+          :class="{ active: action.id === activeNodeId }"
+          v-on:mouseenter="toggleActionActive(action)"
+          class="menu-node__action-item"
+          :title="action.tooltip"
+          :style="{ marginLeft: (action.space || 0) + 'px' }"
+          @click.stop="close(action)"
+          @mousedown.prevent
+          @mouseup.prevent
+        >
           <icon class="menu-icon" :icon="action.icon" fixed-width style="font-size: 15px"></icon>
         </span>
       </div>
-      <div class="menu-node__item menu-node__item--disabled" v-else-if="item.disabled">{{item.name}}
+      <div class="menu-node__item menu-node__item--disabled" v-else-if="item.disabled">
+        {{ item.name }}
       </div>
-      <div class="menu-node__item-link flex flex--row flex--align-center" v-else
-           :class="{active: item.id === activeNodeId}"
-           @click.stop="close(item)" @mousedown.prevent @mouseup.prevent>
+      <div
+        class="menu-node__item-link flex flex--row flex--align-center"
+        v-else
+        :class="{ active: item.id === activeNodeId }"
+        @click.stop="close(item)"
+        @mousedown.prevent
+        @mouseup.prevent
+      >
         <span class="menu-node__item-icon flex flex--column flex--center flex--align-center">
-          <icon v-if="item.icon" :icon="item.icon" fixed-width size="lg"/>
+          <icon v-if="item.icon" :icon="item.icon" fixed-width size="lg" />
         </span>
-        <span class="menu-node__item-text flex flex--column">{{item.name}}</span>
+        <span class="menu-node__item-text flex flex--column">{{ item.name }}</span>
         <span class="menu-node__item-arrow flex flex--column flex--end" v-if="item.hasMenu">
-          <icon icon="angle-right" fixed-width/>
+          <icon icon="angle-right" fixed-width />
         </span>
       </div>
     </div>
 
-    <sub-menu-node :item="item" :key="item.id" v-if="item.hasMenu && isMenuOpen" :space-to-bottom="spaceToBottom"
-                   :space-to-right="spaceToRight"></sub-menu-node>
+    <sub-menu-node
+      :item="item"
+      :key="item.id"
+      v-if="item.hasMenu && isMenuOpen"
+      :space-to-bottom="spaceToBottom"
+      :space-to-right="spaceToRight"
+    ></sub-menu-node>
   </div>
 </template>
 

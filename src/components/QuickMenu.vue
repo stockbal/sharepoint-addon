@@ -1,21 +1,34 @@
 <template>
   <div class="quick-menu" @contextmenu.prevent="close()">
-    <div class="quick-menu__inner flex flex--column" :style="{left: left + 'px', top: top + 'px'}">
+    <div
+      class="quick-menu__inner flex flex--column"
+      :style="{ left: left + 'px', top: top + 'px' }"
+    >
       <div class="quick-menu__title-bar flex flex--row flex--align-center">
-        <span class="flex flex--column">{{title}}</span>
+        <span class="flex flex--column">{{ title }}</span>
         <button class="button flex flex--column flex--end" @click="close()">
           <icon icon="times" fixed-width></icon>
         </button>
       </div>
       <div class="quick-menu__items">
-        <div class="quick-menu__item" v-for="(item,idx) in items" :key="idx">
+        <div class="quick-menu__item" v-for="(item, idx) in items" :key="idx">
           <!-- Display Select menu for type 'select' -->
           <form-entry v-if="item.type === 'select'" :label="item.label">
-            <select-menu slot="field" v-form-el-focus :selected="item.value" :items="item.options"
-                         @change="item.action($event)"/>
+            <select-menu
+              slot="field"
+              v-form-el-focus
+              :selected="item.value"
+              :items="item.options"
+              @change="item.action($event)"
+            />
           </form-entry>
           <!-- Display Slider for type 'check' -->
-          <slider v-else-if="item.type === 'check'" :label="item.label" :active="item.value" @change="item.action($event)" />
+          <slider
+            v-else-if="item.type === 'check'"
+            :label="item.label"
+            :active="item.value"
+            @change="item.action($event)"
+          />
         </div>
       </div>
     </div>

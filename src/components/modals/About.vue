@@ -3,16 +3,17 @@
     <h2 slot="title">SharePoint Add-On</h2>
     <icon slot="title-icon" icon="question-circle" size="2x"></icon>
     <div class="modal__content">
-      <small>v{{version}} -- &copy; 2018 {{author}}</small>
-      <hr/>
+      <small>v{{ version }} -- &copy; 2018 {{ author }}</small>
+      <hr />
       <a class="link" target="_blank" :href="issueTracker">
-        <icon icon="bug" slot="icon"/>
-        Issue-Tracker
+        <icon icon="bug" slot="icon" /> Issue-Tracker
       </a>
-      --
-      <a class="link" target="_blank" :href="changelog">Changelog</a>
-      <hr/>
-      <div>Licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a>-License</div>
+      -- <a class="link" target="_blank" :href="changelog">Changelog</a>
+      <hr />
+      <div>
+        Licensed under the
+        <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a>-License
+      </div>
       <div class="modal__button-bar">
         <button class="button" @click="config.resolve()" accesskey="c">Close</button>
       </div>

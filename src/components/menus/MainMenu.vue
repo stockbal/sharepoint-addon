@@ -1,28 +1,28 @@
 <template lang="html">
   <div class="side-bar__panel side-bar__panel--menu">
     <menu-entry @click.native="setPanel('toc')">
-      <icon icon="list" slot="icon"/>
+      <icon icon="list" slot="icon" />
       <div>Table of Contents</div>
     </menu-entry>
-    <hr/>
+    <hr />
     <menu-entry @click.native="setPanel('config')">
-      <icon icon="cog" slot="icon"/>
+      <icon icon="cog" slot="icon" />
       <div>Quick Configuration</div>
       <span>Configure the Add-On</span>
     </menu-entry>
     <menu-entry @click.native="customStyle">
-      <icon :icon="['fab', 'css3-alt']" slot="icon" size="lg"/>
+      <icon :icon="['fab', 'css3-alt']" slot="icon" size="lg" />
       <div>Configure Styling</div>
       <span>Configure the styling for the editor and the add on</span>
     </menu-entry>
-    <hr/>
+    <hr />
     <menu-entry @click.native="openWiki()">
       <icon icon="book" slot="icon" />
       <div>Wiki</div>
       <span>Documentation of the Add-On</span>
     </menu-entry>
     <menu-entry @click.native="about()" class="about flex--end">
-      <icon icon="question-circle" slot="icon"/>
+      <icon icon="question-circle" slot="icon" />
       <div>About the Add-On</div>
     </menu-entry>
   </div>
@@ -74,6 +74,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -1,9 +1,7 @@
 <template>
   <div class="form-entry" :error="error">
-    <label class="form-entry__label" :for="uid">{{label}}</label>
-    <div class="form-entry__field">
-      <slot name="field"></slot>
-    </div>
+    <label class="form-entry__label" :for="uid">{{ label }}</label>
+    <div class="form-entry__field"><slot name="field"></slot></div>
     <slot></slot>
   </div>
 </template>

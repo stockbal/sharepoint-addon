@@ -1,9 +1,17 @@
 <template>
   <div class="context-menu" @contextmenu.prevent="close()" @click.prevent.stop="close()">
-    <div class="context-menu__inner menu-list" tabindex="0"
-         :style="{left: left + 'px', top: top + 'px'}">
-      <menu-node v-for="(item, idx) in items" :key="idx" :item="item" :space-to-bottom="bottomSpace"
-                 :space-to-right="rightSpace"/>
+    <div
+      class="context-menu__inner menu-list"
+      tabindex="0"
+      :style="{ left: left + 'px', top: top + 'px' }"
+    >
+      <menu-node
+        v-for="(item, idx) in items"
+        :key="idx"
+        :item="item"
+        :space-to-bottom="bottomSpace"
+        :space-to-right="rightSpace"
+      />
     </div>
   </div>
 </template>

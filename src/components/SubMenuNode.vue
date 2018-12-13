@@ -1,6 +1,6 @@
 <template>
-  <div class="menu-node__children menu-list" :style="{left: left + 'px', top: top + 'px'}">
-    <menu-node v-for="(subitem, idx2) in item.items" :key="idx2" :item="subitem"/>
+  <div class="menu-node__children menu-list" :style="{ left: left + 'px', top: top + 'px' }">
+    <menu-node v-for="(subitem, idx2) in item.items" :key="idx2" :item="subitem" />
   </div>
 </template>
 
@@ -55,6 +55,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

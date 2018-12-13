@@ -1,24 +1,34 @@
 <template>
   <div class="toc-node">
-    <div :id="`toc-item-${node.id}`" class="toc-node__item" v-if="!node.isRoot && !isFiltered"
-         :class="{'toc-node__link--active': node.id === activeNode}">
+    <div
+      :id="`toc-item-${node.id}`"
+      class="toc-node__item"
+      v-if="!node.isRoot && !isFiltered"
+      :class="{ 'toc-node__link--active': node.id === activeNode }"
+    >
       <div class="toc-node__link flex flex--row">
-        <div class="toc-node__link-expander flex flex--column flex--center" v-if="node.isFolder"
-             @click="toggle(node.id)">
-          <icon v-if="isOpen" :icon="['far', 'minus-square']" fixed-width/>
-          <icon v-else :icon="['far', 'plus-square']" fixed-width/>
+        <div
+          class="toc-node__link-expander flex flex--column flex--center"
+          v-if="node.isFolder"
+          @click="toggle(node.id)"
+        >
+          <icon v-if="isOpen" :icon="['far', 'minus-square']" fixed-width />
+          <icon v-else :icon="['far', 'plus-square']" fixed-width />
         </div>
         <div class="toc-node__link-without-expander flex flex-column flex--center" v-else></div>
         <div class="toc-node__active-link-indicator flex flex--column flex--center"></div>
-        <a class="toc-node__link-text flex flex--column" :class="tocLevelClass" :style="{paddingLeft: leftPadding}"
-           @click="navigate(node.item.headingId)">
-          {{node.item.headingName}}
+        <a
+          class="toc-node__link-text flex flex--column"
+          :class="tocLevelClass"
+          :style="{ paddingLeft: leftPadding }"
+          @click="navigate(node.item.headingId)"
+        >
+          {{ node.item.headingName }}
         </a>
       </div>
     </div>
     <div class="toc-node__children" v-if="node.isFolder && isOpen">
-      <toc-node v-for="node in node.children" :key="node.id" :node="node">
-      </toc-node>
+      <toc-node v-for="node in node.children" :key="node.id" :node="node"> </toc-node>
     </div>
   </div>
 </template>

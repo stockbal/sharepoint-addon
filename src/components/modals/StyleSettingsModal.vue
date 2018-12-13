@@ -4,29 +4,40 @@
     <icon slot="title-icon" :icon="['fab', 'css3-alt']" size="2x"></icon>
     <div class="modal__content">
       <div class="tabs flex flex--row">
-        <tab :active="tab === 'custom'" @click="tab = 'custom'">
-          Custom Style
-        </tab>
-        <tab :active="tab === 'default'" @click="tab = 'default'">
-          Default Style
-        </tab>
+        <tab :active="tab === 'custom'" @click="tab = 'custom'"> Custom Style </tab>
+        <tab :active="tab === 'default'" @click="tab = 'default'"> Default Style </tab>
       </div>
       <div class="flex flex--row">
         <div class="form-entry" v-if="tab === 'default'" role="tabpanel" aria-label="Default Style">
           <form-entry class="editor__text" label="YAML:">
-            <code-editor slot="field" lang="yaml" :value="defaultStyle" key="default-style"
-                         disabled="true"></code-editor>
+            <code-editor
+              slot="field"
+              lang="yaml"
+              :value="defaultStyle"
+              key="default-style"
+              disabled="true"
+            ></code-editor>
           </form-entry>
         </div>
-        <div class="form-entry" v-else-if="tab === 'custom'" role="tabpanel" aria-label="Custom Style">
+        <div
+          class="form-entry"
+          v-else-if="tab === 'custom'"
+          role="tabpanel"
+          aria-label="Custom Style"
+        >
           <form-entry class="editor__text" label="YAML:">
-            <code-editor lang="yaml" slot="field" :value="customStyle" key="custom-style"
-                         @changed="setCustomStyle($event)"></code-editor>
+            <code-editor
+              lang="yaml"
+              slot="field"
+              :value="customStyle"
+              key="custom-style"
+              @changed="setCustomStyle($event)"
+            ></code-editor>
           </form-entry>
         </div>
       </div>
 
-      <div class="modal__error modal__error--settings">{{error}}</div>
+      <div class="modal__error modal__error--settings">{{ error }}</div>
     </div>
     <div class="modal__button-bar">
       <button class="button" @click="config.reject()">Cancel</button>

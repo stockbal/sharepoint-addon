@@ -1,7 +1,16 @@
 <template>
-  <label class="slider flex flex--row flex--align-center" :class="{'slider--disabled': disable}" :tabindex="tabindex"
-         @keydown.enter="onEnter">
-    <input type="checkbox" v-model="activeState" @change="$emit('change', activeState)" :disabled="disable">
+  <label
+    class="slider flex flex--row flex--align-center"
+    :class="{ 'slider--disabled': disable }"
+    :tabindex="tabindex"
+    @keydown.enter="onEnter"
+  >
+    <input
+      type="checkbox"
+      v-model="activeState"
+      @change="$emit('change', activeState)"
+      :disabled="disable"
+    />
     <span class="slider__inner flex flex--column"></span>
     <span class="slider__label flex flex--column">{{ cleanLabel }}</span>
   </label>

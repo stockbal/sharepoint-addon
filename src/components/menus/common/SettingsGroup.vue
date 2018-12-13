@@ -1,17 +1,18 @@
 <template>
   <div class="settings-group">
-    <a class="settings-group__link button flex flex--row flex--align-center" @click="opened = !opened">
+    <a
+      class="settings-group__link button flex flex--row flex--align-center"
+      @click="opened = !opened"
+    >
       <div class="settings-group__icon flex flex--column flex--center">
         <icon :icon="icon" fixed-width />
       </div>
       <div class="settings-group__text flex flex--column">
-        <div>{{title}}</div>
-        <span>{{subtitle}}</span>
+        <div>{{ title }}</div>
+        <span>{{ subtitle }}</span>
       </div>
     </a>
-    <div class="settings-group__items" v-if="opened">
-      <slot></slot>
-    </div>
+    <div class="settings-group__items" v-if="opened"><slot></slot></div>
   </div>
 </template>
 

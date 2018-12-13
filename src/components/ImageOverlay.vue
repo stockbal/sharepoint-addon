@@ -1,13 +1,20 @@
 <template>
   <div class="overlay-image">
     <div class="overlay-image__inner flex flex--align-center">
-      <img :height="imgHeight" :src="imgSrc" :alt="alt"
-           :style="{'max-height': maxHeight, 'max-width': maxWidth}"
-           />
+      <img
+        :height="imgHeight"
+        :src="imgSrc"
+        :alt="alt"
+        :style="{ 'max-height': maxHeight, 'max-width': maxWidth }"
+      />
     </div>
     <div class="overlay-image__top-area flex flex--row flex--align-center">
-      <span class="overlay-image__title">{{alt}}</span>
-      <button class="button overlay-image__zoom-button" @click="toggleZoom" :title="zoomedIn ? 'Zoom out' : 'Zoom in'">
+      <span class="overlay-image__title">{{ alt }}</span>
+      <button
+        class="button overlay-image__zoom-button"
+        @click="toggleZoom"
+        :title="zoomedIn ? 'Zoom out' : 'Zoom in'"
+      >
         <icon :icon="zoomedIn ? 'search-minus' : 'search-plus'" fixed-width size="lg"></icon>
       </button>
       <button class="button overlay-image__close-button" @click="dispose">Close</button>

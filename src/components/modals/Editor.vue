@@ -4,17 +4,37 @@
       <div class="flex flex--column">
         <h2 class="modal__title">Code editor</h2>
         <form-entry class="editor__language" label="Language">
-          <select-menu slot="field" v-form-el-focus :selected="code.language" :items="languages" :accesskey="'l'"
-                       @change="code.language = $event"/>
+          <select-menu
+            slot="field"
+            v-form-el-focus
+            :selected="code.language"
+            :items="languages"
+            :accesskey="'l'"
+            @change="code.language = $event"
+          />
         </form-entry>
         <form-entry class="editor__text" label="Code">
-          <pre slot="field" contenteditable="true" spellcheck="false"
-               @keydown="onKeydown" @keyup="onKeyUp"></pre>
+          <pre
+            slot="field"
+            contenteditable="true"
+            spellcheck="false"
+            @keydown="onKeydown"
+            @keyup="onKeyUp"
+          ></pre>
         </form-entry>
-        <slider label="_Print line numbers" :active="code.printLineNumbers" @change="togglePrintLineNumbers"
-                :disable="code.inline"/>
-        <slider label="Inl_ine coding" :active="code.inline" @change="toggleInline" :disable="code.printLineNumbers"/>
-        <div class="modal__error modal__error--settings">{{error}}</div>
+        <slider
+          label="_Print line numbers"
+          :active="code.printLineNumbers"
+          @change="togglePrintLineNumbers"
+          :disable="code.inline"
+        />
+        <slider
+          label="Inl_ine coding"
+          :active="code.inline"
+          @change="toggleInline"
+          :disable="code.printLineNumbers"
+        />
+        <div class="modal__error modal__error--settings">{{ error }}</div>
       </div>
       <div class="modal__button-bar">
         <button class="button" @click="config.reject()" accesskey="c">Cancel</button>

@@ -1,6 +1,10 @@
 <template>
-  <pre class="code-editor textfield prism-default" :disabled="disabled"
-       :contenteditable="!disabled" spellcheck="false"></pre>
+  <pre
+    class="code-editor textfield prism-default"
+    :disabled="disabled"
+    :contenteditable="!disabled"
+    spellcheck="false"
+  ></pre>
 </template>
 
 <script>

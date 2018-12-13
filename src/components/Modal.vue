@@ -1,14 +1,17 @@
 <template>
   <transition name="fade">
     <div class="modal" @keyup.esc="onEscape" @keydown.tab="onTab">
-      <editor v-if="config.type === 'editor'"/>
-      <about v-else-if="config.type === 'about'"/>
-      <style-settings-modal v-else-if="config.type === 'editorStyle'"/>
+      <editor v-if="config.type === 'editor'" /> <about v-else-if="config.type === 'about'" />
+      <style-settings-modal v-else-if="config.type === 'editorStyle'" />
       <modal-inner v-else aria-label="Dialog">
         <div class="modal__content" v-html="config.content"></div>
         <div class="modal__button-bar">
-          <button class="button" v-if="config.rejectText" @click="config.reject()">{{config.rejectText}}</button>
-          <button class="button" v-if="config.resolveText" @click="config.resolve()">{{config.resolveText}}</button>
+          <button class="button" v-if="config.rejectText" @click="config.reject()">
+            {{ config.rejectText }}
+          </button>
+          <button class="button" v-if="config.resolveText" @click="config.resolve()">
+            {{ config.resolveText }}
+          </button>
         </div>
       </modal-inner>
     </div>

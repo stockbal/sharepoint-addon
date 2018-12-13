@@ -2,12 +2,14 @@
   <div class="modal__inner-1" role="dialog">
     <div class="modal__inner-2">
       <div class="modal__title flex flex--row flex--align-center">
-        <div class="modal__title-icon">
-          <slot name="title-icon"></slot>
-        </div>
+        <div class="modal__title-icon"><slot name="title-icon"></slot></div>
         <slot name="title"></slot>
       </div>
-      <button class="modal__close-button button not-tabbable" @click="config.reject()" title="Close modal">
+      <button
+        class="modal__close-button button not-tabbable"
+        @click="config.reject()"
+        title="Close modal"
+      >
         <icon icon="times" />
       </button>
       <slot></slot>
