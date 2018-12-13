@@ -293,7 +293,6 @@ export default {
     }
   },
   _scrollToStateLocation(state) {
-    console.log(state);
     if (state) {
       if (state.hasOwnProperty('headingId')) {
         this._scrollToElementInWorkspace(state.headingId);

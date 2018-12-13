@@ -104,7 +104,6 @@ export default {
     return heightBeforeWorkspace;
   },
   updateDistanceFromTop() {
-    debugger;
     let distanceFromTop = this.calculateHeightToForm() + this.calculateHeightInFormToWorkspace();
     // update the layout store
     store.dispatch('layout/updateDistanceFromTop', `${parseInt(distanceFromTop, 10)}px`);
