@@ -1,3 +1,9 @@
+### v1.0.6
+
+#### Fixes
+
+- heading content is not changed after toc is built and heading anchors were added
+
 ### v1.0.5
 
 #### Fixes

@@ -1,5 +1,5 @@
 # SharePoint Wiki Add-On
-###### *Version 1.0.2*
+###### *Version 1.0.6*
 > Add-On's for MS SharePoint wiki sites
 
 ## Building the Add-On's for your site
