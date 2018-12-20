@@ -15,7 +15,7 @@ export default {
   // Edge 20+
   isEdge: () => !this.isIE && !!window.StyleMedia,
   // Chrome 1+
-  isChrome: () => !!window.chrome && !!window.chrome.webstore,
+  isChrome: () => /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
   // Blink engine detection
   isBlink: () => (this.isChrome || this.isOpera) && !!window.CSS
 };
