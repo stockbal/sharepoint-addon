@@ -1,3 +1,9 @@
+### v1.0.7
+
+#### Fixes
+
+- detection for chrome browser had to be fixed starting from Chrome 71
+
 ### v1.0.6
 
 #### Fixes
