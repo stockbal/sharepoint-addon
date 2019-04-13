@@ -102,13 +102,29 @@ blockquote.quote {
   }
 }
 
-.adt-link {
+.adt-link,
+.icon {
   padding: 3px 5px;
   margin: 3px 5px;
-  border: 1px blue dashed;
-  background: rgba(0, 0, 0, 0.05);
   font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
   line-height: 1.5;
+  &.adt-link {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px blue dashed;
+  }
+  &.icon {
+    font-size: $font-size-monospace;
+    font-weight: bold;
+    background: rgba(132, 20, 57, 0.1);
+    border: 1px $primary-color dotted;
+
+    &::before {
+      content: '['
+    }
+    &::after {
+      content: ']'
+    }
+  }
 }
 
 .adt-link--parse-error {

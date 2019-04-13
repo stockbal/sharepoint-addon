@@ -161,6 +161,8 @@ export class ContextMenuItemCreator {
           )
         ]
       },
+      separator,
+      createItem('Add Icon', 'plus-circle', () => eventProxy.$trigger('insertIcon')),
       ...clipBoardActions
     ];
 

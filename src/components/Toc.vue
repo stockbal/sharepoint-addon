@@ -17,10 +17,10 @@
           <icon icon="redo"></icon>
         </a>
         <a class="button toc__nav-button" @click="expandAll" title="Expand all top menus">
-          <icon icon="plus-circle" />
+          <icon icon="angle-double-down" />
         </a>
         <a class="button toc__nav-button" @click="collapseAll" title="Collapse all top menus">
-          <icon icon="minus-circle" />
+          <icon icon="angle-double-up" />
         </a>
       </div>
       <div class="toc__filter">

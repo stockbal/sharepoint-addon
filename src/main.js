@@ -18,6 +18,14 @@ $(document).ready(() => {
     store,
     render: h => h(App),
     mounted() {
+      // inject fontawesome icons into page
+      const fontAwesome = document.createElement('link');
+      fontAwesome.rel = 'stylesheet';
+      fontAwesome.href = 'https://use.fontawesome.com/releases/v5.7.2/css/all.css';
+      fontAwesome.integrity =
+        'sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr';
+      fontAwesome.crossOrigin = 'anonymous';
+      document.head.appendChild(fontAwesome);
       /* move element to bottom of body to prevent
        * unwanted submit actions fired in the pages' form element */
       document.body.appendChild(this.$el);
