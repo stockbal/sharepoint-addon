@@ -1,8 +1,9 @@
-### v1.1.0
+### v1.1.1
 
 #### Features
 
 - add FontAwesome Icon via context menu action
+- add line highlighting to coding blocks
 
 #### Changes
 
