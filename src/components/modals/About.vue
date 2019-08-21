@@ -3,7 +3,7 @@
     <h2 slot="title">SharePoint Add-On</h2>
     <icon slot="title-icon" icon="question-circle" size="2x"></icon>
     <div class="modal__content">
-      <small>v{{ version }} -- &copy; 2018 {{ author }}</small>
+      <small>v{{ version }} -- &copy; 2019 {{ author }}</small>
       <hr />
       <a class="link" target="_blank" :href="issueTracker">
         <icon icon="bug" slot="icon" /> Issue-Tracker

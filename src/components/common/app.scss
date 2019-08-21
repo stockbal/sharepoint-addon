@@ -101,8 +101,10 @@
 }
 
 .s4-workspace--addons-loaded {
-  width: calc(100% - #{$sidebar-width-folded}) !important;
-  margin-left: $sidebar-width-folded;
+  //width: calc(100% - #{$sidebar-width-folded}) !important;
+  //margin-left: $sidebar-width-folded;
+  width: 100%;
+  margin-left: 0;
 }
 
 .s4-workspace--addons__sidebar--pinned {

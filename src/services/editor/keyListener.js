@@ -6,6 +6,7 @@ import config from '../../config';
 import {
   ADT_LINK_SELECTOR,
   CODING_SELECTOR,
+  ICON_SELECTOR,
   ZERO_WIDTH
 } from '../../config/constants';
 import selectionSvc, { RangeCursor } from '../selectionSvc';
@@ -302,9 +303,12 @@ export default {
     keyListenerSvc.addKeyListener(KeyStrokes.Backspace, { alt: true }, evt => {
       const { containerElement } = selectionSvc.getSelection();
 
-      const $codingArea = $(containerElement).closest(CODING_SELECTOR);
-      if ($codingArea.length) {
-        $codingArea.remove();
+      let $elementToRemove = $(containerElement).closest(CODING_SELECTOR);
+      if (!$elementToRemove.length) {
+        $elementToRemove = $(containerElement).closest(ICON_SELECTOR);
+      }
+      if ($elementToRemove.length) {
+        $elementToRemove.remove();
         evt.preventDefault();
       }
     });

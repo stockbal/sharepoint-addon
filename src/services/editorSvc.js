@@ -238,6 +238,7 @@ export default {
 
       codeConverter.convertCodingAreas();
       codeConverter.convertADTLinks();
+      CodeConverter.convertIcons();
       this._updatePrismStyle();
       this.highlightCode();
     }
@@ -350,19 +351,20 @@ export default {
    * @private
    */
   _insertIcon() {
-    let selectionData = store.state.selectionData;
+    let { range, sel } = store.state.selectionData;
 
     // check if selection resides already inside iconElement
     const iconElement = document.createElement('span');
     iconElement.classList.add('icon');
     iconElement.title = 'Icon Area';
-    iconElement.innerText = `regular:bell`;
+    iconElement.innerText = `[regular:bell]`;
 
-    selectionData.range.deleteContents();
-    selectionData.sel.removeAllRanges();
-    selectionData.range.insertNode(iconElement);
-    selectionData.range.setStartBefore(iconElement);
-    selectionData.range.setEndAfter(iconElement);
+    range.deleteContents();
+    sel.removeAllRanges();
+    range.insertNode(iconElement);
+    range.setStartBefore(iconElement);
+    range.setEndAfter(iconElement);
+    sel.addRange(range);
   },
   /**
    * Main initialisation for the editor functions

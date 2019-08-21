@@ -117,13 +117,6 @@ blockquote.quote {
     font-weight: bold;
     background: rgba(132, 20, 57, 0.1);
     border: 1px $primary-color dotted;
-
-    &::before {
-      content: '['
-    }
-    &::after {
-      content: ']'
-    }
   }
 }
 
