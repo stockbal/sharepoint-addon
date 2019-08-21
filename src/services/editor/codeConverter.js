@@ -135,6 +135,10 @@ export class CodeConverter {
       if (blockCoding.getData('line-numbers')) {
         pre.classList.add('line-numbers');
       }
+      const highlightedLines = blockCoding.getData('line');
+      if (highlightedLines) {
+        pre.setData('line', highlightedLines);
+      }
 
       pre.appendChild(this._createCodeElement(blockCoding, language));
       codeDiv.appendChild(pre);

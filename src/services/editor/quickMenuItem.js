@@ -1,6 +1,7 @@
 export const QuickMenuType = {
   Select: 'select',
-  Check: 'check'
+  Check: 'check',
+  Text: 'text'
 };
 
 export class QuickMenuItem {

@@ -22,8 +22,16 @@
               @change="item.action($event)"
             />
           </form-entry>
+          <form-entry v-else-if="item.type === 'text'" :label="item.label">
+            <text-input
+              slot="field"
+              v-form-el-focus
+              :value="item.value"
+              @change="item.action($event)"
+            />
+          </form-entry>
           <!-- Display Slider for type 'check' -->
-          <slider
+          <Slider
             v-else-if="item.type === 'check'"
             :label="item.label"
             :active="item.value"
@@ -44,16 +52,20 @@ import $ from 'jquery';
 import utils from '../services/utils';
 
 import keystrokes from '../services/keystrokes';
+import TextInput from './TextInput';
 
 export default {
   name: 'QuickMenu',
   components: {
+    TextInput,
     Slider,
     FormEntry,
     SelectMenu
   },
   data: () => ({
-    sizeData: {}
+    sizeData: {},
+    textModelCounter: 1,
+    textModels: {}
   }),
   computed: {
     ...mapState('quickMenu', ['items', 'coordinates', 'title']),
@@ -79,6 +91,10 @@ export default {
         evt.preventDefault();
         this.close();
       }
+    },
+    sendTextValue(item, evt) {
+      console.log(evt);
+      item.action(evt.target.value);
     }
   },
   mounted() {
@@ -91,6 +107,12 @@ export default {
       this.coordinates.top,
       this.coordinates.left
     );
+
+    // register text models
+    this.$el.querySelectorAll('.quick-menu__text-type').forEach(el => {
+      const id = this.textModelCounter++;
+      this.textModels[id] = el;
+    });
   },
   beforeDestroy() {
     document.removeEventListener('mousedown', this.mouseListener);
@@ -111,6 +133,20 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+.quick-menu__text-type {
+  background-color: #fff;
+  border: none;
+  font-family: inherit;
+  font-weight: 400;
+  padding: 0 0.6rem;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  color: inherit;
+  height: 26px;
 }
 
 .quick-menu__inner {

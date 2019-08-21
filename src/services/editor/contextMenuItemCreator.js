@@ -103,6 +103,17 @@ export class ContextMenuItemCreator {
           }
         )
       );
+      quickMenuItems.push(
+        new QuickMenuItem(
+          QuickMenuType.Text,
+          'Highlight Lines',
+          $coding[0].getData('line'),
+          newVal => {
+            console.log(newVal);
+            $coding[0].setData('line', newVal);
+          }
+        )
+      );
     }
     quickMenuItems.push(
       new QuickMenuItem(
