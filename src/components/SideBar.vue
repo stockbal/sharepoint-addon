@@ -1,10 +1,11 @@
 <template>
   <div
+    v-if="isOpen"
     class="side-bar flex flex--column"
     :class="{ visible: isOpen }"
     :style="{ height: panelHeight }"
   >
-    <div v-if="isOpen" class="side-title flex flex--row">
+    <div class="side-title flex flex--row">
       <button
         v-if="panel !== 'menu'"
         class="side-title__button button"
@@ -18,19 +19,8 @@
         <icon icon="times" fixed-width />
       </button>
     </div>
-    <div v-else class="side-title flex flex--row">
-      <button
-        class="side-title__button side-title__button--open button"
-        :title="toggleButtonText"
-        @click="toggleSideBar()"
-      >
-        <icon v-if="panel === 'toc'" icon="list" fixed-width />
-        <icon v-else-if="panel === 'config'" icon="cog" fixed-width />
-        <icon v-else icon="bars" fixed-width />
-      </button>
-    </div>
 
-    <div v-if="isOpen" class="side-bar__inner">
+    <div class="side-bar__inner">
       <main-menu v-if="panel === 'menu'" />
       <config-menu v-else-if="panel === 'config'" />
       <toc v-else />
@@ -43,12 +33,7 @@ import MainMenu from './menus/MainMenu';
 import ConfigMenu from './menus/ConfigMenu';
 import Toc from './Toc';
 import { mapState, mapActions } from 'vuex';
-
-const panelNames = {
-  toc: 'Table of Contents',
-  menu: `Add-On's Menu`,
-  config: 'Configuration'
-};
+import { PANEL_NAMES } from '../config/constants';
 
 export default {
   components: {
@@ -62,7 +47,7 @@ export default {
       panel: 'sideBarPanel'
     }),
     panelName() {
-      return panelNames[this.panel];
+      return PANEL_NAMES[this.panel];
     },
     panelHeight() {
       return `calc(100% - ${this.$store.getters['layout/styles'].distanceFromTop}`;

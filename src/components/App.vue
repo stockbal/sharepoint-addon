@@ -1,6 +1,7 @@
 <template>
   <div id="wiki-addons-container">
     <side-bar />
+    <side-bar-opener />
     <modal v-if="showModal" />
     <context-menu v-if="showContextMenu" />
     <image-overlay v-if="showImagePreview" />
@@ -23,6 +24,7 @@ import layoutSvc from '../services/layoutSvc';
 import Vue from 'vue';
 import $ from 'jquery';
 import MenuNode from './MenuNode';
+import SideBarOpener from './SideBarOpener';
 
 Logger.useDefaults();
 
@@ -51,6 +53,7 @@ Vue.directive('tooltip', {
 
 export default {
   components: {
+    SideBarOpener,
     QuickMenu,
     ImageOverlay,
     SideBar,

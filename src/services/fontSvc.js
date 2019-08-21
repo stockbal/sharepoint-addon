@@ -21,6 +21,8 @@ import * as faList from '@fortawesome/fontawesome-free-solid/faList';
 import * as faTimes from '@fortawesome/fontawesome-free-solid/faTimes';
 import * as faPlus from '@fortawesome/fontawesome-free-solid/faPlus';
 import * as faMinus from '@fortawesome/fontawesome-free-solid/faMinus';
+import * as faAngleDoubleDown from '@fortawesome/fontawesome-free-solid/faAngleDoubleDown';
+import * as faAngleDoubleUp from '@fortawesome/fontawesome-free-solid/faAngleDoubleUp';
 import * as faCode from '@fortawesome/fontawesome-free-solid/faCode';
 import * as faQuoteRight from '@fortawesome/fontawesome-free-solid/faQuoteRight';
 import * as faEdit from '@fortawesome/fontawesome-free-solid/faEdit';
@@ -80,6 +82,8 @@ fontawesome.library.add(
   faEdit,
   faTrash,
   faMinus,
+  faAngleDoubleDown,
+  faAngleDoubleUp,
   faBars,
   faArrowLeft,
   faAngleDown,

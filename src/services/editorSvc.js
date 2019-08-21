@@ -238,6 +238,7 @@ export default {
 
       codeConverter.convertCodingAreas();
       codeConverter.convertADTLinks();
+      CodeConverter.convertIcons();
       this._updatePrismStyle();
       this.highlightCode();
     }
@@ -327,7 +328,7 @@ export default {
    * Inserts ADT Link section at the current position
    * @private
    */
-  _insertADTLink: function() {
+  _insertADTLink() {
     let selectionData = store.state.selectionData;
 
     // check if selection resides already inside adtLink
@@ -343,6 +344,28 @@ export default {
     selectionData.range.setStartBefore(adtLink);
     selectionData.range.setEndAfter(adtLink);
   },
+
+  /**
+   * Create an element which holds a FontAwesome Icon
+   * TODO: Create and open new custom icon picker control
+   * @private
+   */
+  _insertIcon() {
+    let { range, sel } = store.state.selectionData;
+
+    // check if selection resides already inside iconElement
+    const iconElement = document.createElement('span');
+    iconElement.classList.add('icon');
+    iconElement.title = 'Icon Area';
+    iconElement.innerText = `[regular:bell]`;
+
+    range.deleteContents();
+    sel.removeAllRanges();
+    range.insertNode(iconElement);
+    range.setStartBefore(iconElement);
+    range.setEndAfter(iconElement);
+    sel.addRange(range);
+  },
   /**
    * Main initialisation for the editor functions
    */
@@ -351,6 +374,7 @@ export default {
     eventProxy.on('enableEditor', () => this._enableEditor());
     eventProxy.on('updatePrismStyle', () => this._updatePrismStyle());
     eventProxy.on('insertADTLink', () => this._insertADTLink());
+    eventProxy.on('insertIcon', () => this._insertIcon());
     eventProxy.on('setCustomStyle', (updateBaseFontSize = true) =>
       this._setCustomEditorStyle(updateBaseFontSize)
     );

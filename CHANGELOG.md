@@ -1,3 +1,14 @@
+### v1.1.0
+
+#### Features
+
+- add FontAwesome Icon via context menu action
+
+#### Changes
+
+- Change some icons in Sidebar
+- Make Sidebar more inconspicuous if collapsed
+
 ### v1.0.7
 
 #### Fixes

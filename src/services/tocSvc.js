@@ -4,6 +4,7 @@ import store from '../store';
 import Logger from 'js-logger';
 import _ from 'lodash';
 import eventProxy from '../util/eventProxy';
+import { CodeConverter } from './editor/codeConverter';
 
 const logger = Logger.get('Toc Service'); // eslint-disable-line no-unused-vars
 
@@ -60,7 +61,10 @@ const buildTocClosureTable = () => {
       return;
     }
 
-    const headingText = $heading.text().trim();
+    const headingText = $heading
+      .text()
+      .trim()
+      .replace(CodeConverter.getIconMatcher(), '');
     if (headingText === '') {
       return; // empty headings will be ignored
     }
@@ -78,7 +82,8 @@ const buildTocClosureTable = () => {
      * resides in read-only mode
      */
     if (store.state.editMode) {
-      $(heading).text(headingText);
+      // $(heading).text(headingText);
+      $(heading).html(headingHTMLContent);
     } else {
       // update heading element with new anchor tag
       const anchor = document.createElement('a');
