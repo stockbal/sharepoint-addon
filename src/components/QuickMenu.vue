@@ -63,9 +63,7 @@ export default {
     SelectMenu
   },
   data: () => ({
-    sizeData: {},
-    textModelCounter: 1,
-    textModels: {}
+    sizeData: {}
   }),
   computed: {
     ...mapState('quickMenu', ['items', 'coordinates', 'title']),
@@ -107,12 +105,6 @@ export default {
       this.coordinates.top,
       this.coordinates.left
     );
-
-    // register text models
-    this.$el.querySelectorAll('.quick-menu__text-type').forEach(el => {
-      const id = this.textModelCounter++;
-      this.textModels[id] = el;
-    });
   },
   beforeDestroy() {
     document.removeEventListener('mousedown', this.mouseListener);

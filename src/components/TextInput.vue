@@ -3,7 +3,7 @@
     class="text"
     slot="field"
     v-model="internalValue"
-    @change="$emit('change', internalValue)"
+    @keyup="$emit('change', internalValue)"
   />
 </template>
 

@@ -236,6 +236,7 @@ export default {
       this._scrollToStateLocation(history.state, true);
       ImagePreview.createImgListeners();
 
+      codeConverter.convertLineBreaksToNonBreaking();
       codeConverter.convertCodingAreas();
       codeConverter.convertADTLinks();
       CodeConverter.convertIcons();
