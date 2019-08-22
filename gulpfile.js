@@ -6,25 +6,44 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const fs = require('fs');
 
+const languages = [
+  'core', // this is the core prism library
+  'basic',
+  'markup',
+  'clike',
+  'c',
+  'javascript',
+  'css',
+  'ruby',
+  'cpp',
+  'aspnet',
+  'bash',
+  'csharp',
+  'coffeescript',
+  'git',
+  'java',
+  'json',
+  'sql',
+  'kotlin',
+  'less',
+  'markdown',
+  'objectivec',
+  'powershell',
+  'python',
+  'scss',
+  'sass',
+  'scala',
+  'stylus',
+  'vbnet',
+  'yaml'
+];
+
 // include some language specs before processing all other languages
 // as others depend on thesed
-var prismScripts = [
-  'prismjs/components/prism-core.min', // this is the core prism library
-  'prismjs/components/prism-markup.min',
-  'prismjs/components/prism-clike.min',
-  'prismjs/components/prism-c.min',
-  'prismjs/components/prism-javascript.min',
-  'prismjs/components/prism-css.min',
-  'prismjs/components/prism-ruby.min',
-  'prismjs/components/prism-cpp.min'
-].map(require.resolve);
-
-prismScripts.push(
-  path.join(path.dirname(require.resolve('prismjs/components/prism-core')), 'prism-*.min.js')
-);
-// include custom prism languages
+var prismScripts = languages
+  .map(language => `prismjs/components/prism-${language}.min.js`)
+  .map(require.resolve);
 prismScripts.push('./prism/min/prism-abap.js');
-
 // add the needed plugins to the prism file
 prismScripts = prismScripts.concat(
   [
