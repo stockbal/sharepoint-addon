@@ -192,7 +192,7 @@ export class CodeConverter {
    * @returns {RegExp}
    */
   static getIconMatcher() {
-    return /\[(regular|brand|solid):(\w+)(:?:(\d))?]/;
+    return /\[(regular|brand|solid):([\w-]+)(:?:(\d))?]/;
   }
 
   /**
