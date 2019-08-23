@@ -25,6 +25,12 @@ export default {
     document.body.classList.remove(config.cssClasses.addonStyleGeneric);
     this.deactivateAddonStyleTheme();
   },
+  toggleCodeEditorLines(activate) {
+    document.body.setData('editor-lines', activate);
+  },
+  toggleCodeEditorLanguage(activate) {
+    document.body.setData('editor-language', activate);
+  },
   showSideBar() {
     document
       .getElementById(config.elements.workspaceElementId)

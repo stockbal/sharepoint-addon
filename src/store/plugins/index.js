@@ -39,7 +39,12 @@ export default {
                 layoutSvc.hideSideBar();
               }
               break;
-
+            case 'editorShowLanguage':
+              layoutSvc.toggleCodeEditorLanguage(value);
+              break;
+            case 'editorShowLineNumbers':
+              layoutSvc.toggleCodeEditorLines(value);
+              break;
             case 'editorCustomStyleActive':
               if (value) {
                 layoutSvc.activateAddonStyle();

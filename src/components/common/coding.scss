@@ -8,19 +8,53 @@
   border: 1.5px dotted $primary-color;
   padding: 2px 5px;
   margin: 5px;
-  background: rgb(237, 237, 237);
+  background: $light-gray;
+
+  &[data-language]::after {
+    display: none;
+    body[data-editor-language=true] & {
+      display: inline;
+    }
+    content: attr(data-language);
+    margin: 5px;
+    padding: 2px 5px;
+    color: white;
+    background: $primary-color;
+    border-radius: 3px;
+  }
 
   .wiki-addon--dark & {
     color: rgba(255, 255, 255, 0.8);
     border: 2px dotted white;
-    background: #4b4b4b;
+    background: $dark-grey;
   }
 }
 
 .coding-line {
   font-family: Consolas, monospace;
   line-height: 1.5;
-  //white-space: pre;
+
+  // Line number  for coding line
+  div.coding--editable & {
+    counter-increment: linenumber;
+    &::before {
+      display: none;
+      body[data-editor-lines=true] & {
+        display: inline;
+      }
+      content: counter(linenumber);
+      padding: 0 5px;
+      background: darken($light-gray,10%);
+      border-radius: 8px;
+      margin: 0 10px 0 0;
+      box-shadow: 0 1px white;
+
+      .wiki-addon--dark & {
+        color: $dark-grey;
+        box-shadow: 0 1px black;
+      }
+    }
+  }
 }
 
 .content-box--no-coding-selection .coding {

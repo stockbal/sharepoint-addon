@@ -1,11 +1,6 @@
 /**
  * Selectors for line highlighting
  */
-pre[data-line] {
-  position: relative;
-  padding: 1em 0 1em 3em;
-}
-
 .line-highlight {
   position: absolute;
   left: 0;
@@ -13,8 +8,8 @@ pre[data-line] {
   padding: inherit 0;
   margin-top: 1em; /* Same as .prism’s padding-top */
 
-  background: hsla(24, 20%, 50%,.08);
-  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  background: hsla(24, 20%, 50%, 0.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%, 0.1) 70%, hsla(24, 20%, 50%, 0));
 
   pointer-events: none;
 
@@ -26,15 +21,15 @@ pre[data-line] {
 .line-highlight[data-end]:after {
   content: attr(data-start);
   position: absolute;
-  top: .4em;
-  left: .6em;
+  top: 0.4em;
+  left: 0.6em;
   min-width: 1em;
-  padding: 0 .5em;
-  background-color: hsla(24, 20%, 50%,.4);
+  padding: 0 0.5em;
+  background-color: hsla(24, 20%, 50%, 0.4);
   color: hsl(24, 20%, 95%);
   font: bold 65%/1.5 sans-serif;
   text-align: center;
-  vertical-align: .3em;
+  vertical-align: 0.3em;
   border-radius: 999px;
   text-shadow: none;
   box-shadow: 0 1px white;
@@ -43,7 +38,7 @@ pre[data-line] {
 .line-highlight[data-end]:after {
   content: attr(data-end);
   top: auto;
-  bottom: .4em;
+  bottom: 0.4em;
 }
 
 .line-numbers .line-highlight:before,
@@ -58,11 +53,11 @@ pre[data-line] {
  */
 
 .prism-a11y-dark {
-  code[class*="language-"],
-  pre[class*="language-"] {
+  code[class*='language-'],
+  pre[class*='language-'] {
     color: #f8f8f2;
     background: none;
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -80,21 +75,21 @@ pre[data-line] {
 
   /* Code blocks */
 
-  pre[class*="language-"] {
+  pre[class*='language-'] {
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
   }
 
-  :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
+  :not(pre) > code[class*='language-'],
+  pre[class*='language-'] {
     background: #2b2b2b;
   }
 
   /* Inline code */
 
-  :not(pre) > code[class*="language-"] {
+  :not(pre) > code[class*='language-'] {
     padding: 0.1em;
     border-radius: 0.3em;
     white-space: normal;
@@ -171,13 +166,13 @@ pre[data-line] {
   }
 
   @media screen and (-ms-high-contrast: active) {
-    code[class*="language-"],
-    pre[class*="language-"] {
+    code[class*='language-'],
+    pre[class*='language-'] {
       color: windowText;
       background: window;
     }
-    :not(pre) > code[class*="language-"],
-    pre[class*="language-"] {
+    :not(pre) > code[class*='language-'],
+    pre[class*='language-'] {
       background: window;
     }
     .token.important {
@@ -211,6 +206,10 @@ pre[data-line] {
 
   /* styles for line number and toolbar language
   * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.4em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -326,12 +325,11 @@ pre[data-line] {
  */
 
 .prism-atom-dark {
-  code[class*="language-"],
-  pre[class*="language-"] {
+  code[class*='language-'],
+  pre[class*='language-'] {
     color: #c5c8c6;
     text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-    font-family: Inconsolata, Monaco, Consolas, "Courier New", Courier,
-      monospace;
+    font-family: Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace;
     direction: ltr;
     text-align: left;
     white-space: pre;
@@ -350,20 +348,20 @@ pre[data-line] {
   }
 
   /* Code blocks */
-  pre[class*="language-"] {
+  pre[class*='language-'] {
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
   }
 
-  :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
+  :not(pre) > code[class*='language-'],
+  pre[class*='language-'] {
     background: #1d1f21;
   }
 
   /* Inline code */
-  :not(pre) > code[class*="language-"] {
+  :not(pre) > code[class*='language-'] {
     padding: 0.1em;
     border-radius: 0.3em;
     white-space: normal;
@@ -471,6 +469,10 @@ pre[data-line] {
 
   /* styles for line number and toolbar language
  * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.4em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -590,12 +592,11 @@ Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/b
 
 */
 .prism-base16-ateliersulphurpool-light {
-  code[class*="language-"],
-  pre[class*="language-"] {
-    font-family: Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono",
-      "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
-      "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L",
-      "Courier New", Courier, monospace;
+  code[class*='language-'],
+  pre[class*='language-'] {
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -613,31 +614,31 @@ Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/b
     color: #5e6687;
   }
 
-  pre[class*="language-"]::-moz-selection,
-  pre[class*="language-"] ::-moz-selection,
-  code[class*="language-"]::-moz-selection,
-  code[class*="language-"] ::-moz-selection {
+  pre[class*='language-']::-moz-selection,
+  pre[class*='language-'] ::-moz-selection,
+  code[class*='language-']::-moz-selection,
+  code[class*='language-'] ::-moz-selection {
     text-shadow: none;
     background: #dfe2f1;
   }
 
-  pre[class*="language-"]::selection,
-  pre[class*="language-"] ::selection,
-  code[class*="language-"]::selection,
-  code[class*="language-"] ::selection {
+  pre[class*='language-']::selection,
+  pre[class*='language-'] ::selection,
+  code[class*='language-']::selection,
+  code[class*='language-'] ::selection {
     text-shadow: none;
     background: #dfe2f1;
   }
 
   /* Code blocks */
-  pre[class*="language-"] {
+  pre[class*='language-'] {
     padding: 1em;
     margin: 0.5em 0;
     overflow: auto;
   }
 
   /* Inline code */
-  :not(pre) > code[class*="language-"] {
+  :not(pre) > code[class*='language-'] {
     padding: 0.1em;
     border-radius: 0.3em;
     white-space: normal;
@@ -741,6 +742,11 @@ Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/b
     outline-offset: 0.4em;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1.2em 0 1em 3em;
+  }
+
   /* overrides color-values for the Line Numbers plugin
  * http://prismjs.com/plugins/line-numbers/
  */
@@ -757,16 +763,8 @@ Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/b
  */
   .line-highlight {
     background: rgba(107, 115, 148, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(107, 115, 148, 0.2) 70%,
-      rgba(107, 115, 148, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(107, 115, 148, 0.2) 70%,
-      rgba(107, 115, 148, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(107, 115, 148, 0.2) 70%, rgba(107, 115, 148, 0));
+    background: linear-gradient(to right, rgba(107, 115, 148, 0.2) 70%, rgba(107, 115, 148, 0));
   }
 
   /* styles for line number and toolbar language
@@ -1011,7 +1009,7 @@ Original Base16 color scheme by Chris Kempson (https://github.com/chriskempson/b
   /* Line highlight plugin */
   pre[data-line] {
     position: relative;
-    padding: 1em 0 1em 3em;
+    padding: 1.5em 0 1em 3em;
   }
 
   .line-highlight {
@@ -1214,10 +1212,7 @@ http://prismjs.com/download.html?themes=prism-coy&languages=markup+css+clike+jav
     border-left: 10px solid #358ccb;
     box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
     background-color: #fdfdfd;
-    background-image: linear-gradient(
-      transparent 50%,
-      rgba(69, 142, 209, 0.04) 50%
-    );
+    background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
     background-size: 3em 3em;
     background-origin: content-box;
     background-attachment: local;
@@ -1685,6 +1680,10 @@ http://prismjs.com/download.html?themes=prism-coy&languages=markup+css+clike+jav
 
   /* styles for line number and toolbar language
  * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.4em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -1928,6 +1927,11 @@ http://prismjs.com/download.html?themes=prism-dark&languages=markup+css+clike+ja
     color: red;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+  }
+
   pre.line-numbers {
     position: relative;
     padding-left: 3.8em;
@@ -2040,10 +2044,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-dark {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -2202,20 +2205,16 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
    */
   .line-highlight {
     background: rgba(224, 145, 66, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(224, 145, 66, 0.2) 70%,
-      rgba(224, 145, 66, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(224, 145, 66, 0.2) 70%,
-      rgba(224, 145, 66, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(224, 145, 66, 0.2) 70%, rgba(224, 145, 66, 0));
+    background: linear-gradient(to right, rgba(224, 145, 66, 0.2) 70%, rgba(224, 145, 66, 0));
   }
 
   /* styles for line number and toolbar language
  * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -2336,10 +2335,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-earth {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -2498,20 +2496,16 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
    */
   .line-highlight {
     background: rgba(191, 160, 90, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(191, 160, 90, 0.2) 70%,
-      rgba(191, 160, 90, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(191, 160, 90, 0.2) 70%,
-      rgba(191, 160, 90, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(191, 160, 90, 0.2) 70%, rgba(191, 160, 90, 0));
+    background: linear-gradient(to right, rgba(191, 160, 90, 0.2) 70%, rgba(191, 160, 90, 0));
   }
 
   /* styles for line number and toolbar language
    * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -2632,10 +2626,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-forest {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -2794,20 +2787,16 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
    */
   .line-highlight {
     background: rgba(162, 179, 77, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(162, 179, 77, 0.2) 70%,
-      rgba(162, 179, 77, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(162, 179, 77, 0.2) 70%,
-      rgba(162, 179, 77, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(162, 179, 77, 0.2) 70%, rgba(162, 179, 77, 0));
+    background: linear-gradient(to right, rgba(162, 179, 77, 0.2) 70%, rgba(162, 179, 77, 0));
   }
 
   /* styles for line number and toolbar language
    * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -2929,10 +2918,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-light {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -3091,20 +3079,16 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
  */
   .line-highlight {
     background: rgba(45, 32, 6, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(45, 32, 6, 0.2) 70%,
-      rgba(45, 32, 6, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(45, 32, 6, 0.2) 70%,
-      rgba(45, 32, 6, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(45, 32, 6, 0.2) 70%, rgba(45, 32, 6, 0));
+    background: linear-gradient(to right, rgba(45, 32, 6, 0.2) 70%, rgba(45, 32, 6, 0));
   }
 
   /* styles for line number and toolbar language
  * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -3224,10 +3208,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-sea {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -3365,6 +3348,11 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
     cursor: help;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
+
   pre > code.highlight {
     outline: 0.4em solid #34659d;
     outline-offset: 0.4em;
@@ -3386,16 +3374,8 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
    */
   .line-highlight {
     background: rgba(10, 163, 112, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(10, 163, 112, 0.2) 70%,
-      rgba(10, 163, 112, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(10, 163, 112, 0.2) 70%,
-      rgba(10, 163, 112, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(10, 163, 112, 0.2) 70%, rgba(10, 163, 112, 0));
+    background: linear-gradient(to right, rgba(10, 163, 112, 0.2) 70%, rgba(10, 163, 112, 0));
   }
 
   /* styles for line number and toolbar language
@@ -3521,10 +3501,9 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
 .prism-duotone-space {
   code[class*='language-'],
   pre[class*='language-'] {
-    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono',
-      'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono',
-      'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L',
-      'Courier New', Courier, monospace;
+    font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console',
+      'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono',
+      'Nimbus Mono L', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -3662,6 +3641,11 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
     cursor: help;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
+
   pre > code.highlight {
     outline: 0.4em solid #7676f4;
     outline-offset: 0.4em;
@@ -3683,16 +3667,8 @@ Generated with Base16 Builder (https://github.com/base16-builder/base16-builder)
    */
   .line-highlight {
     background: rgba(221, 103, 44, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(221, 103, 44, 0.2) 70%,
-      rgba(221, 103, 44, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(221, 103, 44, 0.2) 70%,
-      rgba(221, 103, 44, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(221, 103, 44, 0.2) 70%, rgba(221, 103, 44, 0));
+    background: linear-gradient(to right, rgba(221, 103, 44, 0.2) 70%, rgba(221, 103, 44, 0));
   }
 
   /* styles for line number and toolbar language
@@ -3927,6 +3903,11 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
     color: red;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+  }
+
   pre.line-numbers {
     position: relative;
     padding-left: 3.8em;
@@ -4037,8 +4018,7 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
   code[class*='language-'],
   pre[class*='language-'] {
     color: #393a34;
-    font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier,
-      monospace;
+    font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
     direction: ltr;
     text-align: left;
     white-space: pre;
@@ -4155,6 +4135,10 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
 
   /* styles for line number and toolbar language
    * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.1em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -4277,8 +4261,7 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
   code[class*='language-'],
   pre[class*='language-'] {
     color: #ffffff;
-    font-family: Menlo, Monaco, 'Lucida Console', 'Courier New',
-      Courier, monospace;
+    font-family: Menlo, Monaco, 'Lucida Console', 'Courier New', Courier, monospace;
     line-height: 1.375;
     direction: ltr;
     text-align: left;
@@ -4392,6 +4375,10 @@ http://prismjs.com/download.html?themes=prism-funky&languages=markup+css+clike+j
 
   /* styles for line number and toolbar language
    * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1.3em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -4627,6 +4614,11 @@ http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike
     cursor: help;
   }
 
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+  }
+
   pre.line-numbers {
     position: relative;
     padding-left: 3.8em;
@@ -4851,7 +4843,10 @@ http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike
 
   /* styles for line number and toolbar language
    * ------------------------------------------- */
-
+  pre[data-line] {
+    position: relative;
+    padding: 1.5em 0 1em 3em;
+  }
   pre .line-highlight {
     margin-top: 0;
   }
@@ -5117,6 +5112,12 @@ green     #859900
   .token.entity {
     cursor: help;
   }
+
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+  }
+
   pre.line-numbers {
     position: relative;
     padding-left: 3.8em;
@@ -5539,8 +5540,7 @@ http://prismjs.com/download.html?themes=prism-twilight&languages=markup+css+clik
   code[class*='language-'],
   pre[class*='language-'] {
     color: #393a34;
-    font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier,
-      monospace;
+    font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
     direction: ltr;
     text-align: left;
     white-space: pre;
@@ -5693,20 +5693,16 @@ http://prismjs.com/download.html?themes=prism-twilight&languages=markup+css+clik
    */
   .line-highlight {
     background: rgba(193, 222, 241, 0.2);
-    background: -webkit-linear-gradient(
-      left,
-      rgba(193, 222, 241, 0.2) 70%,
-      rgba(221, 222, 241, 0)
-    );
-    background: linear-gradient(
-      to right,
-      rgba(193, 222, 241, 0.2) 70%,
-      rgba(221, 222, 241, 0)
-    );
+    background: -webkit-linear-gradient(left, rgba(193, 222, 241, 0.2) 70%, rgba(221, 222, 241, 0));
+    background: linear-gradient(to right, rgba(193, 222, 241, 0.2) 70%, rgba(221, 222, 241, 0));
   }
 
   /* styles for line number and toolbar language
  * ------------------------------------------- */
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
+  }
 
   pre .line-highlight {
     margin-top: 0;
@@ -6316,6 +6312,11 @@ http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascr
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+
+  pre[data-line] {
+    position: relative;
+    padding: 1em 0 1em 3em;
   }
 
   pre.code-toolbar > .toolbar a,

@@ -95,34 +95,41 @@ export default {
     this._listenersCreated = true;
   },
   _escapeElement(evt, escapeAfter = true) {
-    let $codingArea = null;
-    let $adtLinkArea = null;
-
     const { range, containerElement, sel: selection } = selectionSvc.getSelection();
+
+    const $codingArea = $(containerElement).closest(CODING_SELECTOR);
     const $nearestBlockquote = $(containerElement).closest('blockquote, .alert');
+    const $adtLinkArea = $(containerElement).closest(ADT_LINK_SELECTOR);
+    const $icon = $(containerElement).closest(ICON_SELECTOR);
 
     // is it a blockquote?
     if ($nearestBlockquote.length) {
       insertBreak($nearestBlockquote[0], range, escapeAfter);
       updateRange(selection, range, evt);
-    } else {
-      // is it a coding block?
-      $codingArea = $(containerElement).closest(CODING_SELECTOR);
-      if ($codingArea.length) {
-        if ($codingArea.prop('tagName') === 'DIV') {
-          insertBreak($codingArea[0], range, escapeAfter);
-        } else {
-          insertSpace($codingArea[0], range, escapeAfter);
-        }
-        updateRange(selection, range, evt);
+      return;
+    }
+
+    // is it a coding block?
+    if ($codingArea.length) {
+      if ($codingArea.prop('tagName') === 'DIV') {
+        insertBreak($codingArea[0], range, escapeAfter);
       } else {
-        // is it inside ADT Link?
-        $adtLinkArea = $(containerElement).closest(ADT_LINK_SELECTOR);
-        if ($adtLinkArea.length) {
-          insertSpace($adtLinkArea[0], range, escapeAfter);
-          updateRange(selection, range, evt);
-        }
+        insertSpace($codingArea[0], range, escapeAfter);
       }
+      updateRange(selection, range, evt);
+      return;
+    }
+
+    // is it inside ADT Link?
+    if ($adtLinkArea.length) {
+      insertSpace($adtLinkArea[0], range, escapeAfter);
+      updateRange(selection, range, evt);
+      return;
+    }
+
+    if ($icon.length) {
+      insertSpace($icon[0], range, escapeAfter);
+      updateRange(selection, range, evt);
     }
   },
   _createEscapeListeners() {

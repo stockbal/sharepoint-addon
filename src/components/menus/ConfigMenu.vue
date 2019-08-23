@@ -27,6 +27,18 @@
     <hr />
     <settings-group title="Editor" subtitle="Settings for Editor">
       <slider
+        label="Show Line Numbers"
+        :active="editorShowLineNumbers"
+        @change="update('editorShowLineNumbers', $event)"
+        title="Show/Hide line numbers in coding block areas"
+      />
+      <slider
+        label="Show Coding Language"
+        :active="editorShowLanguage"
+        @change="update('editorShowLanguage', $event)"
+        title="Show/Hide Code Language in coding areas"
+      />
+      <slider
         label="Disa_ble"
         :active="editorDisabled"
         @change="update('editorDisabled', $event)"
@@ -77,6 +89,8 @@ export default {
       'tocShowAtStart',
       'tocCollapsedInitially',
       'codeEditorTheme',
+      'editorShowLineNumbers',
+      'editorShowLanguage',
       'editorCustomStyleActive',
       'editorCustomStyleDark',
       'editorDisabled'

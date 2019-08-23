@@ -145,6 +145,7 @@ export default {
   position: absolute;
   min-width: 200px;
   background: $light-gray;
+  user-select: none;
 
   border-radius: $border-radius-base + 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);

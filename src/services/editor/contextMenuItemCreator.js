@@ -109,7 +109,6 @@ export class ContextMenuItemCreator {
           'Highlight Lines',
           $coding[0].getData('line'),
           newVal => {
-            console.log(newVal);
             $coding[0].setData('line', newVal);
           }
         )

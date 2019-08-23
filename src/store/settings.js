@@ -10,6 +10,8 @@ export default {
     tocCollapsedInitially: false,
     tocSynchronize: true,
     codeEditorTheme: 'prism-default',
+    editorShowLineNumbers: true,
+    editorShowLanguage: true,
     editorCustomStyleActive: false,
     editorCustomStyleDark: false,
     editorCustomStyle: '',
