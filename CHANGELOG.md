@@ -1,3 +1,14 @@
+### v1.2.0
+
+#### Features
+
+- Add lines numbers to coding areas (toggleable via config menu)
+- Add language badge to coding areas (toggleable via config menu)
+
+#### Fixes
+
+- Fix some minor issues in ABAP language (prism)
+
 ### v1.1.1
 
 #### Features
