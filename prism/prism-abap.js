@@ -7,7 +7,7 @@ Prism.languages.abap = {
     alias: 'string'
   },
   annotation: {
-    pattern: /@[\w\.]+?:/i,
+    pattern: /@[\w\.]+?\s*:/i,
     alias: 'atrule'
   },
   /* End Of Line comments should not interfere with strings when the
