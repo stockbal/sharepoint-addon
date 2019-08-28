@@ -1,3 +1,10 @@
+### v1.2.1
+
+#### Features
+
+- Add configuration menu to icons
+- Add Copy to Clipboard to coding blocks
+
 ### v1.2.0
 
 #### Features
