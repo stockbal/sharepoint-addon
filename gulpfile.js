@@ -50,8 +50,8 @@ prismScripts = prismScripts.concat(
     'prismjs/plugins/line-numbers/prism-line-numbers.min',
     'prismjs/plugins/line-highlight/prism-line-highlight.min',
     'prismjs/plugins/toolbar/prism-toolbar.min',
-    'prismjs/plugins/show-language/prism-show-language.min'
-    // 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min'
+    'prismjs/plugins/show-language/prism-show-language.min',
+    'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min'
   ].map(require.resolve)
 );
 
