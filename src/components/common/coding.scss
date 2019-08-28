@@ -136,8 +136,19 @@ blockquote.quote {
   }
 }
 
-.adt-link,
 .icon {
+  padding: 2px 3px;
+}
+
+.ms-rte-layoutszone-inner-editable  {
+  .icon {
+    border: 1px dashed $primary-color;
+    padding: 2px 4px;
+    cursor: pointer;
+  }
+}
+
+.adt-link {
   padding: 3px 5px;
   margin: 3px 5px;
   font-family: 'Consolas', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
@@ -145,12 +156,6 @@ blockquote.quote {
   &.adt-link {
     background: rgba(0, 0, 0, 0.05);
     border: 1px blue dashed;
-  }
-  &.icon {
-    font-size: $font-size-monospace;
-    font-weight: bold;
-    background: rgba(132, 20, 57, 0.1);
-    border: 1px $primary-color dotted;
   }
 }
 

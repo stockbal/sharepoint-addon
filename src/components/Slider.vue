@@ -1,6 +1,6 @@
 <template>
   <label
-    class="slider flex flex--row flex--align-center"
+    class="range-slider flex flex--row flex--align-center"
     :class="{ 'slider--disabled': disable }"
     :tabindex="tabindex"
     @keydown.enter="onEnter"
@@ -54,7 +54,7 @@ export default {
 <style lang="scss" scoped>
 @import './common/base';
 
-.slider {
+.range-slider {
   cursor: pointer;
   @include no-selection;
 

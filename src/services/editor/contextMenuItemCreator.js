@@ -1,7 +1,7 @@
 import store from '../../store/index';
 import eventProxy from '../../util/eventProxy';
-import { QuickMenuItem, QuickMenuType } from './quickMenuItem';
-import prismConfig from '../../config/prismConfig';
+import { QuickMenuItem, QuickMenuRangeItem, QuickMenuType } from './quickMenuItem';
+import config from '../../config';
 
 const command = id => () => {
   document.execCommand(id);
@@ -83,7 +83,7 @@ export class ContextMenuItemCreator {
 
   /**
    * Creates the quick menu items for a coding element
-   * @param $coding
+   * @param $coding {jQuery}
    * @returns {Array}
    */
   createItemsForCoding($coding) {
@@ -125,11 +125,36 @@ export class ContextMenuItemCreator {
             codingLanguage = newVal;
           }
         },
-        prismConfig.languages
+        config.prism.languages
       )
     );
 
     return quickMenuItems;
+  }
+
+  /**
+   * Creates the quick menu items for an FontAwesomeIcon
+   * @param icon {HTMLElement} the icon for which the quick menu should be opened
+   * @returns {[*]}
+   */
+  createItemsForIcon(icon) {
+    const iconFamily = icon.getData('icon-family');
+    const iconName = icon.getData('icon-name');
+    const iconSize = icon.getData('icon-size');
+
+    return [
+      new QuickMenuItem(
+        QuickMenuType.Select,
+        'Icon Family',
+        iconFamily,
+        newVal => icon.setData('icon-family', newVal),
+        config.iconFamilies
+      ),
+      new QuickMenuItem(QuickMenuType.Text, 'Name', iconName, newVal =>
+        icon.setData('icon-name', newVal)
+      ),
+      new QuickMenuRangeItem('Size', iconSize, 1, 10, newVal => icon.setData('icon-size', newVal))
+    ];
   }
 
   /**

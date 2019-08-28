@@ -6,7 +6,9 @@ export default {
   namespaced: true,
   state: {
     items: [],
+    afterClose: undefined,
     title: '',
+    actions: [],
     coordinates: {
       top: 0,
       left: 0
@@ -14,17 +16,28 @@ export default {
   },
   mutations: {
     setItems: setter('items'),
+    setAfterClose: setter('afterClose'),
+    setActions: setter('actions'),
     setCoordinates: setter('coordinates'),
     setTitle: setter('title')
   },
   actions: {
-    open({ commit }, { items, title = 'Quick Menu', coordinates }) {
+    open({ commit }, { items, actions, afterClose, title = 'Quick Menu', coordinates }) {
       commit('setItems', items);
+      commit('setAfterClose', afterClose);
+      commit('setActions', actions);
       commit('setTitle', title);
       commit('setCoordinates', coordinates);
     },
-    close({ commit }) {
+    close({ commit, state }, force = false) {
+      if (!force) {
+        if (state.afterClose) {
+          state.afterClose();
+        }
+      }
       commit('setItems', []);
+      commit('setActions', []);
+      commit('setAfterClose', undefined);
     }
   }
 };

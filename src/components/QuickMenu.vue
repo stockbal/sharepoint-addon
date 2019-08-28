@@ -22,11 +22,23 @@
               @change="item.action($event)"
             />
           </form-entry>
+          <!-- display text input for type 'text' -->
           <form-entry v-else-if="item.type === 'text'" :label="item.label">
             <text-input
               slot="field"
               v-form-el-focus
               :value="item.value"
+              @change="item.action($event)"
+            />
+          </form-entry>
+          <!-- Display Range Slider for type 'range' -->
+          <form-entry v-else-if="item.type === 'range'" :label="item.label">
+            <range-slider
+              slot="field"
+              v-form-el-focus
+              :value="item.value"
+              :min="item.min"
+              :max="item.max"
               @change="item.action($event)"
             />
           </form-entry>
@@ -39,6 +51,13 @@
           />
         </div>
       </div>
+      <div class="quick-menu__actions">
+        <div class="quick-menu__action" v-for="(action, idx) in actions" :key="idx">
+          <button class="button" :title="action.name" @click="action.action">
+            <icon :icon="action.icon"></icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -47,6 +66,7 @@
 import { mapState } from 'vuex';
 import Slider from './Slider';
 import FormEntry from './FormEntry';
+import RangeSlider from './RangeSlider';
 import SelectMenu from './SelectMenu';
 import $ from 'jquery';
 import utils from '../services/utils';
@@ -58,6 +78,7 @@ export default {
   name: 'QuickMenu',
   components: {
     TextInput,
+    RangeSlider,
     Slider,
     FormEntry,
     SelectMenu
@@ -66,7 +87,7 @@ export default {
     sizeData: {}
   }),
   computed: {
-    ...mapState('quickMenu', ['items', 'coordinates', 'title']),
+    ...mapState('quickMenu', ['items', 'actions', 'coordinates', 'title']),
     top() {
       return this.coordinates.top + this.sizeData.topOffset;
     },
@@ -152,7 +173,14 @@ export default {
 }
 
 .quick-menu__items {
-  padding: 10px;
+  padding: 0 10px;
+
+  .form-entry {
+    margin: 0;
+  }
+}
+.quick-menu__item {
+  margin: 0 0 10px 0;
 }
 
 .quick-menu__title-bar {
@@ -166,9 +194,17 @@ export default {
     color: $primary-color;
   }
   .button {
-    /*text-align: right;*/
     flex: none;
     margin: 0;
   }
+}
+
+.quick-menu__actions {
+  padding: 0 10px 5px 10px;
+  text-align: right;
+}
+
+.quick-menu__action {
+  color: $primary-color;
 }
 </style>

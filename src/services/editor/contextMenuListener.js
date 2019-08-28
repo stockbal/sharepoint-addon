@@ -3,10 +3,11 @@ import $ from 'jquery';
 import Logger from 'js-logger';
 import store from '../../store/index';
 import config from '../../config/index';
-import { ADT_LINK_SELECTOR, CODING_SELECTOR } from '../../config/constants';
+import { ADT_LINK_SELECTOR, CODING_SELECTOR, ICON_SELECTOR } from '../../config/constants';
 import browser from '../browser';
 import { ContextMenuItemCreator } from './contextMenuItemCreator';
 import selectionSvc from '../selectionSvc';
+import { QuickMenuAction } from './quickMenuItem';
 
 const logger = Logger.get('ContextMenuListener');
 
@@ -61,7 +62,45 @@ const getContextMenuEventTargetData = evt => {
 };
 
 /**
- * Context menu listener for <code>coding</code> elements
+ * Calls Quick Menu to configure the properties of a FontAwesome Icon
+ * @param $icon {jQuery}
+ * @param coordinates {Object}
+ * @returns {Promise<void>}
+ */
+const configureIconProperties = async ($icon, coordinates) => {
+  try {
+    await store.dispatch('quickMenu/open', {
+      coordinates,
+      items: menuItemCreator.createItemsForIcon($icon[0]),
+      actions: [
+        new QuickMenuAction('Delete Icon', 'trash', () => {
+          store.dispatch('quickMenu/close', true);
+          // delete the icon
+          $icon.remove();
+        })
+      ],
+      title: 'Edit Icon',
+      afterClose: () => {
+        // update the icon with the new values
+        const iconFamily = $icon[0].getData('icon-family');
+        const iconName = $icon[0].getData('icon-name').toLowerCase();
+        const iconSize = $icon[0].getData('icon-size');
+        const sizeClass = iconSize > 1 ? `fa-${iconSize}x` : '';
+        $icon[0].setAttribute('class', `icon ${iconFamily} fa-${iconName} ${sizeClass}`);
+      }
+    });
+  } catch (e) {
+    logger.error(e);
+  }
+};
+
+/**
+ * Context menu listener for the following elements
+ * <ul>
+ *   <li>Coding Blocks</li>
+ *   <li>ADT Links</li>
+ *   <li>Icons</li>
+ * </ul>
  */
 export default {
   async _listener(evt) {
@@ -83,17 +122,20 @@ export default {
     if (!$target.is(CODING_SELECTOR)) {
       $coding = $target.closest(CODING_SELECTOR);
     }
+    const $icon = $target.closest(ICON_SELECTOR);
 
     if ($coding.length) {
       try {
         await store.dispatch('quickMenu/open', {
           coordinates,
           items: menuItemCreator.createItemsForCoding($coding),
-          title: 'Properties'
+          title: 'Configure Coding'
         });
       } catch (e) {
         logger.error(e);
       }
+    } else if ($icon.length) {
+      await configureIconProperties($icon, coordinates);
     } else {
       let isADTLink = $target.is(ADT_LINK_SELECTOR);
 

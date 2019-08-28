@@ -4,7 +4,6 @@ import store from '../store';
 import Logger from 'js-logger';
 import _ from 'lodash';
 import eventProxy from '../util/eventProxy';
-import { CodeConverter } from './editor/codeConverter';
 
 const logger = Logger.get('Toc Service'); // eslint-disable-line no-unused-vars
 
@@ -61,10 +60,7 @@ const buildTocClosureTable = () => {
       return;
     }
 
-    const headingText = $heading
-      .text()
-      .trim()
-      .replace(CodeConverter.getIconMatcher(), '');
+    const headingText = $heading.text().trim();
     if (headingText === '') {
       return; // empty headings will be ignored
     }

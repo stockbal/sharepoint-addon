@@ -51,5 +51,13 @@ export default {
       saveEditButtonLarge: '#Ribbon\\.WikiPageTab\\.EditAndCheckout\\.SaveEdit-Large > a'
     }
   },
-  prism: prism
+  prism: prism,
+  /**
+   * FontAwesomeIcon Families
+   */
+  iconFamilies: {
+    far: 'Regular',
+    fas: 'Solid',
+    fab: 'Brand'
+  }
 };

@@ -97,7 +97,7 @@ export default {
 
       const availableSizeData = utils.calcOffset(
         button.offsetWidth,
-        300,
+        Object.keys(this.items).length < 11 ? this.items.length * 27 : 300,
         document.body,
         this.top,
         this.left

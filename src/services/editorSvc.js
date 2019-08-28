@@ -239,7 +239,6 @@ export default {
       codeConverter.convertLineBreaksToNonBreaking();
       codeConverter.convertCodingAreas();
       codeConverter.convertADTLinks();
-      CodeConverter.convertIcons();
       this._updatePrismStyle();
       this.highlightCode();
     }
@@ -355,16 +354,17 @@ export default {
     let { range, sel } = store.state.selectionData;
 
     // check if selection resides already inside iconElement
-    const iconElement = document.createElement('span');
+    const iconElement = document.createElement('i');
     iconElement.classList.add('icon');
-    iconElement.title = 'Icon Area';
-    iconElement.innerText = `[regular:bell]`;
+    iconElement.classList.add('fas');
+    iconElement.classList.add('fa-bell');
+    iconElement.setData('icon-family', 'fas');
+    iconElement.setData('icon-name', 'bell');
+    iconElement.setData('icon-size', '1');
 
     range.deleteContents();
     sel.removeAllRanges();
     range.insertNode(iconElement);
-    range.setStartBefore(iconElement);
-    range.setEndAfter(iconElement);
     sel.addRange(range);
   },
   /**

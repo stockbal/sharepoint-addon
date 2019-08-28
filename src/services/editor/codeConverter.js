@@ -1,4 +1,4 @@
-import { ADT_LINK_SELECTOR, CODING_SELECTOR, ICON_SELECTOR } from '../../config/constants';
+import { ADT_LINK_SELECTOR, CODING_SELECTOR } from '../../config/constants';
 import browser from '../../services/browser';
 import utils from '../utils';
 const previewCodingClass = 'coding';
@@ -184,51 +184,6 @@ export class CodeConverter {
       } else {
         breakEl.remove();
       }
-    }
-  }
-
-  /**
-   * Returns Regular Expression to match icon content
-   * @returns {RegExp}
-   */
-  static getIconMatcher() {
-    return /\[(regular|brand|solid):([\w-]+)(:?:(\d))?]/;
-  }
-
-  /**
-   * Insert FontAweSome Icons at icon areas
-   *
-   * @public
-   */
-  static convertIcons() {
-    for (const iconEl of document.querySelectorAll(ICON_SELECTOR)) {
-      // retrieve the icon name and category from the element
-      const iconInfo = iconEl.innerText.match(CodeConverter.getIconMatcher());
-
-      if (!iconInfo || !Array.isArray(iconInfo)) {
-        continue;
-      }
-      const iconName = iconInfo[2];
-      let iconSize = 1; // eslint-disable-line no-unused-vars
-
-      if (iconInfo.length === 5) {
-        iconSize = iconInfo[4];
-      }
-
-      const newIconEl = document.createElement('i');
-      switch (iconInfo[1]) {
-        case 'brand':
-          newIconEl.classList.add('fab');
-          break;
-        case 'regular':
-          newIconEl.classList.add('far');
-          break;
-        case 'solid':
-          newIconEl.classList.add('fas');
-          break;
-      }
-      newIconEl.classList.add(`fa-${iconName}`, `fa-${iconSize}x`);
-      iconEl.parentElement.replaceChild(newIconEl, iconEl);
     }
   }
 }
