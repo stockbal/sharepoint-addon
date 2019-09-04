@@ -10,6 +10,7 @@ export class ImagePreview {
     const images = document.querySelectorAll(`.${config.cssClasses.sharePointReadOnlyClass} img`);
 
     for (const image of images) {
+      image.setAttribute('title', 'Click to show full size');
       image.addEventListener('click', evt => {
         try {
           store.dispatch('imagePreview/open', {
